@@ -8,13 +8,7 @@
 
 static std::unique_ptr<RobotContainer> g_rc{ nullptr };
 
-RobotContainer* RobotContainer::Get() {
-    if (!g_rc) {
-        g_rc.reset(new RobotContainer());
-    }
 
-    return g_rc.get();
-}
 
 RobotContainer::RobotContainer() 
   : ctrl(new t34::T34CommandXboxController(0))
@@ -22,10 +16,21 @@ RobotContainer::RobotContainer()
   , DefaultCommand(swerve_drive, ctrl)
 {
   ConfigureBindings();
+  autoChooser = pathplanner::AutoBuilder::buildAutoChooser();
+   frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
+}
+
+RobotContainer* RobotContainer::Get() {
+    if (!g_rc) {
+        g_rc.reset(new RobotContainer());
+    }
+
+    return g_rc.get();
+    
 }
 
 void RobotContainer::ConfigureBindings() {}
 
-frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return frc2::cmd::Print("No autonomous command configured");
+frc2::Command* RobotContainer::GetAutonomousCommand() {
+  return autoChooser.GetSelected();
 }
