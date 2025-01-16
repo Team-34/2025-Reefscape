@@ -11,8 +11,8 @@ static std::unique_ptr<RobotContainer> g_rc{ nullptr };
 
 
 RobotContainer::RobotContainer() 
-  : ctrl(new t34::T34CommandXboxController(0))
-  , swerve_drive(new t34::SwerveDrive())
+  : swerve_drive(new t34::SwerveDrive())
+  , ctrl(new t34::T34CommandXboxController(0))
   , DefaultCommand(swerve_drive, ctrl)
 {
   ConfigureBindings();
@@ -31,6 +31,8 @@ RobotContainer* RobotContainer::Get() {
 
 void RobotContainer::ConfigureBindings() {}
 
-frc2::Command* RobotContainer::GetAutonomousCommand() {
-  return autoChooser.GetSelected();
+frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
+  auto myCommand = std::make_unique<frc2::InstantCommand>([this] { autoChooser.GetSelected(); }); 
+  frc2::CommandPtr wrappedCommand(std::move(myCommand));
+  return wrappedCommand;
 }

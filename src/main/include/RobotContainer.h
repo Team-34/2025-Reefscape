@@ -16,6 +16,7 @@
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/Command.h>
 #include <memory>
+#include <iostream>
 
 class RobotContainer {
  public:
@@ -28,7 +29,7 @@ class RobotContainer {
 
   t34::ControllerDriveCommand DefaultCommand;
   frc::SendableChooser<frc2::Command*> autoChooser;
-  frc2::Command* GetAutonomousCommand();
+  frc2::CommandPtr GetAutonomousCommand();
 
  private:
   void ConfigureBindings();
