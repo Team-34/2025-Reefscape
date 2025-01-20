@@ -7,8 +7,7 @@
 Elevator::Elevator()
 : m_motors(elevator_motor_id)
 , m_motors_PID(1.0, 1.0, 1.0)
-{
-}
+{}
 
 // This method will be called once per scheduler run
 void Elevator::Periodic() {}

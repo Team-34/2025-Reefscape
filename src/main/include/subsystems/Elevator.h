@@ -10,6 +10,8 @@
 
 #include "Constants.h"
 
+using namespace ctre::phoenix::motorcontrol::can;
+
 class Elevator : public frc2::SubsystemBase {
 public:
   Elevator();
