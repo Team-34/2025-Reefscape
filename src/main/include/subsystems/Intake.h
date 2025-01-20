@@ -2,6 +2,7 @@
 #pragma once
 #include <rev/SparkMax.h>
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/InstantCommand.h>
 
 using namespace rev::spark;
 
@@ -12,7 +13,7 @@ namespace t34{
         
        Intake();
 
-       frc2::CommandPtr Move(double input);
+       frc2::InstantCommand RunMotors(double power_percentage);
        
         private:
 

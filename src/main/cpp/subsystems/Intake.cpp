@@ -7,11 +7,12 @@ namespace t34{
   , motor_2(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
   {} 
 
-  frc2::CommandPtr Intake::Move(double input)
+  frc2::InstantCommand Intake::RunMotors(double power_percentage)
   {
-    motor_1.Set(input);
-    motor_2.Set(input);
-    return this->StartEnd([this]  {this->motor_1.Set(1.0), this->motor_2.Set(1.0); }, [this] { this->motor_1.Set(0.0), this->motor_2.Set(0.0); });   
+    return frc2::InstantCommand([this]{
+      this->motor_1.Set(0.2); this->motor_2.Set(0.2);
+      this->motor_1.Set(0.0), this->motor_2.Set(0.0);
+    });
   }
   
 }
