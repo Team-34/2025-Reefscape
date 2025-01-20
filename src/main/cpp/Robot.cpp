@@ -6,14 +6,12 @@
 
 #include <frc2/command/CommandScheduler.h>
 
-Robot::Robot() {
-  
-  rc = RobotContainer::Get();
-
-}
+Robot::Robot() {}
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
+
+  frc::SmartDashboard::PutNumber("rotation", m_container.swerve_drive->GetModulePositions()[2].angle.Degrees().value());
 }
 
 void Robot::DisabledInit() {}
@@ -35,13 +33,9 @@ void Robot::AutonomousPeriodic() {}
 void Robot::AutonomousExit() {}
 
 void Robot::TeleopInit() {
-  if (m_autonomousCommand)
-  {
+  if (m_autonomousCommand) {
     m_autonomousCommand->Cancel();
-    m_autonomousCommand.reset();
   }
-
-  frc2::CommandScheduler::GetInstance().SetDefaultCommand(rc->swerve_drive.get(), std::move(rc->DefaultCommand));
 }
 
 void Robot::TeleopPeriodic() {}

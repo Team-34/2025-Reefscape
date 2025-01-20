@@ -2,6 +2,13 @@
 
 #include <string>
 #include <cmath>
+#include <units/mass.h>
+#include <units/length.h>
+#include <units/velocity.h>
+#include <units/current.h>
+#include <frc/system/plant/DCMotor.h>
+#include <vector>
+#include <frc/geometry/Translation2d.h>
 
 const int CONTROLLER_PORT = 0;
 
@@ -33,4 +40,27 @@ const int POV_LEFT{ 270 };
 Elevator Subsytem Constants
 */
 
-const int elevator_motor_id{ 0 };
+const int ELEVATOR_MOTOR_ID{ 0 };
+
+/*PathPlanner Constants
+
+const units::kilogram_t ROBOT_WEIGHT{ 85.0 };
+const units::kilogram_square_meter_t MOI{ 1.0 };
+const int MOTOR_NUM{ 8 };
+const std::vector<frc::Translation2d> MODULE_OFFSETS{ 
+    frc::Translation2d(units::meter_t(1), frc::Rotation2d(units::degree_t(0))), //left aft drive
+    frc::Translation2d(units::meter_t(1), frc::Rotation2d(units::degree_t(0))), //left aft steer
+    frc::Translation2d(units::meter_t(1), frc::Rotation2d(units::degree_t(0))), //left front drive
+    frc::Translation2d(units::meter_t(1), frc::Rotation2d(units::degree_t(0))), //left front steer
+    frc::Translation2d(units::meter_t(1), frc::Rotation2d(units::degree_t(0))), //right aft drive
+    frc::Translation2d(units::meter_t(1), frc::Rotation2d(units::degree_t(0))), //right aft steer
+    frc::Translation2d(units::meter_t(1), frc::Rotation2d(units::degree_t(0))), //right front drive
+    frc::Translation2d(units::meter_t(1), frc::Rotation2d(units::degree_t(0))) //right front steer
+    };
+
+const units::meter_t WHEEL_RADIUS{0.1};
+const units::meters_per_second_t MAX_DRIVE_VELOCITY{ 15.0 };
+const double WHEEL_COF{0.2};
+const frc::DCMotor DRIVE_MOTOR;
+const double DRIVE_GEARING{ 12.0 };
+const units::ampere_t DRIVE_CURRENT_LIMIT{ 40.0 };*/

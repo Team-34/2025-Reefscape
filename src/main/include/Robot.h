@@ -28,8 +28,6 @@ class Robot : public frc::TimedRobot {
   void TestPeriodic() override;
   void TestExit() override;
 
-  RobotContainer* rc{ nullptr };
-
  private:
   std::optional<frc2::CommandPtr> m_autonomousCommand;
 

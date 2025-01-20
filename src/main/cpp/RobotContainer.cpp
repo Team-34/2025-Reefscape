@@ -8,24 +8,33 @@
 
 static std::unique_ptr<RobotContainer> g_rc{ nullptr };
 
+
+
+RobotContainer::RobotContainer() 
+  : swerve_drive(new t34::SwerveDrive())
+  //, DefaultCommand(swerve_drive, ctrl)
+{
+  ConfigureBindings();
+  autoChooser = pathplanner::AutoBuilder::buildAutoChooser("New Auto");
+  frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
+}
+
 RobotContainer* RobotContainer::Get() {
     if (!g_rc) {
         g_rc.reset(new RobotContainer());
     }
 
     return g_rc.get();
-}
-
-RobotContainer::RobotContainer() 
-  : ctrl(new t34::T34CommandXboxController(0))
-  , swerve_drive(new t34::SwerveDrive())
-  , DefaultCommand(swerve_drive, ctrl)
-{
-  ConfigureBindings();
+    
 }
 
 void RobotContainer::ConfigureBindings() {}
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return frc2::cmd::Print("No autonomous command configured");
+  //auto myCommand{std::make_unique<frc2::InstantCommand>([this] { autoChooser.GetSelected(); })}; 
+  //frc2::CommandPtr wrappedCommand(std::move(myCommand));
+  //return wrappedCommand;
+
+  return pathplanner::PathPlannerAuto("New Auto").ToPtr();
 }
+

@@ -14,7 +14,7 @@ namespace t34 {
 
         void ToggleFarisMode();
         void Drive(frc::Translation2d translation, double rotation, bool field_relative = true, bool is_open_loop = false);
-        void DriveAuto(frc::ChassisSpeeds speeds);
+        void DriveAuto(const frc::ChassisSpeeds& speeds);
         void Stop();
 
 
@@ -24,7 +24,7 @@ namespace t34 {
         double GetPoseY();
         double GetPoseRotation();
 
-        void ResetOdometry(frc::Pose2d pose);
+        void ResetOdometry(const frc::Pose2d pose);
 
         std::array<frc::SwerveModuleState, 4> GetModuleStates();
         std::array<frc::SwerveModulePosition, 4> GetModulePositions();
