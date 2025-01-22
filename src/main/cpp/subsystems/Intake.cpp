@@ -9,9 +9,11 @@ namespace t34{
 
   frc2::InstantCommand Intake::RunMotors(double power_percentage)
   {
-    return frc2::InstantCommand([this]{
-      this->motor_1.Set(0.2); this->motor_2.Set(0.2);
-      this->motor_1.Set(0.0), this->motor_2.Set(0.0);
+    return frc2::InstantCommand([this, power_percentage]{
+      this->motor_1.Set(power_percentage);
+      this->motor_2.Set(power_percentage);
+      this->motor_1.Set(0.0);
+      this->motor_2.Set(0.0);
     });
   }
   
