@@ -52,5 +52,34 @@ frc2::CommandPtr Elevator::Elevate(units::inch_t height)
     });
 }
 
+frc2::CommandPtr Elevator::MoveToLevel(int level)
+{
+    return this->Run([this, level] {
+        switch (level)
+        {
+        case 0:
+            MoveWristTo(units::degree_t(85));
+            Elevate(units::inch_t(0));
+
+        case 1:
+            MoveWristTo(units::degree_t(35));
+            Elevate(units::inch_t(18));
+        
+        case 2:
+            MoveWristTo(units::degree_t(35));
+            Elevate(units::inch_t(31 + (7/8)));
+        
+        case 3:
+            MoveWristTo(units::degree_t(35));
+            Elevate(units::inch_t(47 + (7/8)));
+        
+        case 4:
+            MoveWristTo(units::degree_t(88));
+            Elevate(units::inch_t(72));
+        
+        }
+    });
+}
+
 // This method will be called once per scheduler run
 void Elevator::Periodic() {}

@@ -25,7 +25,7 @@ public:
 
   frc2::CommandPtr Elevate(units::inch_t height);
   frc2::CommandPtr MoveWristTo(units::degree_t degree);
-
+  frc2::CommandPtr MoveToLevel(int level);
 
 private:
   //TalonSRX m_motors;
