@@ -11,7 +11,7 @@ namespace t34{
     class Intake : public frc2::SubsystemBase {
         public:
         
-       Intake();
+        Intake();
 
         frc2::CommandPtr RunIn(double power_percentage);
         frc2::CommandPtr RunOut(double power_percentage);
