@@ -13,7 +13,6 @@
 Robot::Robot() {
   
   rc = RobotContainer::Get();
-
 }
 
 void Robot::RobotPeriodic() {
@@ -50,9 +49,31 @@ void Robot::TeleopInit() {
 
 void Robot::TeleopPeriodic() {
 
-    rc->intake.Move(0.5);
+  //Runs algae intake in on A button, spits out on B
+  rc->ctrl->A().OnTrue(rc->intake.RunIn(-0.25));
+  rc->ctrl->B().OnTrue(rc->intake.RunOut(0.7));
+  
+  //_________________________________________________
 
-    rc->ctrl->A().OnTrue(rc->intake->Move(0.5));
+  //Runs coral intake in on X button, spits out on Y
+  rc->ctrl->X().OnTrue(rc->coralintake.RunIn(-0.25));
+  rc->ctrl->Y().OnTrue(rc->coralintake.RunOut(0.5));
+
+  //Checks if the intakeflippedup bool is true. If it is, it flips it down and sets the bool to false. if it is false, it flips it up and sets it to true.
+  rc->ctrl->RightBumper().OnTrue(frc2::InstantCommand(
+  [this]
+    {
+      if (rc->coralintake.intakeflippedup) {
+        rc->coralintake.FlipArmDown();
+        rc->coralintake.intakeflippedup = false;
+      } else {
+        rc->coralintake.FlipArmUp();
+        rc->coralintake.intakeflippedup = true;
+      }
+    }
+  ).ToPtr()
+  );
+
 
 }
 
