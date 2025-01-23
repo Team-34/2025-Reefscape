@@ -7,20 +7,31 @@
 #include <frc2/command/SubsystemBase.h>
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <frc/controller/PIDController.h>
+#include <units/length.h>
+#include <frc2/command/CommandPtr.h>
+#include <frc2/command/ConditionalCommand.h>
+#include <rev/SparkMax.h>
 
 #include "Constants.h"
+
+using namespace ctre::phoenix::motorcontrol::can;
+using namespace rev::spark;
 
 class Elevator : public frc2::SubsystemBase {
 public:
   Elevator();
-
   
   void Periodic() override;
 
-private:
-  ctre::phoenix::motorcontrol::can::TalonSRX m_motors;
+  frc2::CommandPtr Elevate(units::inch_t height);
+  frc2::CommandPtr MoveWristTo(units::degree_t degree);
+  frc2::CommandPtr MoveToLevel(int level);
 
-  frc::PIDController m_motors_PID;
-  // Components (e.g. motor controllers and sensors) should generally be
-  // declared private and exposed only through public methods.
+private:
+  //TalonSRX m_motors;
+  SparkMax m_vert_motors;
+  SparkMax m_wrist_motor;
+
+  frc::PIDController m_vert_motors_PID;
+  frc::PIDController m_wrist_motor_PID;
 };

@@ -5,6 +5,10 @@
 #include "Robot.h"
 
 #include <frc2/command/CommandScheduler.h>
+#include <rev/SparkMax.h>
+#include "subsystems/Elevator.h"
+#include "subsystems/Intake.h"
+
 
 Robot::Robot() {
   
@@ -44,7 +48,13 @@ void Robot::TeleopInit() {
   frc2::CommandScheduler::GetInstance().SetDefaultCommand(rc->swerve_drive.get(), std::move(rc->DefaultCommand));
 }
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+
+    rc->intake.Move(0.5);
+
+    rc->ctrl->A().OnTrue(rc->intake->Move(0.5));
+
+}
 
 void Robot::TeleopExit() {}
 

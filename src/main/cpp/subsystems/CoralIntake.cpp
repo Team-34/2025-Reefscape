@@ -1,0 +1,35 @@
+#include "subsystems/CoralIntake.h"
+#include <frc2/command/SubsystemBase.h>
+#include <frc2/command/InstantCommand.h>
+
+CoralIntake::CoralIntake() 
+: coralwristmotor(3, rev::spark::SparkLowLevel::MotorType::kBrushless)
+, coralintakemotor(4, rev::spark::SparkLowLevel::MotorType::kBrushless)
+, m_motor_pid(0.5, 0.5, 0.5)
+{}
+
+frc2::CommandPtr CoralIntake::RunIn(double power_percentage) {
+    return this->StartEnd(
+      [this, power_percentage] {
+        this->coralintakemotor.Set(power_percentage); 
+    },
+      [this, power_percentage] {
+        this->coralintakemotor.Set(0.0);
+    }
+    );
+}
+
+frc2::CommandPtr CoralIntake::RunOut(double power_percentage)
+  {
+    return this->StartEnd(
+      [this, power_percentage] {
+        this->coralintakemotor.Set(power_percentage);
+      },
+      [this, power_percentage] {
+        this->coralintakemotor.Set(0.0);
+      }
+    );
+}
+
+frc2::CommandPtr CoralIntake::
+

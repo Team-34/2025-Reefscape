@@ -1,0 +1,21 @@
+#include "Intake.h"
+#include <frc/controller/PIDController.h>
+
+using namespace rev::spark;
+
+class CoralIntake : public t34::Intake {
+public:
+
+CoralIntake();
+
+frc2::CommandPtr RunIn(double power_percentage);
+frc2::CommandPtr RunOut(double power_percentage);
+
+private:
+
+SparkMax coralwristmotor;
+SparkMax coralintakemotor;
+
+frc::PIDController m_motor_pid;
+
+};
