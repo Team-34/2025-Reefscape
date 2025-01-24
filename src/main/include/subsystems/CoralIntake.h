@@ -13,12 +13,12 @@ frc2::CommandPtr RunOut(double power_percentage);
 frc2::CommandPtr FlipArmUp();
 frc2::CommandPtr FlipArmDown();
 
-bool intakeflippedup;
+bool intakeflippedup = true;
 
 private:
 
-SparkMax coralwristmotor;
-SparkMax coralintakemotor;
+SparkMax coral_wrist_motor;
+SparkMax coral_intake_motor;
 
 frc::PIDController m_motor_pid;
 

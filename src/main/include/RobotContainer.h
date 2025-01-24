@@ -11,10 +11,8 @@
 #include "subsystems/SwerveDrive.h"
 #include "subsystems/CoralIntake.h"
 #include "subsystems/Elevator.h"
-#include "commands/ControllerDriveCommand.h"
 #include "commands/CenterOnCoral.h"
-
-
+#include "subsystems/Climber.h"
 class RobotContainer {
  public:
   RobotContainer();
@@ -24,11 +22,9 @@ class RobotContainer {
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
   t34::Intake intake;
-
   t34::ControllerDriveCommand DefaultCommand;
-
+  Climber climber;
   CenterOnCoral CenterOnCoralCommand;
-
   Elevator elevator;
   frc2::CommandPtr GetAutonomousCommand();
 
