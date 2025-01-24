@@ -64,19 +64,19 @@ frc2::CommandPtr Elevator::MoveToLevel()
     
         case 1:
             MoveWristTo(units::degree_t(35));
-            Elevate(units::inch_t(18));
+            Elevate(units::inch_t(18) - BASE_HEIGHT_FROM_FLOOR_INCHES.value());
             
         case 2:
             MoveWristTo(units::degree_t(35));
-            Elevate(units::inch_t(31 + (7/8)));
+            Elevate(units::inch_t(31 + (7/8)) - BASE_HEIGHT_FROM_FLOOR_INCHES.value());
             
         case 3:
             MoveWristTo(units::degree_t(35));
-            Elevate(units::inch_t(47 + (7/8)));
+            Elevate(units::inch_t(47 + (7/8)) - BASE_HEIGHT_FROM_FLOOR_INCHES.value());
             
         case 4:
             MoveWristTo(units::degree_t(88));
-            Elevate(units::inch_t(72));
+            Elevate(units::inch_t(72) - BASE_HEIGHT_FROM_FLOOR_INCHES.value());
             
         }
     });

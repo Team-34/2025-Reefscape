@@ -1,5 +1,5 @@
 #include "subsystems/Climber.h"
-#include "Constants.h"
+
 
 Climber::Climber() 
 : m_pid_controller(0.5, 0.5, 0.5)
@@ -15,9 +15,7 @@ frc2::CommandPtr Climber::FlipArmUp()
         [this] {
            m_motor.Set(0.0); 
         }
-    ).Until(
-        [this] {
-            return m_pid_controller.AtSetpoint();
-        }
-    );
+    ).Until([this]{
+        return m_pid_controller.AtSetpoint();
+    });
 }
