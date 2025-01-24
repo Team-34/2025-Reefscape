@@ -10,6 +10,7 @@
 #include "subsystems/SwerveDrive.h"
 #include "commands/ControllerDriveCommand.h"
 #include "subsystems/CoralIntake.h"
+#include "subsystems/Elevator.h"
 class RobotContainer {
  public:
   RobotContainer();
@@ -24,6 +25,7 @@ class RobotContainer {
 
   CenterOnCoral CenterOnCoralCommand;
 
+  Elevator elevator;
   frc2::CommandPtr GetAutonomousCommand();
 
  private:

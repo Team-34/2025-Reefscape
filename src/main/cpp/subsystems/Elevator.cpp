@@ -10,6 +10,7 @@ Elevator::Elevator()
 , m_vert_motors_PID(0.5, 0.0, 0.0)
 , m_wrist_motor(wrist_motor_id, SparkLowLevel::MotorType::kBrushless)
 , m_wrist_motor_PID(0.5, 0.0, 0.0)
+, level(0)
 {
     m_vert_motors_PID.SetTolerance(NEOUnitToInch(0.5));
 
@@ -52,34 +53,47 @@ frc2::CommandPtr Elevator::Elevate(units::inch_t height)
     });
 }
 
-frc2::CommandPtr Elevator::MoveToLevel(int level)
+frc2::CommandPtr Elevator::MoveToLevel()
 {
-    return this->Run([this, level] {
+    return this->Run([this] {
         switch (level)
         {
         case 0:
             MoveWristTo(units::degree_t(85));
             Elevate(units::inch_t(0));
-
+    
         case 1:
             MoveWristTo(units::degree_t(35));
             Elevate(units::inch_t(18));
-        
+            
         case 2:
             MoveWristTo(units::degree_t(35));
             Elevate(units::inch_t(31 + (7/8)));
-        
+            
         case 3:
             MoveWristTo(units::degree_t(35));
             Elevate(units::inch_t(47 + (7/8)));
-        
+            
         case 4:
             MoveWristTo(units::degree_t(88));
             Elevate(units::inch_t(72));
-        
+            
         }
     });
 }
 
+frc2::CommandPtr Elevator::MoveUpOnce() {
+    level = (level < 5 ) ? level++ : level;
+}
+
+frc2::CommandPtr Elevator::MoveDownOnce() {
+    level = (level > -1 ) ? level-- : level;
+}
+
+
 // This method will be called once per scheduler run
-void Elevator::Periodic() {}
+void Elevator::Periodic() {
+
+
+
+}

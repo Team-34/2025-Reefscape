@@ -22,10 +22,16 @@ public:
   Elevator();
   
   void Periodic() override;
+  
 
   frc2::CommandPtr Elevate(units::inch_t height);
   frc2::CommandPtr MoveWristTo(units::degree_t degree);
-  frc2::CommandPtr MoveToLevel(int level);
+  frc2::CommandPtr MoveToLevel();
+  frc2::CommandPtr MoveUpOnce();
+  frc2::CommandPtr MoveDownOnce();
+
+
+  int level;
 
 private:
   //TalonSRX m_motors;
