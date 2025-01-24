@@ -3,10 +3,12 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "RobotContainer.h"
+#include "commands/CenterOnCoral.h"
 
 #include <frc2/command/Commands.h>
 
 static std::unique_ptr<RobotContainer> g_rc{ nullptr };
+
 
 RobotContainer* RobotContainer::Get() {
     if (!g_rc) {
@@ -21,11 +23,15 @@ RobotContainer::RobotContainer()
   , swerve_drive(new t34::SwerveDrive())
   , DefaultCommand(swerve_drive, ctrl)
   , intake()
+  , CenterOnCoralCommand(swerve_drive.get())
 {
   ConfigureBindings();
 }
 
-void RobotContainer::ConfigureBindings() {}
+void RobotContainer::ConfigureBindings()
+{
+  ctrl->POVRight().WhileTrue(std::move(CenterOnCoralCommand).ToPtr());
+}
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
   return frc2::cmd::Print("No autonomous command configured");

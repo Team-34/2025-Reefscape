@@ -10,6 +10,10 @@ CoralIntake();
 
 frc2::CommandPtr RunIn(double power_percentage);
 frc2::CommandPtr RunOut(double power_percentage);
+frc2::CommandPtr FlipArmUp();
+frc2::CommandPtr FlipArmDown();
+
+bool intakeflippedup;
 
 private:
 
