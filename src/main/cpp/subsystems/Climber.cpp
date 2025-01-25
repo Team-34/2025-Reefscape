@@ -15,6 +15,7 @@ frc2::CommandPtr Climber::FlipArmUp() {
         },
         [this] {
            m_motor.Set(0.0); 
+           m_climber_up = true;
         }
     ).Until([this]{
         return m_pid_controller.AtSetpoint();
@@ -29,6 +30,7 @@ frc2::CommandPtr Climber::FlipArmDown() {
         },
         [this] {
            m_motor.Set(0.0); 
+           m_climber_up = false;
         }
     ).Until(
         [this] {

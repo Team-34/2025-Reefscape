@@ -10,21 +10,21 @@ AlgaeAutoCommand::AlgaeAutoCommand(t34::SwerveDrive * swerve, Elevator * elevato
 
   AddCommands(
     AutoDriveCommand(swerve, units::foot_t(0.0), units::foot_t(0.0), units::degree_t(0.0)), //move to processor
-    *intake->RunOut(0.5).Unwrap(), //spit out initial algae
+    *intake->RunOut(0.5).Unwrap().get(), //spit out initial algae
     AutoDriveCommand(swerve, units::foot_t(0.0), units::foot_t(0.0), units::degree_t(0.0)), //move to southwest reef algae
 
-    *elevator->MoveUpOnce().Unwrap(), //move elevator up to level 1
-    *elevator->MoveUpOnce().Unwrap(), //move elevator up to level 2
-    *intake->RunIn(0.3).Unwrap(), //intake reef algae
+    *elevator->MoveUpOnce().Unwrap().get(), //move elevator up to level 1
+    *elevator->MoveUpOnce().Unwrap().get(), //move elevator up to level 2
+    *intake->RunIn(0.3).Unwrap().get(), //intake reef algae
 
-    *elevator->MoveDownOnce().Unwrap(), //move elevator down to level 1
-    *elevator->MoveDownOnce().Unwrap(), //move elevator down to level 0
+    *elevator->MoveDownOnce().Unwrap().get(), //move elevator down to level 1
+    *elevator->MoveDownOnce().Unwrap().get(), //move elevator down to level 0
     AutoDriveCommand(swerve, units::foot_t(0.0), units::foot_t(0.0), units::degree_t(0.0)), //move to processor
-    *intake->RunOut(0.5).Unwrap(), //spit out reef algae
+    *intake->RunOut(0.5).Unwrap().get(), //spit out reef algae
 
     AutoDriveCommand(swerve, units::foot_t(0.0), units::foot_t(0.0), units::degree_t(0.0)), //move to rightmost algae
-    *intake->RunIn(0.3).Unwrap(), //intake floor algae
+    *intake->RunIn(0.3).Unwrap().get(), //intake floor algae
     AutoDriveCommand(swerve, units::foot_t(0.0), units::foot_t(0.0), units::degree_t(0.0)), //move to processor
-    *intake->RunOut(0.5).Unwrap() //spit out floor algae
+    *intake->RunOut(0.5).Unwrap().get() //spit out floor algae
   );
 }

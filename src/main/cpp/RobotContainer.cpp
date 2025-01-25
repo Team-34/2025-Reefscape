@@ -23,6 +23,7 @@ RobotContainer::RobotContainer()
   , DefaultCommand(swerve_drive, ctrl)
   , intake()
   , CenterOnCoralCommand(swerve_drive.get())
+  , climber()
 {
   ConfigureBindings();
 }
@@ -46,12 +47,12 @@ void RobotContainer::ConfigureBindings()
   ctrl->RightBumper().OnTrue(frc2::InstantCommand(
   [this]
     {
-      if (coralintake.intakeflippedup) {
+      if (coralintake.m_intake_flipped_up) {
         coralintake.FlipArmDown();
-        coralintake.intakeflippedup = false;
+        coralintake.m_intake_flipped_up = false;
       } else {
         coralintake.FlipArmUp();
-        coralintake.intakeflippedup = true;
+        coralintake.m_intake_flipped_up = true;
       }
     }
   ).ToPtr()
@@ -67,13 +68,11 @@ void RobotContainer::ConfigureBindings()
   ctrl->LeftBumper().OnTrue(frc2::InstantCommand(
     [this]
       {
-        if (climber.climber_up)
+        if (climber.m_climber_up)
         {
           climber.FlipArmDown();
-          climber.climber_up = false;
         } else {
           climber.FlipArmUp();
-          climber.climber_up = true;
         }
       }
     ).ToPtr()

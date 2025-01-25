@@ -24,8 +24,8 @@ void AutoDriveCommand::Initialize() {}
 void AutoDriveCommand::Execute() 
 {
   m_swerve->Drive(frc::Translation2d(
-    units::meter_t(m_x_PID.Calculate(m_swerve->GetModulePositions()[0].distance.value(), (m_x_init_dist + m_x_translation) )),
-    units::meter_t(m_y_PID.Calculate(m_swerve->GetModulePositions()[0].distance.value(), (m_y_init_dist + m_y_translation) ))), m_rotation.value()
+    units::meter_t(m_x_PID.Calculate(m_swerve->GetModulePositions()[0].distance.value(), (m_x_init_dist + m_x_translation.value()) )),
+    units::meter_t(m_y_PID.Calculate(m_swerve->GetModulePositions()[0].distance.value(), (m_y_init_dist + m_y_translation.value()) ))), m_rotation.value()
   );
 }
 
