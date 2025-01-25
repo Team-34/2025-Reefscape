@@ -6,18 +6,18 @@
 
 #include <frc2/command/Command.h>
 #include <frc2/command/CommandHelper.h>
+#include <units/length.h>
+#include <units/angle.h>
 #include <frc/controller/PIDController.h>
-#include <cmath>
 
 #include "subsystems/SwerveDrive.h"
-#include "LimelightUtil.h"
 
 
-class CenterOnCoral
-    : public frc2::CommandHelper<frc2::Command, CenterOnCoral> {
+class AutoDriveCommand
+    : public frc2::CommandHelper<frc2::Command, AutoDriveCommand> {
  public:
 
-  CenterOnCoral(t34::SwerveDrive * swerve_ptr);
+  AutoDriveCommand(t34::SwerveDrive * swerve, units::foot_t x_translation, units::foot_t y_translation, units::degree_t rotation);
 
   void Initialize() override;
 
@@ -27,14 +27,16 @@ class CenterOnCoral
 
   bool IsFinished() override;
 
-
   private:
+
+  t34::SwerveDrive * m_swerve;
+  units::foot_t m_x_translation;
+  units::foot_t m_y_translation;
+  units::degree_t m_rotation;
 
   frc::PIDController m_x_PID;
   frc::PIDController m_y_PID;
 
-  t34::LimelightUtil m_LL;
-
-  t34::SwerveDrive* m_swerve;
-
+  double m_x_init_dist;
+  double m_y_init_dist;
 };
