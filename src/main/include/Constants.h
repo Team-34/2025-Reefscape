@@ -2,6 +2,7 @@
 
 #include <string>
 #include <cmath>
+#include <units/length.h>
 
 const int CONTROLLER_PORT = 0;
 
@@ -14,7 +15,7 @@ constexpr double NEO550_RES{ 42 };
 constexpr double NEO550_SHAFT_CIRCUMFERENCE_INCH{ 0.125 * M_PI };
 constexpr double LIMELIGHT_DEGREE_SCALAR{ 23.188 / 20.25 };//{ 21.1726 / 22.5 };
 
-constexpr units::inch_t BASE_HEIGHT_FROM_FLOOR_INCHES{ 2.0 };
+const units::inch_t BASE_HEIGHT_FROM_FLOOR_INCHES{ 2.0 };
 
 //const std::string LIMELIGHT_TABLE_NAME{ "" };
 

@@ -13,6 +13,8 @@
 #include "subsystems/Elevator.h"
 #include "commands/CenterOnCoral.h"
 #include "subsystems/Climber.h"
+#include "commands/ControllerDriveCommand.h"
+
 class RobotContainer {
  public:
   RobotContainer();
