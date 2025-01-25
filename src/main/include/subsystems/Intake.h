@@ -18,7 +18,7 @@ namespace t34{
         
         private:
 
-        SparkMax motor_1;
-        SparkMax motor_2;
+        SparkMax m_motor_1;
+        SparkMax m_motor_2;
     };
 }

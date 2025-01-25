@@ -3,8 +3,8 @@
 namespace t34{
     
   Intake::Intake()
-  : motor_1(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
-  , motor_2(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
+  : m_motor_1(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
+  , m_motor_2(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
   {} 
 
   
@@ -14,12 +14,12 @@ namespace t34{
     return this->StartEnd
     (
     [this, power_percentage] {
-      this->motor_1.Set(power_percentage); 
-      this->motor_2.Set(power_percentage);
+      this->m_motor_1.Set(power_percentage); 
+      this->m_motor_2.Set(power_percentage);
     },
     [this, power_percentage] {
-      this->motor_1.Set(0.0);
-      this->motor_2.Set(0.0);
+      this->m_motor_1.Set(0.0);
+      this->m_motor_2.Set(0.0);
     }
     );
   }
@@ -27,12 +27,12 @@ namespace t34{
   {
     return this->StartEnd(
       [this, power_percentage] {
-        this->motor_1.Set(power_percentage);
-        this->motor_2.Set(power_percentage);
+        this->m_motor_1.Set(power_percentage);
+        this->m_motor_2.Set(power_percentage);
       },
       [this, power_percentage] {
-        this->motor_1.Set(0.0);
-        this->motor_2.Set(0.0);
+        this->m_motor_1.Set(0.0);
+        this->m_motor_2.Set(0.0);
       }
     );
   }
