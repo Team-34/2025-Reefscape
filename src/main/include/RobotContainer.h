@@ -13,7 +13,7 @@
 #include "subsystems/Elevator.h"
 #include "commands/ControllerDriveCommand.h"
 #include "commands/CenterOnCoral.h"
-
+#include "subsystems/Climber.h"
 
 class RobotContainer {
  public:
@@ -24,7 +24,7 @@ class RobotContainer {
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
   t34::Intake intake;
-
+  Climber climber;
   t34::ControllerDriveCommand DefaultCommand;
 
   CenterOnCoral CenterOnCoralCommand;

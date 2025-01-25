@@ -9,11 +9,14 @@ using namespace rev::spark;
 
 class Climber : public frc2::SubsystemBase {
 
+    public:
+
     Climber();
 
     frc2::CommandPtr FlipArmUp();
     frc2::CommandPtr FlipArmDown();
 
+    bool climber_flipped_up;
 
     private:
 

@@ -4,7 +4,6 @@
 
 #include "RobotContainer.h"
 #include "commands/CenterOnCoral.h"
-
 #include <frc2/command/Commands.h>
 
 static std::unique_ptr<RobotContainer> g_rc{ nullptr };
@@ -24,6 +23,7 @@ RobotContainer::RobotContainer()
   , DefaultCommand(swerve_drive, ctrl)
   , intake()
   , CenterOnCoralCommand(swerve_drive.get())
+  , climber()
 {
   ConfigureBindings();
 }
@@ -38,6 +38,7 @@ void RobotContainer::ConfigureBindings()
   //Runs coral intake in on X button, spits out on Y
   ctrl->X().OnTrue(coralintake.RunIn(-0.25));
   ctrl->Y().OnTrue(coralintake.RunOut(0.5));
+
   //Checks if the intakeflippedup bool is true. If it is, it flips it down and sets the bool to false. if it is false, it flips it up and sets it to true.
   ctrl->RightBumper().OnTrue(frc2::InstantCommand(
   [this]
@@ -52,6 +53,28 @@ void RobotContainer::ConfigureBindings()
     }
   ).ToPtr()
   );
+  
+  //does the same thing intakeflippedup but with the climber
+  ctrl->LeftBumper().OnTrue(frc2::InstantCommand(
+  [this]
+    {
+      if (climber.climber_flipped_up) {
+        climber.FlipArmDown();
+        climber.climber_flipped_up = false;
+      } else {
+        climber.FlipArmUp();
+        climber.climber_flipped_up = true;
+      }
+    }
+  ).ToPtr()
+  );
+
+  //runs the elevator up one level on POVUp, down one on POVDown
+  //this should work lol i forgot
+  ctrl->POVUp().OnTrue(elevator.MoveUpOnce());
+  ctrl->POVDown().OnTrue(elevator.MoveDownOnce());
+
+
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
