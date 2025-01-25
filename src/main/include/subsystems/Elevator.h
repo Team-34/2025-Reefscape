@@ -9,8 +9,8 @@
 #include <frc/controller/PIDController.h>
 #include <units/length.h>
 #include <frc2/command/CommandPtr.h>
-#include <frc2/command/ConditionalCommand.h>
 #include <rev/SparkMax.h>
+#include <frc2/command/CommandScheduler.h>
 
 #include "Constants.h"
 
@@ -26,7 +26,7 @@ public:
 
   frc2::CommandPtr Elevate(units::inch_t height);
   frc2::CommandPtr MoveWristTo(units::degree_t degree);
-  frc2::CommandPtr MoveToLevel();
+  frc2::CommandPtr MoveToLevel(frc2::CommandScheduler * scheduler);
   frc2::CommandPtr MoveUpOnce();
   frc2::CommandPtr MoveDownOnce();
 

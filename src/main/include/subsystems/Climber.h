@@ -13,9 +13,9 @@ class Climber : public frc2::SubsystemBase {
     frc2::CommandPtr FlipArmUp();
     frc2::CommandPtr FlipArmDown();
 
-    bool climber_up = false;
+    bool m_climber_up;
 
-    private :
+    private:
 
     frc::PIDController m_pid_controller;
 
