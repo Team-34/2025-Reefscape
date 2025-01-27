@@ -4,37 +4,50 @@
 
 #include "RobotContainer.h"
 
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/Commands.h>
+#include <pathplanner/lib/auto/AutoBuilder.h>
 
-static std::unique_ptr<RobotContainer> g_rc{ nullptr };
-
-
-
-RobotContainer::RobotContainer() 
-  : swerve_drive(new t34::SwerveDrive())
-  //, DefaultCommand(swerve_drive, ctrl)
+RobotContainer::RobotContainer()
 {
-  ConfigureBindings();
-  autoChooser = pathplanner::AutoBuilder::buildAutoChooser("New Auto");
-  frc::SmartDashboard::PutData("Auto Chooser", &autoChooser);
+    autoChooser = pathplanner::AutoBuilder::buildAutoChooser("Tests");
+    frc::SmartDashboard::PutData("Auto Mode", &autoChooser);
+
+    ConfigureBindings();
 }
 
-RobotContainer* RobotContainer::Get() {
-    if (!g_rc) {
-        g_rc.reset(new RobotContainer());
-    }
+void RobotContainer::ConfigureBindings()
+{
+    // Note that X is defined as forward according to WPILib convention,
+    // and Y is defined as to the left according to WPILib convention.
+    drivetrain.SetDefaultCommand(
+        // Drivetrain will execute this command periodically
+        drivetrain.ApplyRequest([this]() -> auto&& {
+            return drive.WithVelocityX(-joystick.GetLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                .WithVelocityY(-joystick.GetLeftX() * MaxSpeed) // Drive left with negative X (left)
+                .WithRotationalRate(-joystick.GetRightX() * MaxAngularRate); // Drive counterclockwise with negative X (left)
+        })
+    );
 
-    return g_rc.get();
-    
+    joystick.A().WhileTrue(drivetrain.ApplyRequest([this]() -> auto&& { return brake; }));
+    joystick.B().WhileTrue(drivetrain.ApplyRequest([this]() -> auto&& {
+        return point.WithModuleDirection(frc::Rotation2d{-joystick.GetLeftY(), -joystick.GetLeftX()});
+    }));
+
+    // Run SysId routines when holding back/start and X/Y.
+    // Note that each routine should be run exactly once in a single log.
+    (joystick.Back() && joystick.Y()).WhileTrue(drivetrain.SysIdDynamic(frc2::sysid::Direction::kForward));
+    (joystick.Back() && joystick.X()).WhileTrue(drivetrain.SysIdDynamic(frc2::sysid::Direction::kReverse));
+    (joystick.Start() && joystick.Y()).WhileTrue(drivetrain.SysIdQuasistatic(frc2::sysid::Direction::kForward));
+    (joystick.Start() && joystick.X()).WhileTrue(drivetrain.SysIdQuasistatic(frc2::sysid::Direction::kReverse));
+
+    // reset the field-centric heading on left bumper press
+    joystick.LeftBumper().OnTrue(drivetrain.RunOnce([this] { drivetrain.SeedFieldCentric(); }));
+
+    drivetrain.RegisterTelemetry([this](auto const &state) { logger.Telemeterize(state); });
 }
 
-void RobotContainer::ConfigureBindings() {}
-
-frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  //auto myCommand{std::make_unique<frc2::InstantCommand>([this] { autoChooser.GetSelected(); })}; 
-  //frc2::CommandPtr wrappedCommand(std::move(myCommand));
-  //return wrappedCommand;
-
-  return pathplanner::PathPlannerAuto("New Auto").ToPtr();
+frc2::Command *RobotContainer::GetAutonomousCommand()
+{
+    return autoChooser.GetSelected();
 }
-
