@@ -10,15 +10,15 @@ class Climber : public frc2::SubsystemBase {
 
     Climber();
 
-    frc2::CommandPtr FlipArmUp();
-    frc2::CommandPtr FlipArmDown();
+    frc2::CommandPtr FlipArm();
 
-    bool m_climber_up;
+    SparkMax m_motor;
 
     private:
 
+    bool m_climber_up;
+
     frc::PIDController m_pid_controller;
 
-    SparkMax m_motor;
 
 };

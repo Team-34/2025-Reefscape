@@ -33,6 +33,7 @@ void RobotContainer::ConfigureBindings()
 {
 
   ctrl->POVRight().WhileTrue(std::move(CenterOnCoralCommand).ToPtr());
+  
 //Runs algae intake in on A button, spits out on B
   ctrl->A().OnTrue(intake.RunIn(-0.25));
   ctrl->B().OnTrue(intake.RunOut(0.7));
@@ -43,42 +44,16 @@ void RobotContainer::ConfigureBindings()
   ctrl->X().OnTrue(coralintake.RunIn(-0.25));
   ctrl->Y().OnTrue(coralintake.RunOut(0.5));
 
-  //Move the coral intake up and down on right bumper press
-  ctrl->RightBumper().OnTrue(frc2::InstantCommand(
-  [this]
-    {
-      if (coralintake.m_intake_flipped_up) {
-        coralintake.FlipArmDown();
-        coralintake.m_intake_flipped_up = false;
-      } else {
-        coralintake.FlipArmUp();
-        coralintake.m_intake_flipped_up = true;
-      }
-    }
-  ).ToPtr()
-  );
+  ctrl->LeftBumper().OnTrue(climber.FlipArm());
 
   //Moves the elevator up one level when the DPad up button is pressed
-  ctrl->POVUp().OnTrue(elevator.MoveUpOnce());
+  //ctrl->POVUp().OnTrue(elevator.MoveUpOnce());
 
   //Moves the elevator down one level when the DPad down button is pressed
-  ctrl->POVDown().OnTrue(elevator.MoveDownOnce());
+  //ctrl->POVDown().OnTrue(elevator.MoveDownOnce());
 
   //Moves the climber up and down on Left Bumber press
-  ctrl->LeftBumper().OnTrue(frc2::InstantCommand(
-    [this]
-      {
-        if (climber.m_climber_up)
-        {
-          climber.FlipArmDown();
-          climber.m_climber_up = false;
-        } else {
-          climber.FlipArmUp();
-          climber.m_climber_up = true;
-        }
-      }
-    ).ToPtr()
-    );
+ 
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

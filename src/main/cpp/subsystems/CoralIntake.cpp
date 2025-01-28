@@ -37,7 +37,7 @@ frc2::CommandPtr CoralIntake::FlipArmUp()
 {
     return this->StartEnd(
         [this] {
-            m_motor_pid.SetSetpoint(NEOUnitToDegree(90));
+            m_motor_pid.Calculate(m_coral_wrist_motor.GetEncoder().GetPosition(), NEOUnitToDegree(90.0));
         },
         [this] {
            m_coral_wrist_motor.Set(0.0); 
@@ -53,7 +53,7 @@ frc2::CommandPtr CoralIntake::FlipArmDown()
 {
     return this->StartEnd(
         [this] {
-            m_motor_pid.SetSetpoint(NEOUnitToDegree(0));
+            m_motor_pid.Calculate(m_coral_wrist_motor.GetEncoder().GetPosition(), NEOUnitToDegree(0.0));        
         },
         [this] {
            m_coral_wrist_motor.Set(0.0); 
