@@ -23,11 +23,11 @@ class RobotContainer {
   CoralIntake coralintake;
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
-  t34::Intake intake;
+  //t34::Intake intake;
   t34::ControllerDriveCommand DefaultCommand;
-  Climber climber;
+  //Climber climber;
   CenterOnCoral CenterOnCoralCommand;
-  Elevator elevator;
+  //Elevator elevator;
   frc2::CommandPtr GetAutonomousCommand();
 
  private:

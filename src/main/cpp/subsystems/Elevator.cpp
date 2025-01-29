@@ -6,9 +6,9 @@
 
 Elevator::Elevator()
 //: m_motors(elevator_motor_id)
-: m_vert_motors(elevator_motor_id, SparkLowLevel::MotorType::kBrushless)
+: m_vert_motors(999, SparkLowLevel::MotorType::kBrushless)
 , m_vert_motors_PID(0.5, 0.0, 0.0)
-, m_wrist_motor(wrist_motor_id, SparkLowLevel::MotorType::kBrushless)
+, m_wrist_motor(998, SparkLowLevel::MotorType::kBrushless)
 , m_wrist_motor_PID(0.5, 0.0, 0.0)
 , level(0)
 {

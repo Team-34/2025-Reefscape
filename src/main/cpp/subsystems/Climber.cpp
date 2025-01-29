@@ -1,5 +1,4 @@
-#include "Climber.h"
-#include "Constants.h"
+#include "subsystems/Climber.h"
 
 Climber::Climber() 
 : m_pid_controller(0.1, 0.0, 0.0)
@@ -9,17 +8,17 @@ Climber::Climber()
     frc2::CommandScheduler::GetInstance().RegisterSubsystem(this);
 }
 
-frc2::CommandPtr Climber::MoveInc() {
-    return this->StartEnd(
-        [this] {
-            m_motor.Set(0.1);
-        },
-        [this] {
-            m_motor.Set(0.0);
-        }
+// frc2::CommandPtr Climber::MoveInc() {
+//     return this->StartEnd(
+//         [this] {
+//             m_motor.Set(0.1);
+//         },
+//         [this] {
+//             m_motor.Set(0.0);
+//         }
 
-    );
-}
+//     );
+// }
 
 frc2::CommandPtr Climber::FlipArm()
 {

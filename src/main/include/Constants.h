@@ -35,10 +35,3 @@ inline double NEOUnitToDegree(double units)
 
 #define DEG_TO_RAD(x) (x * PI_DIV_180)
 #define RAD_TO_DEG(x) (x * _180_DIV_PI)
-
-/*
-Elevator Subsytem Constants
-*/
-
-const int elevator_motor_id{ 0 };
-const int wrist_motor_id{ 0 };
