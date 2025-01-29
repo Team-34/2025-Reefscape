@@ -14,7 +14,6 @@ public:
     frc2::CommandPtr FlipArmCommand();
 
 private:
-
     SparkMax m_motor;
 
     bool m_engaged;
