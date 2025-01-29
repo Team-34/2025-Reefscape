@@ -6,9 +6,9 @@
 
 #include <frc2/command/CommandPtr.h>
 
-#include "subsystems/Intake.h"
 #include "T34CommandXboxController.h"
 #include "subsystems/SwerveDrive.h"
+#include "subsystems/Climber.h"
 #include "commands/ControllerDriveCommand.h"
 
 class RobotContainer {
@@ -20,6 +20,8 @@ class RobotContainer {
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
   t34::Intake intake;
   t34::ControllerDriveCommand DefaultCommand;
+  Climber climber;
+
   frc2::CommandPtr GetAutonomousCommand();
 
  private:

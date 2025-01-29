@@ -22,6 +22,7 @@ RobotContainer::RobotContainer()
   , swerve_drive(new t34::SwerveDrive())
   , DefaultCommand(swerve_drive, ctrl)
   , intake()
+  , climber()
 {
   ConfigureBindings();
 }
@@ -33,6 +34,9 @@ void RobotContainer::ConfigureBindings()
   ctrl->A().OnTrue(intake.AlgaeInCommand(-0.25));
   ctrl->B().OnTrue(intake.AlgaeOutCommand(0.7));
 
+  //Moves the climber up and down on Left Bumber press
+  ctrl->LeftBumper().OnTrue(climber.FlipArm());
+ 
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

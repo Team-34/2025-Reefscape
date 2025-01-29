@@ -6,7 +6,6 @@
 
 #include <frc2/command/CommandScheduler.h>
 #include <rev/SparkMax.h>
-#include "subsystems/Intake.h"
 
 
 Robot::Robot() {
