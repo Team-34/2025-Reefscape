@@ -16,7 +16,7 @@ class Climber : public frc2::SubsystemBase {
 
     private:
 
-    bool m_climber_up;
+    bool m_engaged;
 
     frc::PIDController m_pid_controller;
 

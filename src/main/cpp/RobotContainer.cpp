@@ -22,8 +22,8 @@ RobotContainer::RobotContainer()
   , swerve_drive(new t34::SwerveDrive())
   , DefaultCommand(swerve_drive, ctrl)
   , intake()
-  , CenterOnCoralCommand(swerve_drive.get())
-  , climber()
+  //, CenterOnCoralCommand(swerve_drive.get())
+  //, climber()
 {
   ConfigureBindings();
 }
@@ -32,19 +32,19 @@ void RobotContainer::ConfigureBindings()
 
 {
 
-  ctrl->POVRight().WhileTrue(std::move(CenterOnCoralCommand).ToPtr());
-  
+  //ctrl->POVRight().WhileTrue(std::move(CenterOnCoralCommand).ToPtr());
+
 //Runs algae intake in on A button, spits out on B
-  ctrl->A().OnTrue(intake.RunIn(-0.25));
-  ctrl->B().OnTrue(intake.RunOut(0.7));
+  ctrl->A().WhileTrue(intake.RunInCommand(0.35));
+  ctrl->B().WhileTrue(intake.RunOutCommand(0.5));
 
   //_________________________________________________
 
   //Runs coral intake in on X button, spits out on Y
-  ctrl->X().OnTrue(coralintake.RunIn(-0.25));
-  ctrl->Y().OnTrue(coralintake.RunOut(0.5));
+  //ctrl->X().OnTrue(coralintake.RunIn(-0.25));
+  //ctrl->Y().OnTrue(coralintake.RunOut(0.5));
 
-  ctrl->LeftBumper().OnTrue(climber.FlipArm());
+  //ctrl->LeftBumper().OnTrue(climber.FlipArm());
 
   //Moves the elevator up one level when the DPad up button is pressed
   //ctrl->POVUp().OnTrue(elevator.MoveUpOnce());

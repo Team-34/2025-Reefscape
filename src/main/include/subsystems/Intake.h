@@ -13,8 +13,8 @@ namespace t34{
         
         Intake();
 
-        frc2::CommandPtr RunIn(double power_percentage);
-        frc2::CommandPtr RunOut(double power_percentage);
+        frc2::CommandPtr RunInCommand(double power_percentage);
+        frc2::CommandPtr RunOutCommand(double power_percentage);
         
         private:
 

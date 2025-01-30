@@ -18,7 +18,7 @@ Elevator::Elevator()
 
 frc2::CommandPtr Elevator::MoveWristTo(units::degree_t degree)
 {
-    return this->StartEnd([this, degree] {
+    return this->RunEnd([this, degree] {
         //m_motors_PID.Calculate(m_motors.GetSelectedSensorPosition(), height.value());
         m_vert_motors.Set(m_wrist_motor_PID.Calculate(
             NEOUnitToDegree(m_wrist_motor.GetEncoder().GetPosition()), NEOUnitToDegree(degree.value())));
@@ -37,7 +37,7 @@ frc2::CommandPtr Elevator::MoveWristTo(units::degree_t degree)
 frc2::CommandPtr Elevator::Elevate(units::inch_t height)
 {
 
-    return this->StartEnd([this, height] {
+    return this->RunEnd([this, height] {
         //m_motors_PID.Calculate(m_motors.GetSelectedSensorPosition(), height.value());
         m_vert_motors.Set(m_vert_motors_PID.Calculate(
             NEOUnitToInch(m_vert_motors.GetEncoder().GetPosition()), NEOUnitToInch(height.value())));
@@ -49,7 +49,6 @@ frc2::CommandPtr Elevator::Elevate(units::inch_t height)
 
     }).Until([this]{
         return m_vert_motors_PID.AtSetpoint();
-
     });
 }
 

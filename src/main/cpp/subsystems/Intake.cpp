@@ -3,19 +3,19 @@
 namespace t34{
     
   Intake::Intake()
-  : m_motor_1(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
-  , m_motor_2(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
+  : m_motor_1(10, rev::spark::SparkLowLevel::MotorType::kBrushless)
+  , m_motor_2(20, rev::spark::SparkLowLevel::MotorType::kBrushless)
   {} 
 
   
 
-  frc2::CommandPtr Intake::RunIn(double power_percentage)
+  frc2::CommandPtr Intake::RunInCommand(double power_percentage)
   {
-    return this->StartEnd
+    return this->RunEnd
     (
     [this, power_percentage] {
-      this->m_motor_1.Set(power_percentage); 
-      this->m_motor_2.Set(power_percentage);
+      this->m_motor_1.Set(-power_percentage); 
+      this->m_motor_2.Set(-power_percentage);
     },
     [this, power_percentage] {
       this->m_motor_1.Set(0.0);
@@ -23,10 +23,10 @@ namespace t34{
     }
     );
   }
-  
-  frc2::CommandPtr Intake::RunOut(double power_percentage)
+
+  frc2::CommandPtr Intake::RunOutCommand(double power_percentage)
   {
-    return this->StartEnd(
+    return this->RunEnd(
       [this, power_percentage] {
         this->m_motor_1.Set(power_percentage);
         this->m_motor_2.Set(power_percentage);

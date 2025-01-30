@@ -17,7 +17,6 @@ Robot::Robot() {
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
-  frc::SmartDashboard::PutNumber("encoder", rc->climber.m_motor.GetEncoder().GetPosition());
 }
 
 void Robot::DisabledInit() {}
