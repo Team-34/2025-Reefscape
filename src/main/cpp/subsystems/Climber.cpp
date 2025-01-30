@@ -1,5 +1,5 @@
 #include "subsystems/Climber.h"
-#include "Constants.h"
+namespace t34 {
 
 Climber::Climber() 
 : m_pid_controller(0.1, 0.0, 0.0)
@@ -9,9 +9,7 @@ Climber::Climber()
     frc2::CommandScheduler::GetInstance().RegisterSubsystem(this);
 }
 
-
-
-frc2::CommandPtr Climber::FlipArm()
+frc2::CommandPtr Climber::FlipArmCommand()
 {
     return this->RunEnd(
         [this] {
@@ -30,4 +28,5 @@ frc2::CommandPtr Climber::FlipArm()
             m_motor.Set(0.0);
         }
     ).Until([this]{ return m_pid_controller.AtSetpoint(); });
+}
 }
