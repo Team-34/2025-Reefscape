@@ -34,17 +34,17 @@ void RobotContainer::ConfigureBindings()
 
   ctrl->POVRight().WhileTrue(std::move(CenterOnCoralCommand).ToPtr());
   
-//Runs algae intake in on A button, spits out on B
-  ctrl->A().OnTrue(m_intake.RunInCommand(-0.25));
-  ctrl->B().OnTrue(m_intake.RunOutCommand(0.7));
+  //Runs algae intake in on A button, spits out on B
+  //ctrl->A().OnTrue(m_intake.RunInCommand(-0.25));
+  //ctrl->B().OnTrue(m_intake.RunOutCommand(0.7));
 
   //_________________________________________________
 
   //Runs coral intake in on X button, spits out on Y
-  ctrl->X().OnTrue(m_coralintake.RunInCommand(-0.25));
-  ctrl->Y().OnTrue(m_coralintake.RunOutCommand(0.5));
+  //ctrl->X().OnTrue(m_coralintake.RunInCommand(-0.25));
+  //ctrl->Y().OnTrue(m_coralintake.RunOutCommand(0.5));
 
-  ctrl->LeftBumper().OnTrue(m_climber.FlipArmCommand());
+  //ctrl->LeftBumper().OnTrue(m_climber.FlipArmCommand());
 
   //Moves the elevator up one level when the DPad up button is pressed
   //ctrl->POVUp().OnTrue(elevator.MoveUpOnce());

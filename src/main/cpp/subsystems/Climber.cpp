@@ -1,32 +1,33 @@
 #include "subsystems/Climber.h"
 namespace t34 {
 
-Climber::Climber() 
-: m_pid_controller(0.1, 0.0, 0.0)
-, m_motor(5, rev::spark::SparkLowLevel::MotorType::kBrushless)
-, m_engaged(false)
-{
-    frc2::CommandScheduler::GetInstance().RegisterSubsystem(this);
-}
+    Climber::Climber() 
+    : m_pid_controller(0.1, 0.0, 0.0)
+    , m_motor(5, rev::spark::SparkLowLevel::MotorType::kBrushless)
+    , m_engaged(false)
+    {
+        frc2::CommandScheduler::GetInstance().RegisterSubsystem(this);
+    }
 
-frc2::CommandPtr Climber::FlipArmCommand()
-{
-    return this->RunEnd(
-        [this] {
-            if (m_engaged){
-                m_motor.Set(m_pid_controller.Calculate(m_motor.GetEncoder().GetPosition(), 0.5));//NEOUnitToDegree(37.0));
+    frc2::CommandPtr Climber::FlipArmCommand()
+    {
+        return this->RunEnd(
+            [this] {
+                if (m_engaged){
+                    m_motor.Set(m_pid_controller.Calculate(m_motor.GetEncoder().GetPosition(), 0.5));//NEOUnitToDegree(37.0));
 
-            }
-            else
+                }
+                else
+                {
+                    m_motor.Set(m_pid_controller.Calculate(m_motor.GetEncoder().GetPosition(), 30.0));
+                }
+            },
+            [this]
             {
-                m_motor.Set(m_pid_controller.Calculate(m_motor.GetEncoder().GetPosition(), 30.0));
+                m_engaged = !m_engaged;
+                m_motor.Set(0.0);
             }
-        },
-        [this]
-        {
-            m_engaged = !m_engaged;
-            m_motor.Set(0.0);
-        }
-    ).Until([this]{ return m_pid_controller.AtSetpoint(); });
-}
+        ).Until([this]{ return m_pid_controller.AtSetpoint(); });
+    }
+
 }

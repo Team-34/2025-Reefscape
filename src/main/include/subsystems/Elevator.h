@@ -11,7 +11,7 @@
 #include <frc2/command/CommandPtr.h>
 #include <rev/SparkMax.h>
 #include <frc2/command/CommandScheduler.h>
-
+#include <ctre/phoenix/motorcontrol/can/VictorSPX.h>
 #include "Constants.h"
 
 using namespace ctre::phoenix::motorcontrol::can;
@@ -26,17 +26,25 @@ public:
 
   frc2::CommandPtr Elevate(units::inch_t height);
   frc2::CommandPtr MoveWristTo(units::degree_t degree);
-  frc2::CommandPtr MoveToLevel(frc2::CommandScheduler * scheduler);
   frc2::CommandPtr MoveUpOnce();
   frc2::CommandPtr MoveDownOnce();
+
+  void MoveToLevel(frc2::CommandScheduler * scheduler);
 
 
   int level;
 
 private:
   //TalonSRX m_motors;
-  SparkMax m_vert_motors;
+  //SparkMax m_vert_motors;
   SparkMax m_wrist_motor;
+
+  VictorSPX m_vert_motor_left;
+
+  VictorSPX m_vert_motor_right;
+
+
+
 
   frc::PIDController m_vert_motors_PID;
   frc::PIDController m_wrist_motor_PID;

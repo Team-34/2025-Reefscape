@@ -6,7 +6,8 @@
 
 Elevator::Elevator()
 //: m_motors(elevator_motor_id)
-: m_vert_motors(999, SparkLowLevel::MotorType::kBrushless)
+: m_vert_motor_left(999)
+, m_vert_motor_right(1000)
 , m_vert_motors_PID(0.5, 0.0, 0.0)
 , m_wrist_motor(998, SparkLowLevel::MotorType::kBrushless)
 , m_wrist_motor_PID(0.5, 0.0, 0.0)
@@ -20,13 +21,12 @@ frc2::CommandPtr Elevator::MoveWristTo(units::degree_t degree)
 {
     return this->RunEnd([this, degree] {
         //m_motors_PID.Calculate(m_motors.GetSelectedSensorPosition(), height.value());
-        m_vert_motors.Set(m_wrist_motor_PID.Calculate(
+        m_wrist_motor.Set(m_wrist_motor_PID.Calculate(
             NEOUnitToDegree(m_wrist_motor.GetEncoder().GetPosition()), NEOUnitToDegree(degree.value())));
-
     },
     [this]{
         //m_motors.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        m_wrist_motor.Set(0.0);
+        m_wrist_motor.StopMotor();
 
     }).Until([this]{
         return m_wrist_motor_PID.AtSetpoint();
@@ -39,46 +39,47 @@ frc2::CommandPtr Elevator::Elevate(units::inch_t height)
 
     return this->RunEnd([this, height] {
         //m_motors_PID.Calculate(m_motors.GetSelectedSensorPosition(), height.value());
-        m_vert_motors.Set(m_vert_motors_PID.Calculate(
-            NEOUnitToInch(m_vert_motors.GetEncoder().GetPosition()), NEOUnitToInch(height.value())));
+        m_vert_motor_left.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_vert_motors_PID.Calculate(
+            NEOUnitToInch(m_vert_motor_left.GetSelectedSensorPosition()), NEOUnitToInch(height.value())));
 
+        m_vert_motor_right.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_vert_motors_PID.Calculate(
+            NEOUnitToInch(m_vert_motor_right.GetSelectedSensorPosition()), NEOUnitToInch(height.value())));
     },
     [this]{
-        //m_motors.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        m_vert_motors.Set(0.0);
+        m_vert_motor_left.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_vert_motor_right.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        //m_vert_motors.StopMotor();
 
     }).Until([this]{
         return m_vert_motors_PID.AtSetpoint();
     });
 }
 
-frc2::CommandPtr Elevator::MoveToLevel(frc2::CommandScheduler * scheduler)
+void Elevator::MoveToLevel(frc2::CommandScheduler * scheduler)
 {
-    return this->Run([this, scheduler] {
-        switch (level)
-        {
-        case 0:
-            scheduler->Schedule(MoveWristTo(units::degree_t(85)));
-            scheduler->Schedule(Elevate(units::inch_t(0)));
-    
-        case 1:
-            scheduler->Schedule(MoveWristTo(units::degree_t(35)));
-            scheduler->Schedule(Elevate(units::inch_t(18 - BASE_HEIGHT_FROM_FLOOR_INCHES.value())));
-            
-        case 2:
-            scheduler->Schedule(MoveWristTo(units::degree_t(35)));
-            scheduler->Schedule(Elevate(units::inch_t(31 + (7/8) - BASE_HEIGHT_FROM_FLOOR_INCHES.value())));
-            
-        case 3:
-            scheduler->Schedule(MoveWristTo(units::degree_t(35)));
-            scheduler->Schedule(Elevate(units::inch_t(47 + (7/8) - BASE_HEIGHT_FROM_FLOOR_INCHES.value())));
-            
-        case 4:
-            scheduler->Schedule(MoveWristTo(units::degree_t(88)));
-            scheduler->Schedule(Elevate(units::inch_t(72 - BASE_HEIGHT_FROM_FLOOR_INCHES.value())));
-            
-        }
-    });
+    switch (level)
+    {
+    case 0:
+        scheduler->Schedule(MoveWristTo(units::degree_t(85))
+        .AndThen(Elevate(units::inch_t(0))));
+
+    case 1:
+        scheduler->Schedule(MoveWristTo(units::degree_t(35))
+        .AndThen(Elevate(units::inch_t(18 - BASE_HEIGHT_FROM_FLOOR_INCHES.value()))));
+        
+    case 2:
+        scheduler->Schedule(MoveWristTo(units::degree_t(35))
+        .AndThen(Elevate(units::inch_t(31 + (7/8) - BASE_HEIGHT_FROM_FLOOR_INCHES.value()))));
+        
+    case 3:
+        scheduler->Schedule(MoveWristTo(units::degree_t(35))
+        .AndThen(Elevate(units::inch_t(47 + (7/8) - BASE_HEIGHT_FROM_FLOOR_INCHES.value()))));
+        
+    case 4:
+        scheduler->Schedule(MoveWristTo(units::degree_t(88))
+        .AndThen(Elevate(units::inch_t(72 - BASE_HEIGHT_FROM_FLOOR_INCHES.value()))));
+        
+    }
 }
 
 frc2::CommandPtr Elevator::MoveUpOnce() {
