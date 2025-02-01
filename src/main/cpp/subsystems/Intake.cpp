@@ -32,8 +32,8 @@ namespace t34{
         this->m_motor_2.Set(power_percentage);
       },
       [this, power_percentage] {
-        this->m_motor_1.Set(0.0);
-        this->m_motor_2.Set(0.0);
+        this->m_motor_1.StopMotor();
+        this->m_motor_2.StopMotor();
       }
     );
   }
