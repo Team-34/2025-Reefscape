@@ -11,7 +11,8 @@
 #include "Telemetry.h"
 #include <frc2/command/sysid/SysIdRoutine.h>
 
-class RobotContainer {
+class RobotContainer 
+{
 private:
     units::meters_per_second_t MaxSpeed = TunerConstants::kSpeedAt12Volts; // kSpeedAt12Volts desired top speed
     units::radians_per_second_t MaxAngularRate = 0.75_tps; // 3/4 of a rotation per second max angular velocity

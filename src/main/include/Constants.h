@@ -44,6 +44,18 @@ const int ELEVATOR_MOTOR_ID{ 0 };
 
 const double PATHPLANNER_UNITS{ 1 };
 
+static units::inch_t PPunitsXtoInch(double units) 
+{
+return units::inch_t(units * 41.87);
+
+}
+
+static units::inch_t PPunitsYtoInch(double units) 
+{
+return units::inch_t(units * 45.428);
+
+}
+
 /*PathPlanner Constants
 
 const units::kilogram_t ROBOT_WEIGHT{ 85.0 };

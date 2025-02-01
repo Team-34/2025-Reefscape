@@ -6,10 +6,23 @@
 #include "LimelightHelpers.h"
 
 #include <frc2/command/CommandScheduler.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
-Robot::Robot() {}
+Robot::Robot() 
+{
 
-void Robot::RobotPeriodic() {
+  // for(frc::Translation3d coord: find_values())
+  // {
+  //   std::cout << "x: " << coord.X().value() << "\n";
+  //   std::cout << "y: " << coord.Y().value() << "\n";
+  //   std::cout << "rot: " << coord.Z().value() << "\n";
+  // }
+  OutputXYROTvals();
+  
+}
+
+void Robot::RobotPeriodic()
+ {
   frc2::CommandScheduler::GetInstance().Run();
 
   /*
@@ -41,7 +54,7 @@ void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() {
   m_autonomousCommand = m_container.GetAutonomousCommand();
-
+  
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }
@@ -61,7 +74,8 @@ void Robot::TeleopPeriodic() {}
 
 void Robot::TeleopExit() {}
 
-void Robot::TestInit() {
+void Robot::TestInit()
+{
   frc2::CommandScheduler::GetInstance().CancelAll();
 }
 
@@ -70,7 +84,8 @@ void Robot::TestPeriodic() {}
 void Robot::TestExit() {}
 
 #ifndef RUNNING_FRC_TESTS
-int main() {
+int main() 
+{
   return frc::StartRobot<Robot>();
 }
 #endif

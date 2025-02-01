@@ -5,13 +5,14 @@
 #pragma once
 
 #include <optional>
-
+#include <iostream>
 #include <frc/TimedRobot.h>
 #include <frc2/command/CommandPtr.h>
-
+#include "PathParser.h"
 #include "RobotContainer.h"
 
-class Robot : public frc::TimedRobot {
+class Robot : public frc::TimedRobot 
+{
  public:
   Robot();
   void RobotPeriodic() override;

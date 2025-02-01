@@ -2,9 +2,11 @@
 
 #include <studica/AHRS.h>
 
-namespace t34 {
+namespace t34 
+{
 
-    class Gyro : public studica::AHRS {
+    class Gyro : public studica::AHRS 
+    {
     public: // METHODS
         static Gyro* Get();
 

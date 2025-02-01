@@ -30,14 +30,16 @@ void Telemetry::Telemeterize(subsystems::CommandSwerveDrivetrain::SwerveDriveSta
 
     /* Telemeterize the pose to a Field2d */
     fieldTypePub.Set("Field2d");
-    fieldPub.Set(std::array{
+    fieldPub.Set(std::array
+    {
         state.Pose.X().value(),
         state.Pose.Y().value(),
         state.Pose.Rotation().Degrees().value()
     });
 
     /* Telemeterize the module states to a Mechanism2d */
-    for (size_t i = 0; i < m_moduleSpeeds.size(); ++i) {
+    for (size_t i = 0; i < m_moduleSpeeds.size(); ++i) 
+    {
         m_moduleDirections[i]->SetAngle(state.ModuleStates[i].angle.Degrees());
         m_moduleSpeeds[i]->SetAngle(state.ModuleStates[i].angle.Degrees());
         m_moduleSpeeds[i]->SetLength(state.ModuleStates[i].speed / (2 * MaxSpeed));

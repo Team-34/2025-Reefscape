@@ -4,10 +4,11 @@
 #include <vector>
 #include <frc/geometry/Pose2d.h>
 #include <frc/geometry/Pose3d.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 /*   MAKE COMMENTS FOR CODE BLOCKS   */
 
-int find_values() 
+std::vector<frc::Translation3d> find_values() 
 {
     std::string filename = "C:/src/2025-Reefscape/src/main/deploy/pathplanner/Tests.path";
 
@@ -17,10 +18,11 @@ int find_values()
 
     std::string line;
 
-    std::string file_content= "";
+    std::string file_content = "";
 
     std::string x_str;
     std::string y_str;
+    std::string z_str;
     std::string r_str;
 
 
@@ -32,7 +34,8 @@ int find_values()
         }
         file.close();
     }
-    else{
+    else
+    {
         std::cout << "Unable to open file.\n";
     }
 
@@ -63,6 +66,20 @@ int find_values()
 
         }
 
-        coords.push_back( frc::Translation3d( units::meter_t(std::stod(x_str)), units::meter_t(std::stod(y_str)), units::meter_t(std::stod(r_str))) ); // z is actually a rotaion value
+        coords.push_back( frc::Translation3d ( units::meter_t ( std::stod(x_str) ), units::meter_t ( std::stod(y_str) ) , units::meter_t ( std::stod(r_str) ) ) ); // z is actually a rotaion value
+    }
+
+    return coords;
+
+}
+
+void OutputXYROTvals()
+{
+    for (frc::Translation3d coord: find_values())
+    {
+        frc::SmartDashboard::PutNumber("X val: ", coord.X().value());
+        frc::SmartDashboard::PutNumber("Y val: ", coord.Y().value());
+        frc::SmartDashboard::PutNumber("ROT val: ", coord.Z().value());
+      
     }
 }

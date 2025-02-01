@@ -6,8 +6,10 @@ namespace t34 {
 
     static std::unique_ptr<Gyro> g_gyro{ nullptr };
 
-    Gyro* Gyro::Get() {
-        if (!g_gyro) {
+    Gyro* Gyro::Get() 
+    {
+        if (!g_gyro) 
+        {
             g_gyro.reset(new Gyro());
         }
 
@@ -15,7 +17,8 @@ namespace t34 {
     }
 
     Gyro::Gyro()
-        : AHRS(studica::AHRS::NavXComType::kMXP_SPI) {
+        : AHRS(studica::AHRS::NavXComType::kMXP_SPI) 
+    {
 
     }
 
@@ -25,7 +28,8 @@ namespace t34 {
      * the gyro and it needs to be recalibrated after it 
      * has been running.
      */
-    void Gyro::ZeroYaw() { 
+    void Gyro::ZeroYaw() 
+    { 
         Reset(); 
     }
 

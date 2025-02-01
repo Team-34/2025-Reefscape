@@ -198,7 +198,8 @@ namespace LimelightHelpers
         setLimelightNTDouble(limelightName, "pipeline", index);
     }
 
-    inline void setPriorityTagID(const std::string &limelightName, int ID) {
+    inline void setPriorityTagID(const std::string &limelightName, int ID) 
+    {
         setLimelightNTDouble(limelightName, "priorityid", ID);
     }
 
@@ -298,7 +299,8 @@ namespace LimelightHelpers
     /**
      * Sets the camera pose in robotspace. The UI camera pose must be set to zeros
      */
-    inline void setCameraPose_RobotSpace(const std::string &limelightName, double forward, double side, double up, double roll, double pitch, double yaw) {
+    inline void setCameraPose_RobotSpace(const std::string &limelightName, double forward, double side, double up, double roll, double pitch, double yaw) 
+    {
         double entries[6] ={forward, side, up, roll, pitch, yaw};
         setLimelightNTDoubleArray(limelightName, "camerapose_robotspace_set", entries);
     }
@@ -314,8 +316,10 @@ namespace LimelightHelpers
     }
 
 
-    inline double extractArrayEntry(const std::vector<double>& inData, int position) {
-        if (inData.size() < static_cast<size_t>(position + 1)) {
+    inline double extractArrayEntry(const std::vector<double>& inData, int position) 
+    {
+        if (inData.size() < static_cast<size_t>(position + 1)) 
+        {
             return 0.0;
         }
         return inData[position];
@@ -341,14 +345,16 @@ namespace LimelightHelpers
         nt::NetworkTableEntry entry = LimelightHelpers::getLimelightNTTableEntry(limelightName, "rawfiducials");
         std::vector<double> rawFiducialArray = entry.GetDoubleArray({});
         int valsPerEntry = 7;
-        if (rawFiducialArray.size() % valsPerEntry != 0) {
+        if (rawFiducialArray.size() % valsPerEntry != 0) 
+        {
             return {};
         }
 
         int numFiducials = rawFiducialArray.size() / valsPerEntry;
         std::vector<RawFiducial> rawFiducials;
 
-        for (int i = 0; i < numFiducials; ++i) {
+        for (int i = 0; i < numFiducials; ++i) 
+        {
             int baseIndex = i * valsPerEntry;
             int id = static_cast<int>(extractArrayEntry(rawFiducialArray, baseIndex));
             double txnc = extractArrayEntry(rawFiducialArray, baseIndex + 1);
@@ -399,14 +405,16 @@ namespace LimelightHelpers
         std::vector<double> rawDetectionArray = entry.GetDoubleArray({});
         int valsPerEntry = 11;
 
-        if (rawDetectionArray.size() % valsPerEntry != 0) {
+        if (rawDetectionArray.size() % valsPerEntry != 0) 
+        {
             return {};
         }
 
         int numDetections = rawDetectionArray.size() / valsPerEntry;
         std::vector<RawDetection> rawDetections;
 
-        for (int i = 0; i < numDetections; ++i) {
+        for (int i = 0; i < numDetections; ++i) 
+        {
             int baseIndex = i * valsPerEntry;
             int classId = static_cast<int>(extractArrayEntry(rawDetectionArray, baseIndex));
             double txnc = extractArrayEntry(rawDetectionArray, baseIndex + 1);
@@ -451,12 +459,14 @@ namespace LimelightHelpers
         }
     };
 
-    inline std::optional<PoseEstimate> getBotPoseEstimate(const std::string& limelightName, const std::string& entryName) {
+    inline std::optional<PoseEstimate> getBotPoseEstimate(const std::string& limelightName, const std::string& entryName) 
+    {
         nt::NetworkTableEntry poseEntry = getLimelightNTTableEntry(limelightName, entryName);
         std::vector<double> poseArray = poseEntry.GetDoubleArray(std::span<double>{});
         frc::Pose2d pose = toPose2D(poseArray);
 
-        if (poseArray.size() == 0) {
+        if (poseArray.size() == 0) 
+        {
             // Handle the case where no data is available
             return std::nullopt; // or some default PoseEstimate
         }
@@ -493,19 +503,23 @@ namespace LimelightHelpers
         return PoseEstimate(pose, timestamp, latency, tagCount, tagSpan, tagDist, tagArea, rawFiducials);
     }
 
-    inline std::optional<PoseEstimate> getBotPoseEstimate_wpiBlue(const std::string &limelightName = "") {
+    inline std::optional<PoseEstimate> getBotPoseEstimate_wpiBlue(const std::string &limelightName = "") 
+    {
         return getBotPoseEstimate(limelightName, "botpose_wpiblue");
     }
 
-    inline std::optional<PoseEstimate> getBotPoseEstimate_wpiRed(const std::string &limelightName = "") {
+    inline std::optional<PoseEstimate> getBotPoseEstimate_wpiRed(const std::string &limelightName = "") 
+    {
         return getBotPoseEstimate(limelightName, "botpose_wpired");
     }
 
-    inline std::optional<PoseEstimate> getBotPoseEstimate_wpiBlue_MegaTag2(const std::string &limelightName = "") {
+    inline std::optional<PoseEstimate> getBotPoseEstimate_wpiBlue_MegaTag2(const std::string &limelightName = "") 
+    {
         return getBotPoseEstimate(limelightName, "botpose_orb_wpiblue");
     }
 
-    inline std::optional<PoseEstimate> getBotPoseEstimate_wpiRed_MegaTag2(const std::string &limelightName = "") {
+    inline std::optional<PoseEstimate> getBotPoseEstimate_wpiRed_MegaTag2(const std::string &limelightName = "") 
+    {
         return getBotPoseEstimate(limelightName, "botpose_orb_wpired");
     }
      
