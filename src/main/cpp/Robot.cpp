@@ -40,8 +40,6 @@ void Robot::TeleopInit() {
     m_autonomous_command->Cancel();
     m_autonomous_command.reset();
   }
-
-  frc2::CommandScheduler::GetInstance().SetDefaultCommand(rc.swerve_drive.get(), std::move(rc.m_default_command));
 }
 
 void Robot::TeleopPeriodic() {}
