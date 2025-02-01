@@ -8,8 +8,7 @@
 using namespace rev::spark;
 
 class Climber : public frc2::SubsystemBase {
-    public :
-
+public:
     Climber();
 
     frc2::CommandPtr FlipArmCommand();
@@ -20,8 +19,5 @@ class Climber : public frc2::SubsystemBase {
     SparkMax m_motor;
 
     bool m_climber_up;
-
     frc::PIDController m_pid_controller;
-
-
 };
