@@ -25,8 +25,8 @@ void Robot::DisabledExit() {}
 void Robot::AutonomousInit() {
   m_autonomous_command = rc.GetAutonomousCommand();
 
-  if (m_autonomous_command) {
-    m_autonomous_command->Schedule();
+  if (m_autonomous_Command) {
+    m_autonomous_Command->Schedule();
   }
 }
 
@@ -35,10 +35,10 @@ void Robot::AutonomousPeriodic() {}
 void Robot::AutonomousExit() {}
 
 void Robot::TeleopInit() {
-  if (m_autonomous_command)
+  if (m_autonomous_Command)
   {
-    m_autonomous_command->Cancel();
-    m_autonomous_command.reset();
+    m_autonomous_Command->Cancel();
+    m_autonomous_Command.reset();
   }
 
   frc2::CommandScheduler::GetInstance().SetDefaultCommand(rc.swerve_drive.get(), std::move(rc.m_default_command));
