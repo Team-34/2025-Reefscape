@@ -24,6 +24,5 @@ class RobotContainer {
 
  private:
   Climber m_climber;
-  t34::ControllerDriveCommand m_default_command;
   void ConfigureBindings();
 };
