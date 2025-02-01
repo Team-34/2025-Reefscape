@@ -15,27 +15,19 @@ namespace t34
     );
   } 
 
-  frc2::CommandPtr Intake::AlgaeInCommand(double power_percentage)
+  frc2::CommandPtr Intake::AlgaeInCommand()
   {
     return this->StartEnd(
-      [this, power_percentage] {
-        this->m_primary_motor.Set(power_percentage); 
-      },
-      [this, power_percentage] {
-        this->m_primary_motor.StopMotor();
-      }
+      [this] { this->m_primary_motor.Set(-0.25); },
+      [this] { this->m_primary_motor.StopMotor(); }
     );
   }
   
-  frc2::CommandPtr Intake::AlgaeOutCommand(double power_percentage)
+  frc2::CommandPtr Intake::AlgaeOutCommand()
   {
     return this->StartEnd(
-      [this, power_percentage] {
-        this->m_primary_motor.Set(power_percentage);
-      },
-      [this, power_percentage] {
-        this->m_primary_motor.StopMotor();
-      }
+      [this] { this->m_primary_motor.Set(0.7); },
+      [this] { this->m_primary_motor.StopMotor(); }
     );
   }
 }

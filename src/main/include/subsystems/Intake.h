@@ -13,8 +13,8 @@ namespace t34
     public:
         Intake();
 
-        frc2::CommandPtr AlgaeInCommand(double power_percentage);
-        frc2::CommandPtr AlgaeOutCommand(double power_percentage);
+        frc2::CommandPtr AlgaeInCommand();
+        frc2::CommandPtr AlgaeOutCommand();
         
     private:
         SparkMax m_primary_motor;
