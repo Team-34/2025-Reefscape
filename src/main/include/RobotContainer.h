@@ -20,10 +20,10 @@ class RobotContainer {
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
   t34::Intake intake;
   t34::ControllerDriveCommand m_default_command;
-  Climber m_climber;
 
   frc2::CommandPtr GetAutonomousCommand();
 
  private:
+  Climber m_climber;
   void ConfigureBindings();
 };

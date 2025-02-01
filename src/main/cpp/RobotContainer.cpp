@@ -5,6 +5,8 @@
 #include "RobotContainer.h"
 
 #include <frc2/command/Commands.h>
+#include <frc2/command/Command.h>
+#include <frc2/command/CommandPtr.h>
 
 static std::unique_ptr<RobotContainer> g_rc{ nullptr };
 
@@ -30,12 +32,13 @@ RobotContainer::RobotContainer()
 void RobotContainer::ConfigureBindings() 
 
 {
-//Runs algae intake in on A button, spits out on B
+  //Runs algae intake in on A button, spits out on B
   ctrl->A().OnTrue(intake.AlgaeInCommand(-0.25));
   ctrl->B().OnTrue(intake.AlgaeOutCommand(0.7));
 
-  //Moves the climber up and down on Left Bumber press
+  //Moves the climber up and down on Left Bumper press
   ctrl->LeftBumper().OnTrue(m_climber.FlipArmCommand());
+
  
 }
 
