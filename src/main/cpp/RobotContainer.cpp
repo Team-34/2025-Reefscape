@@ -23,8 +23,8 @@ RobotContainer::RobotContainer()
 void RobotContainer::ConfigureBindings() 
 {
   //Runs algae intake in on A button, spits out on B
-  ctrl->A().OnTrue(m_intake.AlgaeInCommand(-0.25));
-  ctrl->B().OnTrue(m_intake.AlgaeOutCommand(0.7));
+  ctrl->A().OnTrue(m_intake.AlgaeInCommand());
+  ctrl->B().OnTrue(m_intake.AlgaeOutCommand());
 
   //Moves the climber up and down on Left Bumper press
   ctrl->LeftBumper().OnTrue(m_climber.FlipArmCommand());
