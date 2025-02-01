@@ -6,8 +6,8 @@
 #include <rev/config/SparkMaxConfig.h>
 using namespace rev::spark;
 
-namespace t34{
-    
+namespace t34
+{
     class Intake : public frc2::SubsystemBase {
         public:
         
