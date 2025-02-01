@@ -18,8 +18,8 @@ class RobotContainer {
   static RobotContainer* Get();
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
-  t34::ControllerDriveCommand DefaultCommand;
-  Climber climber;
+  t34::ControllerDriveCommand m_Default_Command;
+  Climber m_climber;
 
   frc2::CommandPtr GetAutonomousCommand();
 

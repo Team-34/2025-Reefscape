@@ -20,8 +20,8 @@ RobotContainer* RobotContainer::Get() {
 RobotContainer::RobotContainer() 
   : ctrl(new t34::T34CommandXboxController(0))
   , swerve_drive(new t34::SwerveDrive())
-  , DefaultCommand(swerve_drive, ctrl)
-  , climber()
+  , m_Default_Command(swerve_drive, ctrl)
+  , m_climber()
 {
   ConfigureBindings();
 }
@@ -30,7 +30,7 @@ void RobotContainer::ConfigureBindings()
 
 {
   //Moves the climber up and down on Left Bumber press
-  ctrl->LeftBumper().OnTrue(climber.FlipArm());
+  ctrl->LeftBumper().OnTrue(m_climber.FlipArmCommand());
  
 }
 

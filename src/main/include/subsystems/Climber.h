@@ -1,3 +1,4 @@
+#pragma once
 #include <rev/SparkMax.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc/controller/PIDController.h>
@@ -11,11 +12,12 @@ class Climber : public frc2::SubsystemBase {
 
     Climber();
 
-    frc2::CommandPtr FlipArm();
+    frc2::CommandPtr FlipArmCommand();
 
-    SparkMax m_motor;
 
     private:
+
+    SparkMax m_motor;
 
     bool m_climber_up;
 
