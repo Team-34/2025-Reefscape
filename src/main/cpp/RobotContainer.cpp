@@ -5,6 +5,8 @@
 #include "RobotContainer.h"
 
 #include <frc2/command/Commands.h>
+#include <frc2/command/Command.h>
+#include <frc2/command/CommandPtr.h>
 
 static std::unique_ptr<RobotContainer> g_rc{ nullptr };
 
@@ -29,8 +31,9 @@ RobotContainer::RobotContainer()
 void RobotContainer::ConfigureBindings() 
 
 {
-  //Moves the climber up and down on Left Bumber press
+  //Moves the climber up and down on Left Bumper press
   ctrl->LeftBumper().OnTrue(m_climber.FlipArmCommand());
+
  
 }
 
