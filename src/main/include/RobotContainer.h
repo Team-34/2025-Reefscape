@@ -11,8 +11,9 @@
 #include "subsystems/Climber.h"
 #include "commands/ControllerDriveCommand.h"
 
-class RobotContainer {
- public:
+class RobotContainer
+{
+public:
   RobotContainer();
 
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
@@ -21,7 +22,7 @@ class RobotContainer {
 
   frc2::CommandPtr GetAutonomousCommand();
 
- private:
+private:
   Climber m_climber;
   void ConfigureBindings();
 };
