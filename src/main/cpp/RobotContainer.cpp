@@ -20,7 +20,7 @@ RobotContainer* RobotContainer::Get() {
 RobotContainer::RobotContainer() 
   : ctrl(new t34::T34CommandXboxController(0))
   , swerve_drive(new t34::SwerveDrive())
-  , DefaultCommand(swerve_drive, ctrl)
+  , m_default_command(swerve_drive, ctrl)
   , intake()
   , climber()
 {
