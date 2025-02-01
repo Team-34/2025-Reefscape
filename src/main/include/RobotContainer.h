@@ -15,7 +15,6 @@ class RobotContainer {
  public:
   RobotContainer();
 
-  static RobotContainer* Get();
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
   t34::ControllerDriveCommand m_default_command;
