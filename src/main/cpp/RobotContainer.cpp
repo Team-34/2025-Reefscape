@@ -30,8 +30,7 @@ void RobotContainer::ConfigureBindings()
 
   //Moves the climber up and down on Left Bumper press
   ctrl->LeftBumper().OnTrue(m_climber.FlipArmCommand());
-
- 
+  frc2::CommandScheduler::GetInstance().SetDefaultCommand(g_rc->swerve_drive.get(), std::move(g_rc->m_default_command));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
