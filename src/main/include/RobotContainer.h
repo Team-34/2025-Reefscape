@@ -8,21 +8,21 @@
 
 #include "T34CommandXboxController.h"
 #include "subsystems/SwerveDrive.h"
+#include "subsystems/Climber.h"
 #include "commands/ControllerDriveCommand.h"
 
-class RobotContainer {
- public:
+class RobotContainer
+{
+public:
   RobotContainer();
-
-  static RobotContainer* Get();
 
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
-
-  t34::ControllerDriveCommand DefaultCommand;
+  t34::ControllerDriveCommand m_default_command;
 
   frc2::CommandPtr GetAutonomousCommand();
 
- private:
+private:
+  Climber m_climber;
   void ConfigureBindings();
 };
