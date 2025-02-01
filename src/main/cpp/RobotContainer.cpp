@@ -30,8 +30,8 @@ void RobotContainer::ConfigureBindings()
 
 {
 //Runs algae intake in on A button, spits out on B
-  ctrl->A().OnTrue(intake.RunIn(-0.25));
-  ctrl->B().OnTrue(intake.RunOut(0.7));
+  ctrl->A().OnTrue(intake.AlgaeInCommand(-0.25));
+  ctrl->B().OnTrue(intake.AlgaeOutCommand(0.7));
 
 }
 

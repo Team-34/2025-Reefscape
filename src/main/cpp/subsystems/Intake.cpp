@@ -9,7 +9,7 @@ namespace t34{
 
   
 
-  frc2::CommandPtr Intake::RunIn(double power_percentage)
+  frc2::CommandPtr Intake::AlgaeInCommand(double power_percentage)
   {
     return this->StartEnd
     (
@@ -24,7 +24,7 @@ namespace t34{
     );
   }
   
-  frc2::CommandPtr Intake::RunOut(double power_percentage)
+  frc2::CommandPtr Intake::AlgaeOutCommand(double power_percentage)
   {
     return this->StartEnd(
       [this, power_percentage] {
