@@ -6,33 +6,44 @@
 #include <frc/geometry/Pose3d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
+
 /*   MAKE COMMENTS FOR CODE BLOCKS   */
 
 std::vector<frc::Translation3d> find_values() 
 {
-    std::string filename = "C:/src/2025-Reefscape/src/main/deploy/pathplanner/Tests.path";
+    std::string filename = "../src/main/deploy/pathplanner/paths/New_Path.path";
 
     std::vector<frc::Translation3d> coords;
 
     std::ifstream file(filename);
+    
 
     std::string line;
 
-    std::string file_content = "";
+    char* file_content;
+    std::string file_content_s;
 
     std::string x_str;
     std::string y_str;
     std::string z_str;
     std::string r_str;
 
+    file.open(filename, std::ios::in);
 
     if(file.is_open())
     {
-        while(std::getline(file, line))
+        // while(std::getline(file, line))
+        // {
+        //     file_content += line + "\n";
+        // }
+        // file.close();
+
+        file.read(file_content, sizeof(file));
+
+        for (int i = 0; i < sizeof(file); i++)
         {
-            file_content += line + "\n";
+            file_content_s += *(file_content + i);
         }
-        file.close();
     }
     else
     {
