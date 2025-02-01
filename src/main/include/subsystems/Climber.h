@@ -13,11 +13,11 @@ public:
 
     frc2::CommandPtr FlipArmCommand();
 
-
-    private:
+private:
 
     SparkMax m_motor;
 
-    bool m_climber_up;
+    bool m_engaged;
+
     frc::PIDController m_pid_controller;
 };
