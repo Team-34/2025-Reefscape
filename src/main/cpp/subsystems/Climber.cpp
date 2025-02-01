@@ -8,7 +8,7 @@ Climber::Climber()
     frc2::CommandScheduler::GetInstance().RegisterSubsystem(this);
 }
 
-frc2::CommandPtr Climber::FlipArm()
+frc2::CommandPtr Climber::FlipArmCommand()
 {
     return this->RunEnd(
         [this] {

@@ -35,7 +35,7 @@ void RobotContainer::ConfigureBindings()
   ctrl->B().OnTrue(intake.AlgaeOutCommand(0.7));
 
   //Moves the climber up and down on Left Bumber press
-  ctrl->LeftBumper().OnTrue(climber.FlipArm());
+  ctrl->LeftBumper().OnTrue(m_climber.FlipArmCommand());
  
 }
 
