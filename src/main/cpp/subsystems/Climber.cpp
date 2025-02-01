@@ -10,16 +10,15 @@ Climber::Climber()
 
 frc2::CommandPtr Climber::FlipArmCommand()
 {
+    static const double engagement_speed   {  0.5 };
+    static const double disengagement_speed{ 33.0 };
+
     return this->RunEnd(
         [this] {
-            if (m_engaged){
-                m_motor.Set(m_pid_controller.Calculate(m_motor.GetEncoder().GetPosition(), 0.5));
-
-            }
-            else
-            {
-                m_motor.Set(m_pid_controller.Calculate(m_motor.GetEncoder().GetPosition(), 33.0));
-            }
+            const auto speed = m_pid_controller.Calculate(
+                m_motor.GetEncoder().GetPosition(),
+                m_engaged ? engagement_speed : disengagement_speed);
+            m_motor.Set(speed);
         },
         [this]
         {
