@@ -19,12 +19,12 @@ public:
 
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
-  t34::Intake intake;
   t34::ControllerDriveCommand m_default_command;
 
   frc2::CommandPtr GetAutonomousCommand();
 
 private:
   Climber m_climber;
+  t34::Intake m_intake;
   void ConfigureBindings();
 };
