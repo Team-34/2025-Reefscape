@@ -14,8 +14,8 @@ RobotContainer::RobotContainer()
   : swerve_drive(new t34::SwerveDrive())
   , ctrl(new t34::T34CommandXboxController(0))
   , m_default_command(swerve_drive, ctrl)
-  , m_intake()
   , m_climber()
+  , m_intake()
 {
   ConfigureBindings();
 }
