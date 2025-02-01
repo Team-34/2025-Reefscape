@@ -15,7 +15,8 @@ RobotContainer::RobotContainer()
   : ctrl(new t34::T34CommandXboxController(0))
   , swerve_drive(new t34::SwerveDrive())
   , m_default_command(swerve_drive, ctrl)
-  , m_climber()
+  , intake()
+  , climber()
 {
   ConfigureBindings();
 }
@@ -23,7 +24,7 @@ RobotContainer::RobotContainer()
 void RobotContainer::ConfigureBindings() 
 
 {
-//Runs algae intake in on A button, spits out on B
+  //Runs algae intake in on A button, spits out on B
   ctrl->A().OnTrue(intake.AlgaeInCommand(-0.25));
   ctrl->B().OnTrue(intake.AlgaeOutCommand(0.7));
 
