@@ -7,9 +7,10 @@
 #include <frc2/command/CommandPtr.h>
 
 #include "T34CommandXboxController.h"
-#include "subsystems/SwerveDrive.h"
-#include "subsystems/Climber.h"
 #include "commands/ControllerDriveCommand.h"
+#include "subsystems/Climber.h"
+#include "subsystems/Intake.h"
+#include "subsystems/SwerveDrive.h"
 
 class RobotContainer
 {

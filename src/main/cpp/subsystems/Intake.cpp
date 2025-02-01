@@ -3,8 +3,8 @@
 namespace t34
 {    
   Intake::Intake()
-  : m_primary_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
-  , m_secondary_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
+    : m_primary_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
+    , m_secondary_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
   {
     SparkMaxConfig secondary_motor_config;
     secondary_motor_config.Follow(m_primary_motor);
