@@ -3,13 +3,13 @@
 namespace t34{
     
   Intake::Intake()
-  : m_motor_1(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
-  , m_motor_2(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
+  : m_primary_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
+  , m_secondary_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
   {
-    SparkMaxConfig motor_2_config;
-    motor_2_config.Follow(m_motor_1);
-    m_motor_2.Configure(
-      motor_2_config,
+    SparkMaxConfig secondary_motor_config;
+    secondary_motor_config.Follow(m_primary_motor);
+    m_secondary_motor.Configure(
+      secondary_motor_config,
       rev::spark::SparkBase::ResetMode::kResetSafeParameters,
       rev::spark::SparkBase::PersistMode::kPersistParameters
     );
@@ -22,10 +22,10 @@ namespace t34{
     return this->StartEnd
     (
       [this, power_percentage] {
-        this->m_motor_1.Set(power_percentage); 
+        this->m_primary_motor.Set(power_percentage); 
       },
       [this, power_percentage] {
-        this->m_motor_1.StopMotor();
+        this->m_primary_motor.StopMotor();
       }
     );
   }
@@ -34,10 +34,10 @@ namespace t34{
   {
     return this->StartEnd(
       [this, power_percentage] {
-        this->m_motor_1.Set(power_percentage);
+        this->m_primary_motor.Set(power_percentage);
       },
       [this, power_percentage] {
-        this->m_motor_1.StopMotor();
+        this->m_primary_motor.StopMotor();
       }
     );
   }

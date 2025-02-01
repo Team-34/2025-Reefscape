@@ -19,7 +19,7 @@ namespace t34
         
     private:
 
-        SparkMax m_motor_1;
-        SparkMax m_motor_2;
+        SparkMax m_primary_motor;
+        SparkMax m_secondary_motor;
     };
 }
