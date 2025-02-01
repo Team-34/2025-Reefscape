@@ -1,7 +1,7 @@
 #include "subsystems/Intake.h"
 
-namespace t34{
-    
+namespace t34
+{    
   Intake::Intake()
   : m_primary_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
   , m_secondary_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
@@ -15,12 +15,9 @@ namespace t34{
     );
   } 
 
-  
-
   frc2::CommandPtr Intake::AlgaeInCommand(double power_percentage)
   {
-    return this->StartEnd
-    (
+    return this->StartEnd(
       [this, power_percentage] {
         this->m_primary_motor.Set(power_percentage); 
       },
