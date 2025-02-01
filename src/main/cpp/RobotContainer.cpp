@@ -10,19 +10,22 @@
 
 static std::unique_ptr<RobotContainer> g_rc{ nullptr };
 
-
 RobotContainer::RobotContainer() 
-  : ctrl(new t34::T34CommandXboxController(0))
-  , swerve_drive(new t34::SwerveDrive())
+  : swerve_drive(new t34::SwerveDrive())
+  , ctrl(new t34::T34CommandXboxController(0))
   , m_default_command(swerve_drive, ctrl)
+  , m_intake()
   , m_climber()
 {
   ConfigureBindings();
 }
 
 void RobotContainer::ConfigureBindings() 
-
 {
+  //Runs algae intake in on A button, spits out on B
+  ctrl->A().OnTrue(m_intake.AlgaeInCommand());
+  ctrl->B().OnTrue(m_intake.AlgaeOutCommand());
+
   //Moves the climber up and down on Left Bumper press
   ctrl->LeftBumper().OnTrue(m_climber.FlipArmCommand());
 }
