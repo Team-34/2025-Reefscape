@@ -24,7 +24,7 @@ frc2::CommandPtr Climber::FlipArmCommand()
         [this]
         {
             m_engaged = !m_engaged;
-            m_motor.Set(0.0);
+            m_motor.StopMotor();
         }
     ).Until([this]{ return m_pid_controller.AtSetpoint(); });
 }
