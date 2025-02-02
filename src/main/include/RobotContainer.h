@@ -26,5 +26,6 @@ public:
 private:
   Climber m_climber;
   t34::Intake m_intake;
+  
   void ConfigureBindings();
 };

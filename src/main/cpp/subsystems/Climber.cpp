@@ -1,9 +1,9 @@
 #include "subsystems/Climber.h"
 
 Climber::Climber() 
-: m_pid_controller(0.1, 0.0, 0.0)
-, m_motor(5, rev::spark::SparkLowLevel::MotorType::kBrushless)
+: m_motor(5, rev::spark::SparkLowLevel::MotorType::kBrushless)
 , m_engaged(false)
+, m_pid_controller(0.1, 0.0, 0.0)
 {
     frc2::CommandScheduler::GetInstance().RegisterSubsystem(this);
 }
