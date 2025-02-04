@@ -8,16 +8,10 @@ using namespace rev::spark;
 
 namespace t34
 {
-    class Intake : public frc2::SubsystemBase 
+    class Intake 
     {
     public:
-        Intake();
-
-        frc2::CommandPtr AlgaeInCommand();
-        frc2::CommandPtr AlgaeOutCommand();
-        
-    private:
-        SparkMax m_primary_motor;
-        SparkMax m_secondary_motor;
+        virtual frc2::CommandPtr RunInCommand() = 0;
+        virtual frc2::CommandPtr RunOutCommand() = 0;
     };
 }

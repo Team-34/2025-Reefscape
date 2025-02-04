@@ -11,6 +11,8 @@
 #include "subsystems/Climber.h"
 #include "subsystems/Intake.h"
 #include "subsystems/SwerveDrive.h"
+#include "subsystems/AlgaeIntake.h"
+#include "Subsystems/CoralIntake.h"
 
 class RobotContainer
 {
@@ -25,7 +27,9 @@ public:
 
 private:
   Climber m_climber;
-  t34::Intake m_intake;
+  t34::AlgaeIntake m_algae_intake;
+  t34::CoralIntake m_coral_intake;
+  
   
   void ConfigureBindings();
 };

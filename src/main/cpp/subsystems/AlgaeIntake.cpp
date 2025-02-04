@@ -1,8 +1,8 @@
-#include "subsystems/Intake.h"
+#include "subsystems/AlgaeIntake.h"
 
 namespace t34
 {    
-  Intake::Intake()
+  AlgaeIntake::AlgaeIntake()
     : m_primary_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
     , m_secondary_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
   {
@@ -15,7 +15,7 @@ namespace t34
     );
   } 
 
-  frc2::CommandPtr Intake::AlgaeInCommand()
+  frc2::CommandPtr AlgaeIntake::RunInCommand()
   {
     return this->StartEnd(
       [this] { this->m_primary_motor.Set(-0.25); },
@@ -23,7 +23,7 @@ namespace t34
     );
   }
   
-  frc2::CommandPtr Intake::AlgaeOutCommand()
+  frc2::CommandPtr AlgaeIntake::RunOutCommand()
   {
     return this->StartEnd(
       [this] { this->m_primary_motor.Set(0.7); },
