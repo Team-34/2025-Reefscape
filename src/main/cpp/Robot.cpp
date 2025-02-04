@@ -4,13 +4,21 @@
 
 #include "Robot.h"
 #include "LimelightHelpers.h"
+#include <frc2/command/PIDCommand.h>
+#include <frc2/command/PIDSubsystem.h>
 
 #include <frc2/command/CommandScheduler.h>
 #include <frc/smartdashboard/SmartDashboard.h>
+#include <frc/trajectory/Trajectory.h>
+#include <frc/Filesystem.h>
+#include <frc/trajectory/TrajectoryUtil.h>
+#include <frc2/command/RamseteCommand.h>
+#include "RobotContainer.h"
+
 
 Robot::Robot() 
 {
-
+ 
   // for(frc::Translation3d coord: find_values())
   // {
   //   std::cout << "x: " << coord.X().value() << "\n";
@@ -54,8 +62,22 @@ void Robot::DisabledPeriodic() {}
 void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() {
-  m_autonomousCommand = m_container.GetAutonomousCommand();
-  
+
+    std::string_view trajectoryPath = std::filesystem::path(frc::filesystem::GetDeployDirectory()) / "paths" / "MyPath.wpilib.json";
+  auto trajectory = frc::TrajectoryUtil::FromPathweaverJson(trajectoryPath);
+  auto ramseteCommand = frc2::RamseteCommand(
+        trajectory, // Dereference the trajectory
+        [this]() { return rc->drivetrain.GetPose(); },
+        frc::RamseteController(2.0, 0.7),
+        frc::SimpleMotorFeedforward<units::meters>(1.0, 0.5),
+        rc->drivetrain.GetKinematics(),
+        [this]() { return rc->drivetrain.GetModules()[0]->GetDriveMotor().GetVelocity().GetValue(); },
+        frc::PIDController(1.0, 0.0, 0.0),
+        frc::PIDController(1.0, 0.0, 0.0),
+        [this](){},
+        {&rc->drivetrain}
+    );
+  m_autonomousCommand = std::move(ramseteCommand);
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }

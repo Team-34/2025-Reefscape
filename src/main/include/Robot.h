@@ -10,6 +10,7 @@
 #include <frc2/command/CommandPtr.h>
 #include "PathParser.h"
 #include "RobotContainer.h"
+#include "subsystems/SwerveDrive.h"
 
 class Robot : public frc::TimedRobot 
 {
@@ -29,10 +30,10 @@ class Robot : public frc::TimedRobot
   void TestPeriodic() override;
   void TestExit() override;
 
+  std::shared_ptr<RobotContainer> rc;
  private:
   frc2::Command *m_autonomousCommand;
 
-  RobotContainer m_container;
 
   static constexpr bool kUseLimelight = false;
 };
