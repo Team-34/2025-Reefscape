@@ -24,6 +24,7 @@ void Robot::RobotPeriodic()
  {
   frc2::CommandScheduler::GetInstance().Run();
 
+    //find_values();
    OutputXYROTvals();
   
   /*

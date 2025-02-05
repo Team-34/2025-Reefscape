@@ -11,48 +11,26 @@
 
 std::vector<frc::Translation3d> find_values() 
 {
-    std::string filename = "../src/main/deploy/pathplanner/paths/New_Path.path";
+    // std::string filename =  ../src/main/deploy/pathplanner/paths/New_Path.path ;
 
     std::vector<frc::Translation3d> coords;
 
-    std::ifstream file(filename);
+    // std::ifstream file(filename);
     
 
     std::string line;
 
     char* file_content;
-    std::string file_content_s;
+    std::string file_content_s = "{version :  2025.0 , waypoints : [ { anchor : { x : 8.037102272727275, y : 5.894673295454545 }, prevControl : null, nextControl : { x : 6.991532916472671, y : 5.879126070691161 }, isLocked : false, linkedName : null }, { anchor : { x : 5.1553125, y : 5.166747159090908 }, prevControl : { x : 6.265866333176757, y : 5.786359927035319 }, nextControl : null,isLocked : false,linkedName : null}], rotationTargets : [], constraintZones : [], pointTowardsZones : [], eventMarkers : [], globalConstraints : { maxVelocity : 1.0, maxAcceleration : 1.0, maxAngularVelocity : 540.0, maxAngularAcceleration : 720.0, nominalVoltage : 12.0, unlimited : false},goalEndState : { velocity : 0, rotation : -125.1341930569156}, reversed : false, folder : null, idealStartingState : { velocity : 0, rotation : -178.60281897270355}, useDefaultConstraints : true}";
 
     std::string x_str;
     std::string y_str;
     std::string z_str;
     std::string r_str;
 
-    file.open(filename, std::ios::in);
-
-    if(file.is_open())
+    if(coords.size() == 0)
     {
-        // while(std::getline(file, line))
-        // {
-        //     file_content += line + "\n";
-        // }
-        // file.close();
-
-        file.read(file_content, sizeof(file));
-
-        for (int i = 0; i < sizeof(file); i++)
-        {
-            file_content_s += *(file_content + i);
-        }
-    }
-    else
-    {
-        std::cout << "Unable to open file.\n";
-    }
-
-    if(coords.size() > 1)
-    {
-        for(int i = 0; i < coords.size(), i++;)
+        for(int i = 0; i < file_content_s.size(), i++;)
         {
             if (file_content[i] == 'x' && file_content[i+2] == ':')
             {
@@ -68,11 +46,11 @@ std::vector<frc::Translation3d> find_values()
                 file_content[i+9];
             }
 
-            if (file_content[i] == 'h' && file_content[i+1] == 'o' && file_content[i+2] == 'l' && file_content[i+13] == ':')
+            if (file_content[i] == 'r' && file_content[i+1] == 'o' && file_content[i+2] == 't' && file_content[i+10] == ':')
             {
-                r_str = file_content[i+17] + file_content[i+18] +
-                file_content[i+19] + file_content[i+20] + file_content[i+21] +
-                file_content[i+22] + file_content[i+23];
+                r_str = file_content[i+12] + file_content[i+13] +
+                file_content[i+14] + file_content[i+15] + file_content[i+16] +
+                file_content[i+17] + file_content[i+18];
             }
 
         }
@@ -85,12 +63,21 @@ std::vector<frc::Translation3d> find_values()
 }
 
 void OutputXYROTvals()
-{
-    for (frc::Translation3d coord: find_values())
+{   //as the name implies, it outputs the x, y, and rotational values
+    //for (frc::Translation3d coord: find_values())
+    //{
+    if(find_values().size() > 1)
     {
-        frc::SmartDashboard::PutNumber("X val: ", coord.X().value());
-        frc::SmartDashboard::PutNumber("Y val: ", coord.Y().value());
-        frc::SmartDashboard::PutNumber("ROT val: ", coord.Z().value());
-      
+
+        frc::SmartDashboard::PutNumber( "X val:"  , find_values()[0].X().value());
+        frc::SmartDashboard::PutNumber( "Y val:"  , find_values()[0].Y().value());
+        frc::SmartDashboard::PutNumber( "ROT val:"  , find_values()[0].Z().value());
+        frc::SmartDashboard::PutNumber( "size:", find_values().size());
     }
+    else
+    {
+        frc::SmartDashboard::PutNumber( "size:", find_values().size());
+    }
+      
+    //}
 }
