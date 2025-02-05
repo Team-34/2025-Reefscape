@@ -14,6 +14,7 @@ RobotContainer::RobotContainer()
   , m_default_command(swerve_drive, ctrl)
   , m_climber()
   , m_intake()
+  , m_elevator()
 {
   ConfigureBindings();
 }
