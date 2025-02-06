@@ -1,6 +1,7 @@
 #include "Gyro.h"
 
 #include "Constants.h"
+#include <ctre/phoenix6/Pigeon2.hpp>
 
 namespace t34 {
 
@@ -17,6 +18,10 @@ namespace t34 {
     Gyro::Gyro()
         : AHRS(studica::AHRS::NavXComType::kMXP_SPI) {
 
+    }
+
+    void Gyro::CreatePigeon(){
+        ctre::phoenix6::hardware::Pigeon2 Pigeon_Gyro(1,"RIO");
     }
 
     /**
