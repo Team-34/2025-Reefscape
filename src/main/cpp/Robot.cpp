@@ -14,6 +14,9 @@ Robot::Robot() {
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
+  frc::SmartDashboard::PutNumber("April Tag Distance", rc->lime.CalcDistance().value());
+  
+
 }
 
 void Robot::DisabledInit() {}
