@@ -30,7 +30,7 @@ frc2::CommandPtr Elevator::MoveWristToCommand(units::degree_t angle)
   });
 }
 
-frc2::CommandPtr Elevator::ElevateCommand(units::inch_t height)
+frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
 {
   return this->RunEnd(
     [this, height]
@@ -62,7 +62,7 @@ frc2::CommandPtr Elevator::MoveToLevelCommand(int)
   
   auto [angle, height] = presets.at(m_level);
 
-  return MoveWristToCommand(angle).AndThen(ElevateCommand(height));
+  return MoveWristToCommand(angle).AndThen(ElevateToCommand(height));
 };
 
 

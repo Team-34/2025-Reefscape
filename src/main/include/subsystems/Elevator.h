@@ -22,7 +22,7 @@ class Elevator : public frc2::SubsystemBase {
 public:
   Elevator();
 
-  frc2::CommandPtr ElevateCommand(units::inch_t height);
+  frc2::CommandPtr ElevateToCommand(units::inch_t height);
   frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
   frc2::CommandPtr MoveUpOnceCommand();
   frc2::CommandPtr MoveDownOnceCommand();
