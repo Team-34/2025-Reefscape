@@ -1,13 +1,9 @@
 #pragma once
-
 #include "Constants.h"
-
 #include <array>
 #include <cmath>
 #include <limits>
-
 #include <units/math.h>
-
 #include <frc/filter/MedianFilter.h>
 #include <frc/kinematics/SwerveModuleState.h>
 #include <frc/kinematics/SwerveDriveOdometry.h>
@@ -17,24 +13,26 @@
 #include <frc/geometry/Translation2d.h>
 #include <frc/geometry/Rotation2d.h>
 #include <frc/geometry/Pose2d.h>
-
-
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/CANcoder.hpp>
 #include <ctre/phoenix6/signals/SpnEnums.hpp>
 #include <ctre/phoenix6/controls/VelocityVoltage.hpp>
 
 
-namespace t34 {
+namespace t34 
+{
 
     template <typename T>
-    constexpr T pow(T base, unsigned int exp) {
+    constexpr T pow(T base, unsigned int exp) 
+    {
         return (exp >= sizeof(unsigned int)*8) ? 0 :
             exp == 0 ? 1 : base * pow(base, exp-1);
     }
 
-    namespace Detail {
-        constexpr double sqrtNewtonRaphson(double x, double curr, double prev) {
+    namespace Detail 
+    {
+        constexpr double sqrtNewtonRaphson(double x, double curr, double prev) 
+        {
             return curr == prev ? curr : sqrtNewtonRaphson(x, 0.5 * (curr + x / curr), curr);
         }
     }
@@ -45,7 +43,8 @@ namespace t34 {
     *	- For a finite and non-negative value of "x", returns an approximation for the square root of "x"
     *   - Otherwise, returns NaN
     */
-    constexpr double sqrt(double x) {
+    constexpr double sqrt(double x) 
+    {
         return x >= 0 && x < std::numeric_limits<double>::infinity()
             ? Detail::sqrtNewtonRaphson(x, x, 0)
             : std::numeric_limits<double>::quiet_NaN();

@@ -1,5 +1,4 @@
 #pragma once
-
 #include <studica/AHRS.h>
 
 namespace t34 

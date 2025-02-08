@@ -1,11 +1,11 @@
 #pragma once
-
 #include "subsystems/SwerveConstants.h"
 
 using namespace ctre::phoenix6;
 using namespace ctre::phoenix6::hardware;
 
-namespace t34 {
+namespace t34 
+{
 
     // getRotations
     inline double RadiansToRotations(double radians) { return radians / PI2; }
@@ -14,7 +14,8 @@ namespace t34 {
     // fromRotations
     inline double RotationsToRadians(double rotations) { return rotations * PI2; }
 
-    class SwerveModule {
+    class SwerveModule 
+    {
     public:
         SwerveModule(std::string name, const int drive_id, const int steer_id, const int cancoder_id);
 

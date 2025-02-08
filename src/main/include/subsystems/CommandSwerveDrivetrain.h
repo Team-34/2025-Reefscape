@@ -1,24 +1,23 @@
 #pragma once
-
 #include "ctre/phoenix6/SignalLogger.hpp"
-
 #include <frc/DriverStation.h>
 #include <frc/Notifier.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/sysid/SysIdRoutine.h>
-
 #include "generated/TunerConstants.h"
 
 using namespace ctre::phoenix6;
 
-namespace subsystems {
+namespace subsystems 
+{
 
 /**
  * \brief Class that extends the Phoenix 6 SwerveDrivetrain class and implements
  * Subsystem so it can easily be used in command-based projects.
  */
-class CommandSwerveDrivetrain : public frc2::SubsystemBase, public TunerSwerveDrivetrain {
+class CommandSwerveDrivetrain : public frc2::SubsystemBase, public TunerSwerveDrivetrain 
+{
     static constexpr units::second_t kSimLoopPeriod = 5_ms;
     std::unique_ptr<frc::Notifier> m_simNotifier;
     units::second_t m_lastSimTime;
@@ -39,8 +38,10 @@ class CommandSwerveDrivetrain : public frc2::SubsystemBase, public TunerSwerveDr
     swerve::requests::SysIdSwerveRotation m_rotationCharacterization;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
-    frc2::sysid::SysIdRoutine m_sysIdRoutineTranslation{
-        frc2::sysid::Config{
+    frc2::sysid::SysIdRoutine m_sysIdRoutineTranslation
+    {
+        frc2::sysid::Config
+        {
             std::nullopt, // Use default ramp rate (1 V/s)
             4_V,          // Reduce dynamic step voltage to 4 V to prevent brownout
             std::nullopt, // Use default timeout (10 s)
@@ -50,7 +51,8 @@ class CommandSwerveDrivetrain : public frc2::SubsystemBase, public TunerSwerveDr
                 SignalLogger::WriteString("SysIdTranslation_State", frc::sysid::SysIdRoutineLog::StateEnumToString(state));
             }
         },
-        frc2::sysid::Mechanism{
+        frc2::sysid::Mechanism
+        {
             [this](units::volt_t output) { SetControl(m_translationCharacterization.WithVolts(output)); },
             {},
             this
@@ -58,8 +60,10 @@ class CommandSwerveDrivetrain : public frc2::SubsystemBase, public TunerSwerveDr
     };
 
     /* SysId routine for characterizing steer. This is used to find PID gains for the steer motors. */
-    frc2::sysid::SysIdRoutine m_sysIdRoutineSteer{
-        frc2::sysid::Config{
+    frc2::sysid::SysIdRoutine m_sysIdRoutineSteer
+    {
+        frc2::sysid::Config
+        {
             std::nullopt, // Use default ramp rate (1 V/s)
             7_V,          // Use dynamic voltage of 7 V
             std::nullopt, // Use default timeout (10 s)
@@ -69,7 +73,8 @@ class CommandSwerveDrivetrain : public frc2::SubsystemBase, public TunerSwerveDr
                 SignalLogger::WriteString("SysIdSteer_State", frc::sysid::SysIdRoutineLog::StateEnumToString(state));
             }
         },
-        frc2::sysid::Mechanism{
+        frc2::sysid::Mechanism
+        {
             [this](units::volt_t output) { SetControl(m_steerCharacterization.WithVolts(output)); },
             {},
             this
@@ -81,8 +86,10 @@ class CommandSwerveDrivetrain : public frc2::SubsystemBase, public TunerSwerveDr
      * This is used to find PID gains for the FieldCentricFacingAngle HeadingController.
      * See the documentation of swerve::requests::SysIdSwerveRotation for info on importing the log to SysId.
      */
-    frc2::sysid::SysIdRoutine m_sysIdRoutineRotation{
-        frc2::sysid::Config{
+    frc2::sysid::SysIdRoutine m_sysIdRoutineRotation
+    {
+        frc2::sysid::Config
+        {
             /* This is in radians per second², but SysId only supports "volts per second" */
             units::constants::detail::PI_VAL / 6 * (1_V / 1_s),
             /* This is in radians per second, but SysId only supports "volts" */
@@ -94,7 +101,8 @@ class CommandSwerveDrivetrain : public frc2::SubsystemBase, public TunerSwerveDr
                 SignalLogger::WriteString("SysIdRotation_State", frc::sysid::SysIdRoutineLog::StateEnumToString(state));
             }
         },
-        frc2::sysid::Mechanism{
+        frc2::sysid::Mechanism
+        {
             [this](units::volt_t output)
             {
                 /* output is actually radians per second, but SysId only supports "volts" */
@@ -125,7 +133,8 @@ public:
     CommandSwerveDrivetrain(swerve::SwerveDrivetrainConstants const &driveTrainConstants, ModuleConstants const &... modules) :
         TunerSwerveDrivetrain{driveTrainConstants, modules...}
     {
-        if (utils::IsSimulation()) {
+        if (utils::IsSimulation()) 
+        {
             StartSimThread();
         }
         ConfigureAutoBuilder();
@@ -152,7 +161,8 @@ public:
     ) :
         TunerSwerveDrivetrain{driveTrainConstants, odometryUpdateFrequency, modules...}
     {
-        if (utils::IsSimulation()) {
+        if (utils::IsSimulation()) 
+        {
             StartSimThread();
         }
         ConfigureAutoBuilder();
@@ -181,12 +191,14 @@ public:
         std::array<double, 3> const &visionStandardDeviation,
         ModuleConstants const &... modules
     ) :
-        TunerSwerveDrivetrain{
+        TunerSwerveDrivetrain
+        {
             driveTrainConstants, odometryUpdateFrequency,
             odometryStandardDeviation, visionStandardDeviation, modules...
         }
     {
-        if (utils::IsSimulation()) {
+        if (utils::IsSimulation()) 
+        {
             StartSimThread();
         }
         ConfigureAutoBuilder();
@@ -207,7 +219,8 @@ public:
             requires(RequestSupplier req, TunerSwerveDrivetrain &drive) { drive.SetControl(req()); }
     frc2::CommandPtr ApplyRequest(RequestSupplier request)
     {
-        return Run([this, request=std::move(request)] {
+        return Run([this, request=std::move(request)] 
+        {
             return SetControl(request());
         });
     }

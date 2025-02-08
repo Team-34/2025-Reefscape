@@ -1,9 +1,7 @@
 #pragma once
-
 ///
 //https://github.com/LimelightVision/limelightlib-wpicpp
 ///
-
 #include "networktables/NetworkTable.h"
 #include "networktables/NetworkTableInstance.h"
 #include "networktables/NetworkTableEntry.h"

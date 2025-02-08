@@ -1,13 +1,13 @@
 #pragma once
-
 #include "Gyro.h"
 #include "subsystems/SwerveModule.h"
-
 #include <frc2/command/SubsystemBase.h>
 
-namespace t34 {
+namespace t34 
+{
 
-    class SwerveDrive : public frc2::SubsystemBase {
+    class SwerveDrive : public frc2::SubsystemBase 
+    {
     public: // METHODS
         SwerveDrive();
         ~SwerveDrive() {};
@@ -53,7 +53,8 @@ namespace t34 {
             SwerveModule("SM_R_AFT", ID_RIGHT_AFT_DRIVE, ID_RIGHT_AFT_STEER, ID_RIGHT_AFT_CANCODER)   //, frc::Rotation2d(units::radian_t(RotationsToRadians(RIGHT_AFT_CANCODER_OFFSET)))),
         };
 
-        frc::SwerveDriveKinematics<4> m_swerve_drive_kinematics {
+        frc::SwerveDriveKinematics<4> m_swerve_drive_kinematics 
+        {
                 // Translation2d objects assumes the robot is at the origin facing in the positive X direction, 
                 // forward is positive X and left is positive Y.
                 frc::Translation2d(units::meter_t( SWERVE_MODULE_FROM_CENTER), units::meter_t( SWERVE_MODULE_FROM_CENTER)), // Left Forward Module

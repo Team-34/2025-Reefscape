@@ -1,5 +1,4 @@
 #include "Gyro.h"
-
 #include "Constants.h"
 
 namespace t34 {

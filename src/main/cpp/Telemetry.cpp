@@ -17,7 +17,8 @@ void Telemetry::Telemeterize(subsystems::CommandSwerveDrivetrain::SwerveDriveSta
     /* Also write to log file */
     std::array<double, 8> moduleStatesArray{};
     std::array<double, 8> moduleTargetsArray{};
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < 4; ++i) 
+    {
         moduleStatesArray[i*2 + 0] = state.ModuleStates[i].angle.Radians().value();
         moduleStatesArray[i*2 + 1] = state.ModuleStates[i].speed.value();
         moduleTargetsArray[i*2 + 0] = state.ModuleTargets[i].angle.Radians().value();

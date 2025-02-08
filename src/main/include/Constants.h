@@ -1,5 +1,4 @@
 #pragma once
-
 #include <string>
 #include <cmath>
 #include <units/mass.h>
