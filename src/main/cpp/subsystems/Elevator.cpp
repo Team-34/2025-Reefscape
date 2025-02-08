@@ -14,7 +14,7 @@ Elevator::Elevator()
 , m_level(0)
 {
   m_vertical_motors_pid.SetTolerance(NEOUnitToInch(0.5));
-  m_vertical_motor_right.Follow(  m_vertical_motor_left);
+  m_vertical_motor_right.Follow(m_vertical_motor_left);
 }
 
 frc2::CommandPtr Elevator::MoveWristToCommand(units::degree_t angle)
