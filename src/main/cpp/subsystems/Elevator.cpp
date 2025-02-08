@@ -7,12 +7,12 @@
 #include "subsystems/Elevator.h"
 
 Elevator::Elevator()
-: m_vertical_motor_left(999)
+: m_level(0)
+, m_wrist_motor(998, SparkLowLevel::MotorType::kBrushless)
+, m_vertical_motor_left(999)
 , m_vertical_motor_right(1000)
 , m_vertical_motors_pid(0.5, 0.0, 0.0)
-, m_wrist_motor(998, SparkLowLevel::MotorType::kBrushless)
 , m_wrist_motor_pid(0.5, 0.0, 0.0)
-, m_level(0)
 {
   m_vertical_motors_pid.SetTolerance(NEOUnitToInch(0.5));
   m_vertical_motor_right.Follow(m_vertical_motor_left);
