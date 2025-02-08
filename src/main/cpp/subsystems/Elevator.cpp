@@ -52,10 +52,10 @@ frc2::CommandPtr Elevator::MoveToLevelCommand(int)
 {
   static const std::array<std::pair<units::degree_t, units::inch_t>, 5> presets {{
     { 85_deg, 0_in },
-    { 35_deg, units::inch_t(18 - BASE_HEIGHT_FROM_FLOOR_INCHES.value()) },
-    { 35_deg, units::inch_t(31 + (7/8) - BASE_HEIGHT_FROM_FLOOR_INCHES.value()) },
-    { 35_deg, units::inch_t(47 + (7/8) - BASE_HEIGHT_FROM_FLOOR_INCHES.value()) },
-    { 88_deg, units::inch_t(72- BASE_HEIGHT_FROM_FLOOR_INCHES.value()) },
+    { 35_deg, 18_in - BASE_HEIGHT_FROM_FLOOR },
+    { 35_deg, 31.875_in - BASE_HEIGHT_FROM_FLOOR },
+    { 35_deg, 47.875_in - BASE_HEIGHT_FROM_FLOOR },
+    { 88_deg, 72_in - BASE_HEIGHT_FROM_FLOOR },
   }};
 
   m_level = std::clamp(m_level, 0, static_cast <int> (presets.size()) - 1);
