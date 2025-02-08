@@ -18,25 +18,30 @@
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace rev::spark;
 
-class Elevator : public frc2::SubsystemBase
+namespace t34
 {
-public:
-  Elevator();
 
-  frc2::CommandPtr ElevateToCommand(units::inch_t height);
-  frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
-  frc2::CommandPtr MoveUpOnceCommand();
-  frc2::CommandPtr MoveDownOnceCommand();
-  frc2::CommandPtr MoveToLevelCommand(int level);
+  class Elevator : public frc2::SubsystemBase
+  {
+  public:
+    Elevator();
 
-private:
-  int m_level;
+    frc2::CommandPtr ElevateToCommand(units::inch_t height);
+    frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
+    frc2::CommandPtr MoveUpOnceCommand();
+    frc2::CommandPtr MoveDownOnceCommand();
+    frc2::CommandPtr MoveToLevelCommand(int level);
 
-  SparkMax m_wrist_motor;
+  private:
+    int m_level;
 
-  VictorSPX m_vertical_motor_left;
-  VictorSPX m_vertical_motor_right;
+    SparkMax m_wrist_motor;
 
-  frc::PIDController m_vertical_motors_pid;
-  frc::PIDController m_wrist_motor_pid;
-};
+    VictorSPX m_vertical_motor_left;
+    VictorSPX m_vertical_motor_right;
+
+    frc::PIDController m_vertical_motors_pid;
+    frc::PIDController m_wrist_motor_pid;
+  };
+
+} // namespace t34
