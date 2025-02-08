@@ -1,9 +1,10 @@
-#include "subsystems/Elevator.h"
+#include <algorithm>
+#include <array>
 #include <units/length.h>
 #include <units/angle.h>
-#include <array>
 #include <utility>
-#include <algorithm>
+
+#include "subsystems/Elevator.h"
 
 Elevator::Elevator()
 : m_vertical_motor_left(999)
@@ -31,15 +32,20 @@ frc2::CommandPtr Elevator::MoveWristToCommand(units::degree_t angle)
 
 frc2::CommandPtr Elevator::ElevateCommand(units::inch_t height)
 {
-  return this->RunEnd([this, height] {
-      m_vertical_motor_left.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,   m_vertical_motors_pid.Calculate(
-      NEOUnitToInch(  m_vertical_motor_left.GetSelectedSensorPosition()), NEOUnitToInch(height.value())));
-  },
-  [this]{
+  return this->RunEnd(
+    [this, height]
+    {
+      m_vertical_motor_left.Set(
+        ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
+        m_vertical_motors_pid.Calculate(
+          NEOUnitToInch(m_vertical_motor_left.GetSelectedSensorPosition()),
+          NEOUnitToInch(height.value())));
+    },
+    [this]
+    {
       m_vertical_motor_left.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-  }).Until([this]{
-    return   m_vertical_motors_pid.AtSetpoint();
-  });
+    })
+    .Until([this] { return m_vertical_motors_pid.AtSetpoint(); });
 }
 
 frc2::CommandPtr Elevator::MoveToLevelCommand(int)
@@ -52,12 +58,10 @@ frc2::CommandPtr Elevator::MoveToLevelCommand(int)
     { 88_deg, units::inch_t(72- BASE_HEIGHT_FROM_FLOOR_INCHES.value()) },
   }};
 
-  // Make sure level is within range
   m_level = std::clamp(m_level, 0, static_cast <int> (presets.size()) - 1);
   
-  // Fetch the angle & height for the preset associated with this level
   auto [angle, height] = presets.at(m_level);
-  // Build and return composite command
+
   return MoveWristToCommand(angle).AndThen(ElevateCommand(height));
 };
 
