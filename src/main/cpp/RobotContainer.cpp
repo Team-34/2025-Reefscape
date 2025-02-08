@@ -24,6 +24,7 @@ void RobotContainer::ConfigureBindings()
   //Runs algae intake in on A button, spits out on B
   ctrl->A().OnTrue(m_intake.AlgaeInCommand());
   ctrl->B().OnTrue(m_intake.AlgaeOutCommand());
+
   ctrl->POVUp().OnTrue(m_elevator.MoveUpOnceCommand());
   ctrl->POVDown().OnTrue(m_elevator.MoveDownOnceCommand());
 
