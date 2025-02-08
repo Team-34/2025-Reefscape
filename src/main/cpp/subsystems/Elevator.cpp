@@ -13,8 +13,8 @@ Elevator::Elevator()
 , m_wrist_motor_pid(0.5, 0.0, 0.0)
 , m_level(0)
 {
-    m_vertical_motors_pid.SetTolerance(NEOUnitToInch(0.5));
-    m_vertical_motor_right.Follow(  m_vertical_motor_left);
+  m_vertical_motors_pid.SetTolerance(NEOUnitToInch(0.5));
+  m_vertical_motor_right.Follow(  m_vertical_motor_left);
 }
 
 frc2::CommandPtr Elevator::MoveWristToCommand(units::degree_t angle)
@@ -31,7 +31,6 @@ frc2::CommandPtr Elevator::MoveWristToCommand(units::degree_t angle)
 
 frc2::CommandPtr Elevator::ElevateCommand(units::inch_t height)
 {
-
   return this->RunEnd([this, height] {
       m_vertical_motor_left.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,   m_vertical_motors_pid.Calculate(
       NEOUnitToInch(  m_vertical_motor_left.GetSelectedSensorPosition()), NEOUnitToInch(height.value())));
@@ -69,5 +68,3 @@ frc2::CommandPtr Elevator::MoveUpOnceCommand() {
 frc2::CommandPtr Elevator::MoveDownOnceCommand() {
   return this->MoveToLevelCommand(m_level - 1); 
 }
-
-
