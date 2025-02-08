@@ -41,6 +41,7 @@ frc2::CommandPtr Elevator::ElevateCommand(units::inch_t height)
     return   m_vertical_motors_pid.AtSetpoint();
   });
 }
+
 frc2::CommandPtr Elevator::MoveToLevelCommand(int)
 {
   static const std::array<std::pair<units::degree_t, units::inch_t>, 5> presets {{
@@ -61,10 +62,12 @@ frc2::CommandPtr Elevator::MoveToLevelCommand(int)
 };
 
 
-frc2::CommandPtr Elevator::MoveUpOnceCommand() {
+frc2::CommandPtr Elevator::MoveUpOnceCommand()
+{
   return this->MoveToLevelCommand(m_level + 1); 
 }
 
-frc2::CommandPtr Elevator::MoveDownOnceCommand() {
+frc2::CommandPtr Elevator::MoveDownOnceCommand()
+{
   return this->MoveToLevelCommand(m_level - 1); 
 }
