@@ -6,7 +6,6 @@
 #include <frc/geometry/Pose3d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 
-
 /*   MAKE COMMENTS FOR CODE BLOCKS   */
 
 std::vector<frc::Translation3d> find_values() 
@@ -17,12 +16,10 @@ std::vector<frc::Translation3d> find_values()
 
     // std::ifstream file(filename);
     
-
     std::string line;
 
     char* file_content;
     std::string file_content_s = "{version :  2025.0 , waypoints : [ { anchor : { x : 8.037102272727275, y : 5.894673295454545 }, prevControl : null, nextControl : { x : 6.991532916472671, y : 5.879126070691161 }, isLocked : false, linkedName : null }, { anchor : { x : 5.1553125, y : 5.166747159090908 }, prevControl : { x : 6.265866333176757, y : 5.786359927035319 }, nextControl : null,isLocked : false,linkedName : null}], rotationTargets : [], constraintZones : [], pointTowardsZones : [], eventMarkers : [], globalConstraints : { maxVelocity : 1.0, maxAcceleration : 1.0, maxAngularVelocity : 540.0, maxAngularAcceleration : 720.0, nominalVoltage : 12.0, unlimited : false},goalEndState : { velocity : 0, rotation : -125.1341930569156}, reversed : false, folder : null, idealStartingState : { velocity : 0, rotation : -178.60281897270355}, useDefaultConstraints : true}";
-
     std::string x_str;
     std::string y_str;
     std::string z_str;

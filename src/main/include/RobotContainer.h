@@ -30,18 +30,16 @@ private:
 
     frc2::CommandXboxController joystick{0};
 
-public:
-    subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
+    void ConfigureBindings();
 
-private:
-    /* Path follower */
+     /* Path follower */
     frc::SendableChooser<frc2::Command *> autoChooser;
 
 public:
-    RobotContainer();
+    subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
+
+     RobotContainer();
 
     frc2::Command *GetAutonomousCommand();
-
-private:
-    void ConfigureBindings();
+    
 };
