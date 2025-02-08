@@ -18,7 +18,8 @@
 using namespace ctre::phoenix::motorcontrol::can;
 using namespace rev::spark;
 
-class Elevator : public frc2::SubsystemBase {
+class Elevator : public frc2::SubsystemBase
+{
 public:
   Elevator();
 
