@@ -6,9 +6,9 @@
 #include <algorithm>
 
 Elevator::Elevator()
-:   m_vertical_motor_left(999)
-,   m_vertical_motor_right(1000)
-,   m_vertical_motors_pid(0.5, 0.0, 0.0)
+: m_vertical_motor_left(999)
+, m_vertical_motor_right(1000)
+, m_vertical_motors_pid(0.5, 0.0, 0.0)
 , m_wrist_motor(998, SparkLowLevel::MotorType::kBrushless)
 , m_wrist_motor_pid(0.5, 0.0, 0.0)
 , m_level(0)
@@ -63,13 +63,11 @@ frc2::CommandPtr Elevator::MoveToLevelCommand(int)
 
 
 frc2::CommandPtr Elevator::MoveUpOnceCommand() {
-    return this->MoveToLevelCommand(m_level + 1); 
+  return this->MoveToLevelCommand(m_level + 1); 
 }
 
 frc2::CommandPtr Elevator::MoveDownOnceCommand() {
-  return this->RunOnce([this]{
-  m_level = (m_level > 0 ) ? m_level-- : m_level;
-  });
+  return this->MoveToLevelCommand(m_level - 1); 
 }
 
 
