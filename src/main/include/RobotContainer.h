@@ -8,11 +8,12 @@
 
 #include "T34CommandXboxController.h"
 #include "commands/ControllerDriveCommand.h"
+#include "subsystems/AlgaeIntake.h"
 #include "subsystems/Climber.h"
+#include "Subsystems/CoralIntake.h"
+#include "subsystems/Elevator.h"
 #include "subsystems/Intake.h"
 #include "subsystems/SwerveDrive.h"
-#include "subsystems/AlgaeIntake.h"
-#include "Subsystems/CoralIntake.h"
 
 class RobotContainer
 {
@@ -26,10 +27,10 @@ public:
   frc2::CommandPtr GetAutonomousCommand();
 
 private:
-  Climber m_climber;
   t34::AlgaeIntake m_algae_intake;
+  Climber          m_climber;
   t34::CoralIntake m_coral_intake;
-  
+  t34::Elevator    m_elevator;
   
   void ConfigureBindings();
 };
