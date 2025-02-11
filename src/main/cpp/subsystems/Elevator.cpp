@@ -24,11 +24,13 @@ namespace t34
   frc2::CommandPtr Elevator::MoveWristToCommand(units::degree_t angle)
   {
     return this->RunEnd(
-      [this, angle] {
+      [this, angle]
+      {
         m_wrist_motor.Set(m_wrist_motor_pid.Calculate(
           NEOUnitToDegree(m_wrist_motor.GetEncoder().GetPosition()), NEOUnitToDegree(angle.value())));
       },
-      [this] {
+      [this]
+      {
         m_wrist_motor.StopMotor();
       })
       .Until([this] { return m_wrist_motor_pid.AtSetpoint(); });
