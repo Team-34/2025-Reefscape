@@ -11,13 +11,14 @@
 #include <frc/controller/PIDController.h>
 
 #include "subsystems/SwerveDrive.h"
+#include "Constants.h"
 
 
 class AutoDriveCommand
     : public frc2::CommandHelper<frc2::Command, AutoDriveCommand> {
  public:
 
-  AutoDriveCommand(t34::SwerveDrive * swerve, units::foot_t x_translation, units::foot_t y_translation, units::degree_t rotation);
+  AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::foot_t x_translation, units::foot_t y_translation, units::degree_t rotation);
 
   void Initialize() override;
 
@@ -29,14 +30,20 @@ class AutoDriveCommand
 
   private:
 
-  t34::SwerveDrive * m_swerve;
+  std::shared_ptr<t34::SwerveDrive> m_swerve;
   units::foot_t m_x_translation;
   units::foot_t m_y_translation;
   units::degree_t m_rotation;
 
+  frc::ChassisSpeeds m_speeds;
+
   frc::PIDController m_x_PID;
   frc::PIDController m_y_PID;
+  frc::PIDController m_r_PID;
 
+  double m_x_drive;
+  double m_y_drive;
   double m_x_init_dist;
   double m_y_init_dist;
+  double m_r_speed;
 };

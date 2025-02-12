@@ -29,6 +29,8 @@ namespace t34 {
         std::array<frc::SwerveModuleState, 4> GetModuleStates();
         std::array<frc::SwerveModulePosition, 4> GetModulePositions();
         std::array<frc::SwerveModulePosition, 4> GetModulePositionsInverted();
+        frc::SwerveDriveKinematics<4> GetKinematics();
+        std::array<SwerveModule, 4> GetModules();
 
         frc::Rotation2d GetYaw();
 

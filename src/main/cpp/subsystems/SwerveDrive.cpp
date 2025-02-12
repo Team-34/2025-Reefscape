@@ -231,6 +231,14 @@ namespace t34 {
         return states;
     }
 
+    std::array<SwerveModule, 4> SwerveDrive::GetModules() {
+        return m_swerve_modules;
+    }
+
+    frc::SwerveDriveKinematics<4> SwerveDrive::GetKinematics() {
+        return m_swerve_drive_kinematics;
+    }
+
     /**
      * Get an array of the swerve positions.
      * 

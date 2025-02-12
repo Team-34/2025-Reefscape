@@ -3,10 +3,14 @@
 #include <string>
 #include <cmath>
 #include <units/length.h>
+#include <units/velocity.h>
 
 const int CONTROLLER_PORT = 0;
 
 constexpr bool INVERT_GYRO{ true }; // Always ensure Gyro is CCW+ CW-
+
+constexpr units::velocity::feet_per_second_t MAX_DRIVE_SPEED_AUTO{ 10.0 };
+constexpr units::velocity::feet_per_second_t MAX_STEER_SPEED_AUTO{ 3.0 };
 
 constexpr double PI2{ M_PI * 2.0 };
 constexpr double _180_DIV_PI{ 180.0 / M_PI };
@@ -14,6 +18,8 @@ constexpr double PI_DIV_180{ M_PI / 180.0 };
 constexpr double NEO550_RES{ 42 };
 constexpr double NEO550_SHAFT_CIRCUMFERENCE_INCH{ 0.125 * M_PI };
 constexpr double LIMELIGHT_DEGREE_SCALAR{ 23.188 / 20.25 };//{ 21.1726 / 22.5 };
+
+
 
 const units::inch_t BASE_HEIGHT_FROM_FLOOR_INCHES{ 2.0 };
 
@@ -27,6 +33,11 @@ inline double NEOUnitToInch(double units)
 inline double NEOUnitToDegree(double units)
 {
     return (NEO550_RES / 360.0) * units;
+}
+
+inline units::velocity::meters_per_second_t FPSToMPS(units::velocity::feet_per_second_t fps)
+{
+    return units::velocity::meters_per_second_t(fps * 0.308);
 }
 
 //const int POV_UP{ 0 };

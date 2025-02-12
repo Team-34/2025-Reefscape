@@ -6,8 +6,6 @@
 
 #include <frc2/command/CommandScheduler.h>
 #include <rev/SparkMax.h>
-#include "subsystems/Elevator.h"
-#include "subsystems/Intake.h"
 
 
 Robot::Robot() {
@@ -26,11 +24,13 @@ void Robot::DisabledPeriodic() {}
 void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() {
-  m_autonomousCommand = rc->GetAutonomousCommand();
+//   m_autonomousCommand = rc->GetAutonomousCommand();
 
-  if (m_autonomousCommand) {
-    m_autonomousCommand->Schedule();
-  }
+//   if (m_autonomousCommand) {
+//     m_autonomousCommand->Schedule();
+//   }
+    rc->AutoDrive.Schedule();
+
 }
 
 void Robot::AutonomousPeriodic() {}

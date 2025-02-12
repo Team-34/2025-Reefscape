@@ -6,29 +6,24 @@
 
 #include <frc2/command/CommandPtr.h>
 
-#include "subsystems/Intake.h"
 #include "T34CommandXboxController.h"
 #include "subsystems/SwerveDrive.h"
-#include "subsystems/CoralIntake.h"
-#include "subsystems/Elevator.h"
 #include "commands/CenterOnCoral.h"
-#include "subsystems/Climber.h"
 #include "commands/ControllerDriveCommand.h"
+#include "commands/AutoDriveCommand.h"
 
 class RobotContainer {
  public:
   RobotContainer();
 
   static RobotContainer* Get();
-  CoralIntake coralintake;
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
-  t34::Intake intake;
   t34::ControllerDriveCommand DefaultCommand;
-  Climber climber;
   CenterOnCoral CenterOnCoralCommand;
-  Elevator elevator;
   frc2::CommandPtr GetAutonomousCommand();
+
+  AutoDriveCommand AutoDrive;
 
  private:
   void ConfigureBindings();
