@@ -27,49 +27,12 @@ void t34::LimelightUtil::Periodic()
 
 }
 
-LimelightHelpers::RawFiducial t34::LimelightUtil::GetNearestAT()
-{
-    LimelightHelpers::RawFiducial result_at(m_apriltags[0]);
-    if (m_apriltags.size() > 1) {
-
-        for (LimelightHelpers::RawFiducial at : m_apriltags)
-        {
-            if (at.distToRobot < result_at.distToRobot)
-            {
-               result_at = at;
-            }
-        }
-        return result_at;
-    }
-    
-
-    return LimelightHelpers::RawFiducial(-1, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-}
-
-units::inch_t t34::LimelightUtil::CalcDistanceFromNearest()
-{
-    //LimelightHelpers::RawFiducial at = GetNearestAT();
-
-    return units::inch_t( (log2(GetNearestAT().ta) - 3.0) * 2.54);
-
-}
-
 units::inch_t t34::LimelightUtil::CalcDistance()
 {
     double x = GetTA();
+    
+    double dist_equation = 5.13 * pow(x, -0.486); 
+    double avg_error = -0.04 * x -0.12;
 
-    //double dist_equation = 2.62 + (-0.497 * x) + (0.0267 * std::pow(x, 2));
-
-    //dist_equation:  183 + -261x + 162x^2 + -57.2x^3 + 12.8x^4 + -1.89x^5 + 0.188x^6 + -0.0125x^7 + 5.27E-04x^8 + -1.29E-05x^9 + 1.39E-07x^10
-    double dist_equation = 31 + (-182 * x) + (649 * pow(x, 2)) + (-1319 * pow(x, 3)) + (1491 * pow(x, 4)) + (-864 * pow(x, 5)) + (199 * pow(x, 6)); 
-    // + (-0.0125 * pow(x, 7)) + (5.27 * E_(-4) * pow(x, 8)) + (-1.29 * E_(-5) * pow(x, 9)) + (1.39 * E_(-7) * pow(x, 10));
-
-    //y_error:  10.7 + -0.617x + 1.48E-03x^2 + 1.15E-03x^3 + 4.59E-04x^4 + 7.61E-06x^5 + -2.06E-06x^6
-    double y_error = -41.2 + (42.6 * x) + (-12 * pow(x, 2)) + (0.964 * pow(x, 2));
-    // + (4.59 * E_(-4) * pow(x, 4)) + (7.61 * E_(-6) * pow(x, 5)) + (-2.06 * E_(-6) * pow(x, 6));
-
-    //scalar:  5.23 + -2.7x + 0.659x^2 + -0.0832x^3 + 5.75E-03x^4 + -2.05E-04x^5 + 2.91E-06x^6
-    double scalar = 6.21 + (-3.95 * x) + (1.18 * pow(x, 2)) + (-0.186 * pow(x, 3)) + (0.0162 * pow(x, 4)) + (-7.33 * E_(-4) * pow(x, 5)) + (1.35 * E_(-5) * pow(x, 6));
-
-    return units::inch_t( (dist_equation / y_error));
+    return units::inch_t( (dist_equation + avg_error) * 12.0 );
 }

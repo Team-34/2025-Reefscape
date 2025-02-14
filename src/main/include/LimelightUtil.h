@@ -24,12 +24,8 @@ namespace t34
     LimelightUtil(std::string nt_name, units::degree_t camera_angle);
 
     void Periodic() override;
-
-    units::inch_t CalcDistanceFromNearest();
+    
     units::inch_t CalcDistance();
-
-    /*Returns the nearest apriltag data as a RawFiducial*/
-    LimelightHelpers::RawFiducial GetNearestAT();
 
     /*Returns the tracked object's middle x-coordinate*/
     inline double GetTX() { return LimelightHelpers::getTX(m_nt_name); }
