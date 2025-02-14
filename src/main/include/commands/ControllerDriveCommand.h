@@ -37,10 +37,6 @@ namespace t34 {
         frc::SlewRateLimiter<units::scalar> m_r_limiter;
 
         std::chrono::time_point<std::chrono::steady_clock> m_last_zero;
-
-        frc::SlewRateLimiter<units::scalar> m_x_speed_limiter{0.2 / 1_s};
-        frc::SlewRateLimiter<units::scalar> m_y_speed_limiter{0.2 / 1_s};
-        frc::SlewRateLimiter<units::scalar> m_rot_speed_limiter{0.2 / 1_s};
     };
 
 }

@@ -7,22 +7,32 @@
 #include <frc2/command/CommandPtr.h>
 
 #include "T34CommandXboxController.h"
-#include "subsystems/SwerveDrive.h"
 #include "commands/ControllerDriveCommand.h"
 #include "LimelightUtil.h"
-class RobotContainer {
- public:
-  RobotContainer();
+#include "subsystems/AlgaeIntake.h"
+#include "subsystems/Climber.h"
+#include "Subsystems/CoralIntake.h"
+#include "subsystems/Elevator.h"
+#include "subsystems/Intake.h"
+#include "subsystems/SwerveDrive.h"
 
-  static RobotContainer* Get();
+class RobotContainer
+{
+public:
+  RobotContainer();
 
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
-  t34::LimelightUtil lime;
-  t34::ControllerDriveCommand DefaultCommand;
+
+  t34::ControllerDriveCommand m_default_command;
 
   frc2::CommandPtr GetAutonomousCommand();
 
- private:
+private:
+  t34::AlgaeIntake m_algae_intake;
+  Climber          m_climber;
+  t34::CoralIntake m_coral_intake;
+  t34::Elevator    m_elevator;
+  
   void ConfigureBindings();
 };

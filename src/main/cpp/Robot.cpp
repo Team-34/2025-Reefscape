@@ -5,11 +5,11 @@
 #include "Robot.h"
 
 #include <frc2/command/CommandScheduler.h>
+#include <rev/SparkMax.h>
+
 
 Robot::Robot() {
   
-  rc = RobotContainer::Get();
-
 }
 
 void Robot::RobotPeriodic() {
@@ -26,10 +26,10 @@ void Robot::DisabledPeriodic() {}
 void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() {
-  m_autonomousCommand = m_container.GetAutonomousCommand();
+  m_autonomous_command = rc.GetAutonomousCommand();
 
-  if (m_autonomousCommand) {
-    m_autonomousCommand->Schedule();
+  if (m_autonomous_command) {
+    m_autonomous_command->Schedule();
   }
 }
 
@@ -38,13 +38,13 @@ void Robot::AutonomousPeriodic() {}
 void Robot::AutonomousExit() {}
 
 void Robot::TeleopInit() {
-  if (m_autonomousCommand)
+  if (m_autonomous_command)
   {
-    m_autonomousCommand->Cancel();
-    m_autonomousCommand.reset();
+    m_autonomous_command->Cancel();
+    m_autonomous_command.reset();
   }
 
-  frc2::CommandScheduler::GetInstance().SetDefaultCommand(rc->swerve_drive.get(), std::move(rc->DefaultCommand));
+  frc2::CommandScheduler::GetInstance().SetDefaultCommand(rc.swerve_drive.get(), std::move(rc.m_default_command));
 }
 
 void Robot::TeleopPeriodic() {}
