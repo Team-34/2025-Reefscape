@@ -20,7 +20,7 @@ namespace t34 {
 
     }
 
-    void Gyro::CreatePigeon(){
+    void Gyro::CreatePigeon() {
         ctre::phoenix6::hardware::Pigeon2 Pigeon_Gyro(1,"RIO");
     }
 
