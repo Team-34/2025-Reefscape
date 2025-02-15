@@ -15,11 +15,6 @@ namespace t34 {
         return g_gyro.get();
     }
 
-    Gyro::Gyro()
-        : AHRS(studica::AHRS::NavXComType::kMXP_SPI) {
-
-    }
-
     void Gyro::CreatePigeon() {
         ctre::phoenix6::hardware::Pigeon2 Pigeon_Gyro(1,"RIO");
     }
