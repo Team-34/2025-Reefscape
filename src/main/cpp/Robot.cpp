@@ -6,8 +6,6 @@
 #include "RobotContainer.h"
 #include <frc2/command/CommandScheduler.h>
 
-
-
 Robot::Robot() {
   
   rc = RobotContainer::Get();
