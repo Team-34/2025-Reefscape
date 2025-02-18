@@ -4,7 +4,7 @@
 
 #include "commands/AutoDriveCommand.h"
 
-AutoDriveCommand::AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::foot_t x_translation, units::foot_t y_translation, units::degree_t rotation) 
+AutoDriveCommand::AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::inch_t x_translation, units::inch_t y_translation, units::degree_t rotation) 
 : m_swerve(swerve)
 , m_x_translation(x_translation)
 , m_y_translation(y_translation)
@@ -21,6 +21,9 @@ AutoDriveCommand::AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, uni
 
 {
   AddRequirements(swerve.get());
+  m_x_PID.SetTolerance(5.0);
+  m_y_PID.SetTolerance(5.0);
+  m_r_PID.SetTolerance(5.0);
 }
 
 // Called when the command is initially scheduled.
@@ -33,9 +36,24 @@ void AutoDriveCommand::Execute()
   m_y_drive = m_y_PID.Calculate(m_swerve->GetModulePositions()[0].distance.value(), (m_y_init_dist + m_y_translation.value()) );
   m_r_speed = m_r_PID.Calculate(m_swerve->GetYaw().Degrees().value(), (m_rotation.value()) );
 
+  if (m_x_PID.AtSetpoint())
+  {
+    m_x_drive = 0.0;
+  }
+
+  if (m_y_PID.AtSetpoint())
+  {
+    m_y_drive = 0.0;
+  }
+
+  if (m_r_PID.AtSetpoint())
+  {
+    m_r_speed = 0.0;
+  }
+
   m_speeds = frc::ChassisSpeeds::FromFieldRelativeSpeeds(
-    FPSToMPS(m_x_drive * MAX_DRIVE_SPEED_AUTO),
-    FPSToMPS(m_y_drive * MAX_DRIVE_SPEED_AUTO),
+    FPSToMPS(m_x_drive * MAX_DRIVE_SPEED_AUTO * -1.0),
+    FPSToMPS(m_y_drive * MAX_DRIVE_SPEED_AUTO * -1.0),
     units::radians_per_second_t(DEG_TO_RAD(m_r_speed)),
     frc::Rotation2d(m_swerve->GetYaw().Degrees() * -1.0)
   );
@@ -47,12 +65,6 @@ void AutoDriveCommand::Execute()
   for(size_t i = 0; i < m_swerve->GetModules().size(); ++i) {
             m_swerve->GetModules()[i].SetDesiredState(sms[i], false);
   }
-
-  // m_swerve->Drive(frc::Translation2d(
-  //   units::meter_t(m_x_PID.Calculate(m_swerve->GetModulePositions()[0].distance.value(), (m_x_init_dist + m_x_translation.value()) )),
-  //   units::meter_t(m_y_PID.Calculate(m_swerve->GetModulePositions()[0].distance.value(), (m_y_init_dist + m_y_translation.value()) ))), 
-  //   m_rotation.value()
-  // );
 }
 
 // Called once the command ends or is interrupted.

@@ -15,6 +15,11 @@ Robot::Robot() {
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
+
+  frc::SmartDashboard::PutNumber("Drive enc units", rc->swerve_drive->GetModulePositions()[0].distance.value());
+  frc::SmartDashboard::PutNumber("Drive setpoint", rc->AutoDrive.GetYPID().GetSetpoint());
+  frc::SmartDashboard::PutNumber("Drive y error", rc->AutoDrive.GetYPID().GetError());
+  frc::SmartDashboard::PutBoolean("AtSetpoint?", rc->AutoDrive.GetYPID().AtSetpoint());
 }
 
 void Robot::DisabledInit() {}
@@ -31,9 +36,14 @@ void Robot::AutonomousInit() {
 //   }
     rc->AutoDrive.Schedule();
 
+    //rc->AutoDrive.Initialize();
+
 }
 
-void Robot::AutonomousPeriodic() {}
+void Robot::AutonomousPeriodic() {
+
+  //rc->AutoDrive.Execute();
+}
 
 void Robot::AutonomousExit() {}
 

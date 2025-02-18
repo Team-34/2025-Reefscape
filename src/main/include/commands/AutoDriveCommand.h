@@ -18,7 +18,7 @@ class AutoDriveCommand
     : public frc2::CommandHelper<frc2::Command, AutoDriveCommand> {
  public:
 
-  AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::foot_t x_translation, units::foot_t y_translation, units::degree_t rotation);
+  AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::inch_t x_translation, units::inch_t y_translation, units::degree_t rotation);
 
   void Initialize() override;
 
@@ -28,11 +28,14 @@ class AutoDriveCommand
 
   bool IsFinished() override;
 
+  inline frc::PIDController GetXPID() { return m_x_PID; };
+  inline frc::PIDController GetYPID() { return m_y_PID; };
+
   private:
 
   std::shared_ptr<t34::SwerveDrive> m_swerve;
-  units::foot_t m_x_translation;
-  units::foot_t m_y_translation;
+  units::inch_t m_x_translation;
+  units::inch_t m_y_translation;
   units::degree_t m_rotation;
 
   frc::ChassisSpeeds m_speeds;
