@@ -29,10 +29,6 @@ public:
   frc2::CommandPtr GetAutonomousCommand();
 
 private:
-  t34::AlgaeIntake m_algae_intake;
-  Climber          m_climber;
-  t34::CoralIntake m_coral_intake;
-  t34::Elevator    m_elevator;
   
   void ConfigureBindings();
 };
