@@ -21,10 +21,11 @@ namespace t34
   {
   public:
 
-    LimelightUtil(std::string nt_name, units::degree_t camera_angle);
+    LimelightUtil(std::string nt_name);
 
     void Periodic() override;
     
+    /*Calculates the distance between the center of a detected Limelight object and the camera*/
     units::inch_t CalcDistance();
 
     /*Returns the tracked object's middle x-coordinate*/
@@ -36,8 +37,8 @@ namespace t34
     /*Returns the tracked object's total area*/
     inline double GetTA() { return LimelightHelpers::getTA(m_nt_name); }
 
-    /*Returns the tracked object's total area*/
-    inline double GetID() { return LimelightHelpers::getTA(m_nt_name); }
+    /*Returns the tracked object's ID*/
+    inline double GetID() { return LimelightHelpers::getFiducialID(m_nt_name); }
 
     /*Returns true if Limelight is detecting a valid object*/
     inline bool IsDetecting() { return LimelightHelpers::getTV(m_nt_name); }
@@ -45,17 +46,7 @@ namespace t34
 
   private:
 
-    std::vector<LimelightHelpers::RawFiducial> m_apriltags;
-
     std::string m_nt_name;
-
-    double m_tX;
-    double m_tY;
-    double m_tA;
-
-    units::degree_t m_angle;
-
-    inline double E_(int power) { return pow(10.0, power); }
   };
 
 
