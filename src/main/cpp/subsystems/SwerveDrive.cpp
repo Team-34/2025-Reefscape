@@ -90,7 +90,7 @@ namespace t34 {
      * sets the appropriate motor outputs.
      * 
      * @param Translation2d A vector representing the x & y axis speeds.
-     * @param rotation A value represent rotation speed.
+     * @param rotation A value representing rotation speed.
      * @param field_relative true if field relative mode or false for 
      *                       robot centric mode.
      */
@@ -122,15 +122,12 @@ namespace t34 {
         }
     } 
 
-    /**
-     * Currently not implemented.
-     */
     void SwerveDrive::DriveAuto(frc::ChassisSpeeds speeds) {
 
-        //units::meters_per_second_t temp_vx{speeds.vx};
-        //
-        //speeds.vx = -speeds.vy;
-        //speeds.vy = temp_vx;
+        units::meters_per_second_t temp_vx{speeds.vx};
+        
+        speeds.vx = -speeds.vy;
+        speeds.vy = temp_vx;
 
         speeds.omega *= -1.0;
 
