@@ -20,21 +20,21 @@ units::inch_t t34::LimelightUtil::CalcDistance()
 {
     double x = GetTA();
     
-    /*
-    *Trendline equation generated using Google Sheets- x: tA, y: ft
-    *ex: 
-    *
-    *tA   | ft
-    *     |
-    *2.958| 3
-    *2.301| 3.5
-    *1.544| 4
-    *1.266| 4.5
-    *0.951| 5
-    */
+    // Trendline equation generated using Google Sheets- x: tA, y: ft
+    // ex: 
+    // 
+    // +-------+-----+
+    // | tA    | ft  |
+    // +-------+-----+
+    // | 2.958 | 3   |
+    // | 2.301 | 3.5 |
+    // | 1.544 | 4   |
+    // | 1.266 | 4.5 |
+    // | 0.951 | 5   |
+    // +-------+-----+
     double dist_equation = 5.13 * pow(x, -0.486); 
 
-    //Arbitrary value derived from imperical testing
+    // Arbitrary value derived from imperical testing
     double avg_error = (-0.04 * x) - 0.12;
 
     return units::inch_t( (dist_equation + avg_error) * 12.0 );
