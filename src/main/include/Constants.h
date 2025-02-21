@@ -4,6 +4,13 @@
 #include <cmath>
 #include <units/length.h>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846	/* pi */
+#endif
+#ifndef M_PIl
+#define M_PIl 3.141592653589793238462643383279502884L /* pi */
+#endif
+
 const int CONTROLLER_PORT = 0;
 
 constexpr bool INVERT_GYRO{ true }; // Always ensure Gyro is CCW+ CW-
