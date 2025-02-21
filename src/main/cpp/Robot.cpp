@@ -16,10 +16,12 @@ Robot::Robot() {
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
 
-  frc::SmartDashboard::PutNumber("Drive enc units", rc->swerve_drive->GetModulePositions()[0].distance.value());
-  frc::SmartDashboard::PutNumber("Drive setpoint", rc->AutoDrive.GetYPID().GetSetpoint());
-  frc::SmartDashboard::PutNumber("Drive y error", rc->AutoDrive.GetYPID().GetError());
-  frc::SmartDashboard::PutBoolean("AtSetpoint?", rc->AutoDrive.GetYPID().AtSetpoint());
+  frc::SmartDashboard::PutNumber("travelled", rc->swerve_drive->GetModulePositions()[0].distance.value());
+  frc::SmartDashboard::PutNumber("setpoint", rc->AutoDrive.GetSetpoint().value());
+  frc::SmartDashboard::PutNumber("y", rc->AutoDrive.GetYTravelled().value());
+  frc::SmartDashboard::PutNumber("x", rc->AutoDrive.GetXTravelled().value());
+  frc::SmartDashboard::PutBoolean("Lower bound condition", rc->AutoDrive.GetTravelled() < (rc->AutoDrive.GetSetpoint() - rc->AutoDrive.GetTolerance()));
+  frc::SmartDashboard::PutBoolean("Upper bound condition", rc->AutoDrive.GetTravelled() > (rc->AutoDrive.GetSetpoint() + rc->AutoDrive.GetTolerance()));
 }
 
 void Robot::DisabledInit() {}
