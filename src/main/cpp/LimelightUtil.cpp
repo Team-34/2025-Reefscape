@@ -37,5 +37,5 @@ units::inch_t t34::LimelightUtil::CalcDistance()
     // Arbitrary value derived from imperical testing
     double avg_error = (-0.04 * x) - 0.12;
 
-    return units::inch_t( (dist_equation + avg_error) * 12.0 );
+    return units::inch_t( (dist_equation + avg_error) /* * 12.0 */);
 }
