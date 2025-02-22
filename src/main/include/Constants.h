@@ -6,6 +6,9 @@
 #include <units/length.h>
 #include <units/velocity.h>
 #include <units/current.h>
+#include <ctre/phoenix6/CANcoder.hpp>
+#include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix6/configs/Configs.hpp>
 #include <frc/system/plant/DCMotor.h>
 #include <vector>
 #include <frc/geometry/Translation2d.h>

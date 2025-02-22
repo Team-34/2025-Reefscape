@@ -63,21 +63,7 @@ void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() {
 
-    std::string_view trajectoryPath = std::filesystem::path(frc::filesystem::GetDeployDirectory()) / "paths" / "MyPath.wpilib.json";
-  auto trajectory = frc::TrajectoryUtil::FromPathweaverJson(trajectoryPath);
-  auto ramseteCommand = frc2::RamseteCommand(
-        trajectory, // Dereference the trajectory
-        [this]() { return rc->drivetrain.GetPose(); },
-        frc::RamseteController(2.0, 0.7),
-        frc::SimpleMotorFeedforward<units::meters>(1.0, 0.5),
-        rc->drivetrain.GetKinematics(),
-        [this]() { return rc->drivetrain.GetModules()[0]->GetDriveMotor().GetVelocity().GetValue(); },
-        frc::PIDController(1.0, 0.0, 0.0),
-        frc::PIDController(1.0, 0.0, 0.0),
-        [this](){},
-        {&rc->drivetrain}
-    );
-  m_autonomousCommand = std::move(ramseteCommand);
+  m_autonomousCommand = rc->GetAutonomousCommand();
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }

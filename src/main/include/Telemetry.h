@@ -73,6 +73,7 @@ public:
      */
     Telemetry(units::meters_per_second_t maxSpeed) : MaxSpeed {maxSpeed}
     {
+        ctre::phoenix6::SignalLogger::SetPath(""/* a file you want the signal logger to write to */);
         ctre::phoenix6::SignalLogger::Start();
     }
 

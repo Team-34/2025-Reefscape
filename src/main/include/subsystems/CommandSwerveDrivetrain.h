@@ -229,7 +229,7 @@ public:
     }
 
     void Periodic() override;
-
+    void Init();
     /**
      * \brief Runs the SysId Quasistatic test in the given direction for the routine
      * specified by m_sysIdRoutineToApply.

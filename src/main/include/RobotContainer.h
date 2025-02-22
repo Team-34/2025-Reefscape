@@ -3,7 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #pragma once
-
+//#include "subsystems/LimelightSubsystem.h"
+#include <frc/smartdashboard/Field2d.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
@@ -11,10 +13,14 @@
 #include "Telemetry.h"
 #include <frc2/command/sysid/SysIdRoutine.h>
 #include <ctre/Phoenix.h>
+#include <pathplanner/lib/auto/AutoBuilder.h>
+#include <pathplanner/lib/commands/PathPlannerAuto.h>
+#include <pathplanner/lib/path/PathPlannerPath.h>
 class RobotContainer 
 {
 private:
     units::meters_per_second_t MaxSpeed = TunerConstants::kSpeedAt12Volts; // kSpeedAt12Volts desired top speed
+
     units::radians_per_second_t MaxAngularRate = 0.75_tps; // 3/4 of a rotation per second max angular velocity
 
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -44,6 +50,10 @@ public:
 
     frc2::Command *GetAutonomousCommand();
 
-private:
+
     void ConfigureBindings();
+    void GetStartingPose();
+    void ConfigureDashboard();
+    
+
 };
