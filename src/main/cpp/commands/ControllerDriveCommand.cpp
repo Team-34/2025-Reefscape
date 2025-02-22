@@ -8,9 +8,11 @@ namespace t34 {
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
     }
 
-    inline bool IsInputZero(double x, double y, double r) {
-        static double pos_tolerance =  0.00001;
-        static double neg_tolerance = -0.00001;
+    bool IsInputZero(double x, double y, double r, double tolerance) {
+        tolerance *= 3;
+
+        static double pos_tolerance =  tolerance;
+        static double neg_tolerance = -tolerance;
 
         double combined = x + y + r;
         if (combined < pos_tolerance && combined > neg_tolerance) {

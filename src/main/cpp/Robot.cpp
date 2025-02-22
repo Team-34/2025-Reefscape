@@ -20,6 +20,9 @@ void Robot::RobotPeriodic() {
   frc::SmartDashboard::PutNumber("setpoint", rc->AutoDrive.GetSetpoint().value());
   frc::SmartDashboard::PutNumber("y", rc->AutoDrive.GetYTravelled().value());
   frc::SmartDashboard::PutNumber("x", rc->AutoDrive.GetXTravelled().value());
+  frc::SmartDashboard::PutNumber("y output", rc->AutoDrive.GetXOutput());
+  frc::SmartDashboard::PutNumber("x output", rc->AutoDrive.GetYOutput());
+  frc::SmartDashboard::PutNumber("steer output", rc->AutoDrive.GetSteerOutput());
   frc::SmartDashboard::PutBoolean("Lower bound condition", rc->AutoDrive.GetTravelled() < (rc->AutoDrive.GetSetpoint() - rc->AutoDrive.GetTolerance()));
   frc::SmartDashboard::PutBoolean("Upper bound condition", rc->AutoDrive.GetTravelled() > (rc->AutoDrive.GetSetpoint() + rc->AutoDrive.GetTolerance()));
 }
