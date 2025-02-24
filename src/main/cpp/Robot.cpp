@@ -4,10 +4,6 @@
 
 #include "Robot.h"
 #include "LimelightUtil.h"
-#include <iostream>
-#include <frc2/command/CommandScheduler.h>
-#include <rev/SparkMax.h>
-
 
 Robot::Robot() {
   
@@ -15,8 +11,6 @@ Robot::Robot() {
 
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
-  //frc::SmartDashboard::PutNumber("LimelightDistance", LimelightHelpers::getTX() * -0.9085);
-  frc::SmartDashboard::PutNumber("LimelightDistance", (double)rc.LL.CalcDistance());
 
 }
 
