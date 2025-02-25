@@ -38,32 +38,40 @@ void AutoDriveCommand::Initialize() {}
 void AutoDriveCommand::Execute() 
 {
 
-  m_travelled = units::inch_t(m_swerve->GetModulePositions()[0].distance.value());
-  m_current_x = units::inch_t(-m_travelled * std::cos(m_wheel_theta.value()));
-  m_current_y = units::inch_t(-m_travelled * std::sin(m_wheel_theta.value()));
+  m_travelled = units::inch_t(-m_swerve->GetModulePositions()[0].distance.value());
+  m_current_x = units::inch_t(m_travelled * std::cos(m_wheel_theta.value()));
+  m_current_y = units::inch_t(m_travelled * std::sin(m_wheel_theta.value()));
 
-  m_x_drive = 8 * ((m_x_translation.value() - m_current_x.value()) / (m_x_translation.value() == 0.0 ? 1.0 : m_x_translation.value()));
-  m_y_drive = -8 * ((m_y_translation.value() - m_current_y.value()) / (m_y_translation.value() == 0.0 ? 1.0 : m_y_translation.value())) * std::tan(m_wheel_theta.value());
-  //m_theta_speed = m_kP * ((m_wheel_theta.value() - m_current_theta.value()) / (m_wheel_theta.value() == 0.0 ? 1.0 : m_wheel_theta.value()));
+  // m_x_drive = 8 * ((m_x_translation.value() - m_current_x.value())
+  //               / (m_x_translation.value() == 0.0 ? 1.0 : m_x_translation.value()));
 
-  if (m_travelled < (m_setpoint - m_tolerance)
-   && m_travelled > (m_setpoint + m_tolerance))
+  // m_y_drive = 8 * ((m_y_translation.value() - m_current_y.value()) 
+  //               / (m_y_translation.value() == 0.0 ? 1.0 : m_y_translation.value()))
+  //               * std::tan(m_wheel_theta.value());
+
+  m_x_drive = 8 * (m_setpoint.value() - m_travelled.value()) / m_setpoint.value();
+  m_y_drive = 8 * (m_setpoint.value() - m_travelled.value()) / m_setpoint.value() * std::tan(m_wheel_theta.value());
+
+  //m_theta_speed = 8 * ((m_wheel_theta.value() - m_current_theta.value()) / (m_wheel_theta.value() == 0.0 ? 1.0 : m_wheel_theta.value()));
+
+  if ((std::fabs(m_setpoint.value()) - m_tolerance.value()) < m_travelled.value()
+   && m_travelled.value() < (std::fabs(m_setpoint.value()) + m_tolerance.value()))
   {
     m_swerve->Stop();
+    m_swerve->ResetToAbsolute();
   }
   else
   {
-
-    if ((m_x_translation.value() - m_tolerance.value()) < m_current_x.value() 
-    && m_current_x.value() < (m_x_translation.value() + m_tolerance.value()))
-    {
-      m_x_drive = 0.0;
-    }
-    if ((m_y_translation.value() - m_tolerance.value()) < m_current_y.value() 
-     && m_current_y.value() < (m_y_translation.value() + m_tolerance.value()))
-    {
-      m_y_drive = 0.0;
-    }
+    // if ((std::fabs(m_x_translation.value()) - m_tolerance.value()) < std::fabs(m_current_x.value()) 
+    // && std::fabs(m_current_x.value()) < (std::fabs(m_x_translation.value()) + m_tolerance.value()))
+    // {
+    //   m_x_drive = 0.0;
+    // }
+    // if ((std::fabs(m_y_translation.value()) - m_tolerance.value()) < std::fabs(m_current_y.value()) 
+    //  && std::fabs(m_current_y.value()) < (std::fabs((m_y_translation.value()) + m_tolerance.value())))
+    // {
+    //   m_y_drive = 0.0;
+    // }
 
     m_swerve->Drive(frc::Translation2d(
     units::meter_t(m_x_drive),

@@ -8,6 +8,7 @@
 #include <frc2/command/CommandHelper.h>
 #include <units/length.h>
 #include <units/angle.h>
+#include <cmath>
 #include <frc/controller/PIDController.h>
 
 #include "subsystems/SwerveDrive.h"
