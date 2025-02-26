@@ -14,10 +14,11 @@
 
 
 class CenterOnCoral
-    : public frc2::CommandHelper<frc2::Command, CenterOnCoral> {
+    : public frc2::CommandHelper<frc2::Command, CenterOnCoral> 
+{
  public:
 
-  CenterOnCoral(t34::SwerveDrive * swerve_ptr);
+  CenterOnCoral(std::shared_ptr<t34::SwerveDrive> swerve);
 
   void Initialize() override;
 
@@ -35,6 +36,6 @@ class CenterOnCoral
 
   t34::LimelightUtil m_LL;
 
-  t34::SwerveDrive* m_swerve;
+  std::shared_ptr<t34::SwerveDrive> m_swerve;
 
 };

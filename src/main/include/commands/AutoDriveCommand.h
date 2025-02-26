@@ -69,8 +69,7 @@ class AutoDriveCommand
 
   double m_x_drive;
   double m_y_drive;
-  double m_x_init_dist;
-  double m_y_init_dist;
+  double m_init_dist;
   double m_r_speed;
   double m_theta_speed;
 };

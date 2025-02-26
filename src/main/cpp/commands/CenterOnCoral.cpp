@@ -4,16 +4,16 @@
 
 #include "commands/CenterOnCoral.h"
 
-CenterOnCoral::CenterOnCoral(t34::SwerveDrive * swerve_ptr)
-: m_LL("T34 LL", units::degree_t(0))
+CenterOnCoral::CenterOnCoral(std::shared_ptr<t34::SwerveDrive> swerve_ptr)
+: m_LL("", units::degree_t(0))
 , m_swerve(swerve_ptr)
 , m_x_PID(0.1, 0.0, 0.1)
 , m_y_PID(0.1, 0.0, 0.1)
 {
-  m_x_PID.SetTolerance(0.2);
-  m_y_PID.SetTolerance(0.15);
+  m_x_PID.SetTolerance(0.1);
+  m_y_PID.SetTolerance(0.1);
 
-  AddRequirements(m_swerve);
+  AddRequirements(m_swerve.get());
 }
 
 // Called when the command is initially scheduled.
@@ -24,15 +24,9 @@ void CenterOnCoral::Execute()
 {
 
   m_swerve->Drive(frc::Translation2d(units::meter_t(
-
-    //(-0.2 < m_LL.GetNearestAT().txnc < 0.2) ? 0.0 : std::copysign(0.05, m_LL.GetNearestAT().txnc)
-    m_x_PID.Calculate(m_LL.GetNearestAT().txnc, 0.0)
-
+    m_x_PID.Calculate(m_LL.GetTX(), 0.0)
   ), units::meter_t(
-
-    //(m_LL.GetNearestAT().distToCamera > 0.1) ? 0.05 : 0.0
-    m_y_PID.Calculate(m_LL.GetNearestAT().distToCamera, 0.1)
-
+    m_y_PID.Calculate(m_LL.CalcDistance().value(), 0.1)
   )), 0.0);
 
 }
