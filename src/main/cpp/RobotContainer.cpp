@@ -6,6 +6,8 @@
 #include <pathplanner/lib/path/PathPlannerPath.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/Commands.h>
+#include <frc2/command/Command.h>
+#include <frc2/command/CommandPtr.h>
 //#include <pathplanner/lib/auto/AutoBuilder.h>
 
 RobotContainer::RobotContainer()
@@ -67,16 +69,16 @@ void RobotContainer::ConfigureBindings()
 
 
 
-frc2::Command *RobotContainer::GetAutonomousCommand()
+frc2::CommandPtr RobotContainer::GetAutonomousCommand()
 {
     //return autoChooser.GetSelected();
     using namespace pathplanner;
     auto ChoreoTrajectory = PathPlannerPath::fromChoreoTrajectory("ChoreoPath");
 
-    frc2::CommandPtr newChoreoTrajectory = frc2::CommandPtr(std::make_unique<RobotContainer>());
+    //frc2::CommandPtr newChoreoTrajectory = frc2::CommandPtr(std::make_unique<RobotContainer>());
 
-    frc2::Command *command = std::move(newChoreoTrajectory).get();
+    //frc2::Command *command = std::move(newChoreoTrajectory).get();
 
-    return AutoBuilder::followPath (command);
+    return AutoBuilder::followPath (ChoreoTrajectory);
 
 }

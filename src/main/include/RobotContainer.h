@@ -48,7 +48,7 @@ private:
 public:
     RobotContainer();
 
-    frc2::Command *GetAutonomousCommand();
+    frc2::CommandPtr GetAutonomousCommand();
 
 
     void ConfigureBindings();
