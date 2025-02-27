@@ -16,7 +16,8 @@
 #include "RobotContainer.h"
 
 
-Robot::Robot() 
+Robot::Robot()
+//: m_autonomousCommand(rc->GetAutonomousCommand())
 {
  
   // for(frc::Translation3d coord: find_values())
@@ -63,7 +64,7 @@ void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() {
 
-  m_autonomousCommand = rc->GetAutonomousCommand();
+  m_autonomousCommand = rc->GetAutonomousCommand().Unwrap().get();
   if (m_autonomousCommand) {
     m_autonomousCommand->Schedule();
   }

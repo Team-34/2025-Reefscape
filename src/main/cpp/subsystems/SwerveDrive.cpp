@@ -27,7 +27,8 @@ using namespace pathplanner;
 namespace t34 {
 
     /**
-     * Constructs a new SwerveDrive. 
+     * Constructs a new SwerveDrive.
+     * Auto builder was used to build a path following command before being configured 
      */
     SwerveDrive::SwerveDrive() {
         SetName("SwerveDrive");

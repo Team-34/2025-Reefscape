@@ -73,12 +73,12 @@ frc2::CommandPtr RobotContainer::GetAutonomousCommand()
 {
     //return autoChooser.GetSelected();
     using namespace pathplanner;
-    auto ChoreoTrajectory = PathPlannerPath::fromChoreoTrajectory("ChoreoPath");
+    auto ChoreoTrajectory = PathPlannerPath::fromChoreoTrajectory("First_Choreo_Path34");
 
     //frc2::CommandPtr newChoreoTrajectory = frc2::CommandPtr(std::make_unique<RobotContainer>());
 
     //frc2::Command *command = std::move(newChoreoTrajectory).get();
 
-    return AutoBuilder::followPath (ChoreoTrajectory);
+    return AutoBuilder::followPath(ChoreoTrajectory);
 
 }

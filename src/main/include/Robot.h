@@ -32,7 +32,7 @@ class Robot : public frc::TimedRobot
 
   std::shared_ptr<RobotContainer> rc;
  private:
-  frc2::Command *m_autonomousCommand;
+  frc2::Command * m_autonomousCommand;
 
 
   static constexpr bool kUseLimelight = false;

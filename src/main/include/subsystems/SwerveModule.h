@@ -18,7 +18,7 @@ namespace t34 {
     public:
         SwerveModule(std::string name, const int drive_id, const int steer_id, const int cancoder_id);
 
-        inline void SetDriveBrake(bool on = true) { m_drive->SetNeutralMode(on ? signals::NeutralModeValue::Brake : signals::NeutralModeValue::Coast); }
+        inline void SetDriveBrake(bool on = true) { m_drive->SetNeutralMode(on ? ctre::phoenix6::signals::NeutralModeValue::Brake : ctre::phoenix6::signals::NeutralModeValue::Coast); }
 
         void Stop();
         void SetDesiredState(frc::SwerveModuleState desired_state, bool is_open_loop);
