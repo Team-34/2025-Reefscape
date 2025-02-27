@@ -47,7 +47,7 @@ std::vector<frc::Translation3d> find_values()
     }
     else
     {
-        std::cout << "Unable to open file.\n";
+        //std::cout << "Unable to open file.\n";
     }
 
     if(coords.size() > 1)

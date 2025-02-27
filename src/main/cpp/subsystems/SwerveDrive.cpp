@@ -30,10 +30,11 @@ namespace t34 {
      * Constructs a new SwerveDrive.
      * Auto builder was used to build a path following command before being configured 
      */
-    SwerveDrive::SwerveDrive() {
+    SwerveDrive::SwerveDrive()
+    {
         SetName("SwerveDrive");
         m_gyro->Reset();
-            RobotConfig config = RobotConfig::fromGUISettings();
+        RobotConfig config = RobotConfig::fromGUISettings();
          //Configure the AutoBuilder last
         
         AutoBuilder::configure(

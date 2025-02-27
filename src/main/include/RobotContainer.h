@@ -4,9 +4,13 @@
 
 #pragma once
 //#include "subsystems/LimelightSubsystem.h"
+#include "subsystems/SwerveDrive.h"
+
 #include <frc/smartdashboard/Field2d.h>
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc/smartdashboard/SendableChooser.h>
+#include <frc2/command/Commands.h>
+#include <frc2/command/Command.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/button/CommandXboxController.h>
 #include "subsystems/CommandSwerveDrivetrain.h"
@@ -38,22 +42,20 @@ private:
 
     frc2::CommandXboxController joystick{0};
 
-public:
-    subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
-
-private:
     /* Path follower */
     frc::SendableChooser<frc2::Command *> autoChooser;
+
+    std::shared_ptr<t34::SwerveDrive> m_swerve;
 
 public:
     RobotContainer();
 
     frc2::CommandPtr GetAutonomousCommand();
 
-
     void ConfigureBindings();
     void GetStartingPose();
     void ConfigureDashboard();
     
+    subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
 
 };
