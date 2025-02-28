@@ -46,9 +46,9 @@ class AutoDriveCommand
   inline units::inch_t GetYTravelled() { return m_current_y; }
   inline units::inch_t GetTravelled() { return m_travelled; }
   
-  inline double GetXOutput() { return m_x_drive; }
-  inline double GetYOutput() { return m_y_drive; }
-  inline double GetSteerOutput() { return m_y_drive; }
+  inline double GetXOutput() { return m_x_drive.value(); }
+  inline double GetYOutput() { return m_y_drive.value(); }
+  inline double GetSteerOutput() { return m_theta_speed.value(); }
 
   private:
 
@@ -62,14 +62,14 @@ class AutoDriveCommand
   units::inch_t m_travelled;
   units::inch_t m_current_x;
   units::inch_t m_current_y;
+  units::inch_t m_x_drive;
+  units::inch_t m_y_drive;
 
   units::degree_t m_base_rotation;
   units::degree_t m_wheel_theta;
   units::degree_t m_current_theta;
-
-  double m_x_drive;
-  double m_y_drive;
+  units::degree_t m_theta_speed;
+  
   double m_init_dist;
-  double m_r_speed;
-  double m_theta_speed;
+  units::scalar_t m_drive_tolerance;
 };
