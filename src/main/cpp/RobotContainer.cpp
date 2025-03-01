@@ -22,7 +22,7 @@ RobotContainer::RobotContainer()
   , swerve_drive(new t34::SwerveDrive())
   , DefaultCommand(swerve_drive, ctrl)
   , CenterOnCoralCommand(swerve_drive)
-  , AutoDrive(swerve_drive, -20_ft, 40_ft, 0_deg, 1_in)
+  , AutoDrive(swerve_drive, 0_ft, 10_ft, 0_deg, 1_in)
 {
   ConfigureBindings();
 }

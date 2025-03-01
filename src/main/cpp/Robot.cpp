@@ -16,14 +16,14 @@ Robot::Robot() {
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
 
-  frc::SmartDashboard::PutNumber("travelled", -rc->swerve_drive->GetModulePositions()[0].distance.value());
+  frc::SmartDashboard::PutNumber("travelled", rc->swerve_drive->GetModulePositions()[0].distance.value());
   frc::SmartDashboard::PutNumber("setpoint", rc->AutoDrive.GetSetpoint().value());
   frc::SmartDashboard::PutNumber("y", rc->AutoDrive.GetYTravelled().value());
   frc::SmartDashboard::PutNumber("x", rc->AutoDrive.GetXTravelled().value());
-  frc::SmartDashboard::PutNumber("y output", rc->AutoDrive.GetXOutput());
-  frc::SmartDashboard::PutNumber("x output", rc->AutoDrive.GetYOutput());
+  frc::SmartDashboard::PutNumber("y output", rc->AutoDrive.GetYOutput());
+  frc::SmartDashboard::PutNumber("x output", rc->AutoDrive.GetXOutput());
   frc::SmartDashboard::PutNumber("steer output", rc->AutoDrive.GetSteerOutput());
-  frc::SmartDashboard::PutNumber("Setpoint - travelled", rc->AutoDrive.GetSetpoint().value() - rc->AutoDrive.GetTravelled().value());
+  frc::SmartDashboard::PutNumber("Setpoint + travelled", rc->AutoDrive.GetSetpoint().value() + rc->AutoDrive.GetTravelled().value());
 }
 
 void Robot::DisabledInit() {}

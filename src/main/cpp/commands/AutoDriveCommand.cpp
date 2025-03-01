@@ -26,6 +26,7 @@ AutoDriveCommand::AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, uni
 , m_y_drive(0.0)
 , m_init_dist(swerve->GetModulePositions()[0].distance.value())
 , m_theta_speed(0.0)
+, m_invert_drives( (m_x_translation.value() > 0.0) ? -1.0 : 1.0 )
 , m_drive_tolerance(m_tolerance / m_setpoint)
 {
   AddRequirements(swerve.get());
@@ -39,21 +40,31 @@ void AutoDriveCommand::Initialize() {}
 void AutoDriveCommand::Execute() 
 {
 
-  m_travelled = units::inch_t(-m_swerve->GetModulePositions()[0].distance.value() + m_init_dist);
+  m_travelled = EncUnitsToInches(m_swerve->GetModulePositions()[0].distance.value() + m_init_dist);
   m_current_x = m_travelled * cos(m_wheel_theta);
   m_current_y = -m_travelled * sin(m_wheel_theta);
   m_current_theta = m_swerve->GetYaw().Degrees();
   
-  m_x_drive = -8_in * ((m_x_translation - m_current_x) / (m_x_translation == 0_in ? 1_in : m_x_translation));
-  m_y_drive = -8_in * ((m_y_translation - m_current_y) / (m_y_translation == 0_in ? 1_in : m_y_translation)) * tan(m_wheel_theta);
+  // m_x_drive = -8_in * ((m_x_translation - m_current_x) / (m_x_translation == 0_in ? 1_in : m_x_translation));
+  // m_y_drive = -8_in * ((m_y_translation - m_current_y) / (m_y_translation == 0_in ? 1_in : m_y_translation)) * tan(m_wheel_theta);
 
-  // m_x_drive = 4_in * ((m_setpoint - m_travelled) / (m_setpoint == 0_in ? 1_in : m_setpoint));
-  // m_y_drive = m_x_drive * tan(m_wheel_theta);
+  if (m_x_translation != 0_in)
+  {
+    m_x_drive = 4_in * ((m_setpoint + m_travelled) / fabs(m_setpoint));
+  }
 
-  m_theta_speed = 1_deg * ((m_wheel_theta - m_current_theta) / (m_wheel_theta == 0_deg ? 1_deg : m_wheel_theta));
+  if (m_y_translation != 0_in)
+  {
+    m_y_drive = 4_in * ((m_setpoint + m_travelled) / fabs(m_setpoint)) * tan(m_wheel_theta);
+  }
 
-  if ((abs(m_setpoint) - m_tolerance) < m_travelled
-   && m_travelled < (abs(m_setpoint) + m_tolerance))
+  if (m_theta_speed != 0_deg)
+  {
+    m_theta_speed = 1_deg * ((m_wheel_theta - m_current_theta) / (m_wheel_theta));
+  }
+
+  if ((abs(m_setpoint) - m_tolerance) < m_travelled)
+   //&& m_travelled < (abs(m_setpoint) + m_tolerance))
   {
     m_swerve->Stop();
     m_swerve->ResetToAbsolute();
@@ -82,9 +93,9 @@ void AutoDriveCommand::Execute()
     }
 
     m_swerve->Drive(frc::Translation2d(
-    units::meter_t(m_x_drive.value()),
-    units::meter_t(m_y_drive.value())),
-    m_theta_speed.value()
+    units::meter_t(m_invert_drives * m_x_drive.value()),
+    units::meter_t(-m_invert_drives * m_y_drive.value())),
+    0.0//m_theta_speed.value()
     );
   }
 

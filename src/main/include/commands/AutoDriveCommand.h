@@ -25,7 +25,7 @@ class AutoDriveCommand
    * @param x_translation displacement destination towards the right
    * @param y_translation displacement destination in the forward direction
    * @param rotation degrees that the robot should rotate. NOT THE WHEELS.
-   * @param tolerance extra inches that the robot will coonsider "zero" at the destination
+   * @param tolerance extra inches that the robot will consider "zero" at the destination
    */
   AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::inch_t x_translation, units::inch_t y_translation, units::degree_t rotation, units::inch_t tolerance);
 
@@ -52,6 +52,9 @@ class AutoDriveCommand
 
   private:
 
+  inline units::inch_t EncUnitsToInches(double units) { return units::inch_t(units * (77.5/86)); } // 77.5 inches / 86 encoder units
+  inline units::inch_t EncUnitsToInches(units::inch_t inches) { return units::inch_t(inches.value() * (77.5/86)); }
+
   std::shared_ptr<t34::SwerveDrive> m_swerve;
 
   units::inch_t m_x_translation;
@@ -71,5 +74,6 @@ class AutoDriveCommand
   units::degree_t m_theta_speed;
   
   double m_init_dist;
+  double m_invert_drives;
   units::scalar_t m_drive_tolerance;
 };
