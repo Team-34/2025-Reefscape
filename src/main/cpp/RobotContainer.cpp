@@ -21,7 +21,7 @@ RobotContainer::RobotContainer()
   : ctrl(new t34::T34CommandXboxController(0))
   , swerve_drive(new t34::SwerveDrive())
   , DefaultCommand(swerve_drive, ctrl)
-  , CenterOnCoralCommand(swerve_drive)
+  , CenterOnATCommandCommand(swerve_drive)
   , AutoDrive(swerve_drive, 0_ft, 10_ft, 0_deg, 1_in)
 {
   ConfigureBindings();

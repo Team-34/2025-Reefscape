@@ -27,7 +27,8 @@ class AutoDriveCommand
    * @param rotation degrees that the robot should rotate. NOT THE WHEELS.
    * @param tolerance extra inches that the robot will consider "zero" at the destination
    */
-  AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::inch_t x_translation, units::inch_t y_translation, units::degree_t rotation, units::inch_t tolerance);
+  AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::inch_t x_translation, units::inch_t y_translation, units::degree_t rotation,
+   units::inch_t drive_tolerance = 0.5_in, units::degree_t rotation_tolerance = 0.5_deg);
 
   void Initialize() override;
 
@@ -41,14 +42,13 @@ class AutoDriveCommand
   // inline frc::PIDController GetYPID() { return m_y_PID; };
 
   inline units::inch_t GetSetpoint() { return m_setpoint; }
-  inline units::inch_t GetTolerance() { return m_tolerance; }
   inline units::inch_t GetXTravelled() { return m_current_x; }
   inline units::inch_t GetYTravelled() { return m_current_y; }
   inline units::inch_t GetTravelled() { return m_travelled; }
   
   inline double GetXOutput() { return m_x_drive.value(); }
   inline double GetYOutput() { return m_y_drive.value(); }
-  inline double GetSteerOutput() { return m_theta_speed.value(); }
+  inline double GetSteerOutput() { return m_rot_speed.value(); }
 
   private:
 
@@ -59,7 +59,7 @@ class AutoDriveCommand
 
   units::inch_t m_x_translation;
   units::inch_t m_y_translation;
-  units::inch_t m_tolerance;
+  units::inch_t m_drive_tolerance;
   units::inch_t m_setpoint;
 
   units::inch_t m_travelled;
@@ -71,9 +71,12 @@ class AutoDriveCommand
   units::degree_t m_base_rotation;
   units::degree_t m_wheel_theta;
   units::degree_t m_current_theta;
-  units::degree_t m_theta_speed;
+  units::degree_t m_rot_speed;
+  units::degree_t m_rotation_tolerance;
   
   double m_init_dist;
   double m_invert_drives;
-  units::scalar_t m_drive_tolerance;
+
+  bool m_at_drive_setpoint;
+  bool m_at_steer_setpoint;
 };

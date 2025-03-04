@@ -13,12 +13,12 @@
 #include "LimelightUtil.h"
 
 
-class CenterOnCoral
-    : public frc2::CommandHelper<frc2::Command, CenterOnCoral> 
+class CenterOnATCommand
+    : public frc2::CommandHelper<frc2::Command, CenterOnATCommand> 
 {
  public:
 
-  CenterOnCoral(std::shared_ptr<t34::SwerveDrive> swerve);
+  CenterOnATCommand(std::shared_ptr<t34::SwerveDrive> swerve);
 
   void Initialize() override;
 

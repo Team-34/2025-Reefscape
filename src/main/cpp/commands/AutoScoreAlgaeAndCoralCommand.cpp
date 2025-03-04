@@ -13,10 +13,12 @@ AutoScoreAlgaeAndCoralCommand::AutoScoreAlgaeAndCoralCommand(std::shared_ptr<t34
 
 AddRequirements(m_swerve.get());
 
-  AddCommands(//command_list
-    AutoDriveCommand(m_swerve, 1_ft, 4_ft, 0_deg, 0.5_in),
-    AutoDriveCommand(m_swerve, 10_ft, 0_ft, 90_deg, 0.5_in),
-    AutoDriveCommand(m_swerve, -10_ft, 0_ft, 0_deg, 0.5_in),
-    CenterOnCoral(m_swerve)
+  AddCommands(
+    AutoDriveCommand(m_swerve, 5.123_ft, -8.108_ft, 90_deg), //from starting point to processor
+    AutoDriveCommand(m_swerve, -11.174_ft, 20.896_ft, -45_deg), //from processor to reef
+    CenterOnATCommand(m_swerve),
+    AutoDriveCommand(m_swerve, 11.174_ft, -20.896_ft, 90_deg), //from reef to processor
+    AutoDriveCommand(m_swerve, -5.123_ft, 13.058_ft, 0_deg) //from processor to 4.95ft away from the starting position
+    
   );
 }

@@ -9,7 +9,7 @@
 
 #include "commands/AutoScoreAlgaeAndCoralCommand.h"
 #include "commands/AutoDriveCommand.h"
-#include "commands/CenterOnCoral.h"
+#include "commands/CenterOnATCommand.h"
 #include "subsystems/SwerveDrive.h"
 
 

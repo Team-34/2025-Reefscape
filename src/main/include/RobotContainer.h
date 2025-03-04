@@ -8,7 +8,7 @@
 
 #include "T34CommandXboxController.h"
 #include "subsystems/SwerveDrive.h"
-#include "commands/CenterOnCoral.h"
+#include "commands/CenterOnATCommand.h"
 #include "commands/ControllerDriveCommand.h"
 #include "commands/AutoDriveCommand.h"
 
@@ -20,7 +20,7 @@ class RobotContainer {
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
   t34::ControllerDriveCommand DefaultCommand;
-  CenterOnCoral CenterOnCoralCommand;
+  CenterOnATCommand CenterOnATCommandCommand;
   frc2::CommandPtr GetAutonomousCommand();
 
   AutoDriveCommand AutoDrive;
