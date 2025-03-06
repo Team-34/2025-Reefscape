@@ -3,6 +3,7 @@
 #include <string>
 #include <cmath>
 #include <units/length.h>
+#include <units/angle.h>
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846	/* pi */
@@ -25,20 +26,29 @@ const units::inch_t BASE_HEIGHT_FROM_FLOOR{ 2.0 };
 
 //const std::string LIMELIGHT_TABLE_NAME{ "" };
 
-inline double NEOUnitToInch(double units)
+/**
+ * Converts inches into NEO550 encoder units.
+ * 
+ * @returns inches * (1/NEO550_SHAFT_CIRCUMFERENCE_INCH) * NEO550_RES
+ */
+inline double InchToNEOUnit(units::inch_t inches)
 {
-    return (units / NEO550_RES) * NEO550_SHAFT_CIRCUMFERENCE_INCH;
+// 42 encoder units = ~0.3927 inches
+// 1 inch = 1/NEO550_SHAFT_CIRCUMFERENCE_INCH = ~2.546 NEO550 revolutions
+// 1 inch = (1/NEO550_SHAFT_CIRCUMFERENCE_INCH) * NEO550_RES = ~106.952 encoder units
+
+    return (1.0/NEO550_SHAFT_CIRCUMFERENCE_INCH) * NEO550_RES * inches.value();
 }
 
-inline double NEOUnitToDegree(double units)
+/**
+ * Converts degrees into NEO550 encoder units.
+ * 
+ * @returns (NEO550_RES / 360) * degrees
+ */
+inline double DegreeToNEOUnit(units::degree_t degrees)
 {
-    return (NEO550_RES / 360.0) * units;
+    return (NEO550_RES / 360.0) * degrees.value();
 }
-
-//const int POV_UP{ 0 };
-//const int POV_RIGHT{ 90 };
-//const int POV_DOWN{ 180 };
-//const int POV_LEFT{ 270 };
 
 #define DEG_TO_RAD(x) (x * PI_DIV_180)
 #define RAD_TO_DEG(x) (x * _180_DIV_PI)
