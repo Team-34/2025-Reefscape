@@ -22,7 +22,7 @@
 #include <frc/geometry/Rotation2d.h>
 #include <frc/geometry/Rotation3d.h>
 
-#ifdef __USE_GNU // Commenting out to allow unit tests to run
+#ifdef __USE_GNU // Disabling when targeting Windows out to allow unit tests to run
 #include <unistd.h>
 //#include <curl/curl.h>
 #include <sys/socket.h>
@@ -669,7 +669,7 @@ namespace LimelightHelpers
         inline const std::string _key_colorHSV{"cHSV"};
     }
 
-#ifdef __USE_GNU // Commenting out to allow unit tests to run
+#ifdef __USE_GNU // Disabling when targeting Windows out to allow unit tests to run
     inline void PhoneHome() 
     {
         static int sockfd = -1;
