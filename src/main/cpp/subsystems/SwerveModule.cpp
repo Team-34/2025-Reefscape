@@ -39,10 +39,10 @@ namespace t34 {
      * @param cancoder_id The can id of the CANcoder.
      */
     SwerveModule::SwerveModule(std::string name, const int drive_id, const int steer_id, const int cancoder_id)  
-        : m_drive(new TalonFX(drive_id))
+        : m_module_name(name)
+        , m_drive(new TalonFX(drive_id))
         , m_steer(new TalonFX(steer_id))
-        , m_cancoder(new CANcoder(cancoder_id))
-        , m_module_name(name) {
+        , m_cancoder(new CANcoder(cancoder_id)) {
 
         // Get current configurations for all devices
         configs::TalonFXConfiguration steer_config{};
