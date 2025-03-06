@@ -2,7 +2,7 @@
 
 #include "Gyro.h"
 #include "subsystems/SwerveModule.h"
-
+#include "subsystems/CommandSwerveDrivetrain.h"
 #include <frc2/command/SubsystemBase.h>
 
 namespace t34 {
@@ -37,6 +37,8 @@ namespace t34 {
         void Periodic() override;
 
         void PutTelemetry();
+
+        subsystems::CommandSwerveDrivetrain cmdswrvdt;
 
     private: // DATA
         bool m_field_oriented{ true };

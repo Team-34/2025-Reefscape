@@ -8,7 +8,6 @@
 //#include <pathplanner/lib/util/HolonomicPathFollowerConfig.h>
 //#include <pathplanner/lib/util/PIDConstants.h>
 //#include <pathplanner/lib/util/ReplanningConfig.h>
-
  
 
 #include <frc/smartdashboard/SmartDashboard.h>
@@ -37,7 +36,9 @@ namespace t34 {
         RobotConfig config = RobotConfig::fromGUISettings();
          //Configure the AutoBuilder last
         
-        AutoBuilder::configure(
+        CommandSwerveDrivetrain::ConfigureAutoBuilder()
+
+        /*AutoBuilder::configure(
            [this](){ return GetPose(); }, // Robot pose supplier
            [this](frc::Pose2d pose){ ResetOdometry(pose); }, // Method to reset odometry (will be called if your auto has a starting pose)
            [this](){ return GetRobotRelativeSpeeds(); }, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
@@ -58,7 +59,7 @@ namespace t34 {
             
             
             this // Reference to this subsystem to set requirements
-        );
+        );*/
         
     }
 
