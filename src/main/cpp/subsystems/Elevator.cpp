@@ -11,47 +11,71 @@ namespace t34
 
   Elevator::Elevator()
   : m_level(0)
-  , m_wrist_motor(998, SparkLowLevel::MotorType::kBrushless)
-  , m_vertical_motor_left(999)
-  , m_vertical_motor_right(1000)
-  , m_vertical_motors_pid(0.5, 0.0, 0.0)
-  , m_wrist_motor_pid(0.5, 0.0, 0.0)
+  , m_algae_wrist_motor(997, SparkLowLevel::MotorType::kBrushless)
+  , m_coral_wrist_motor(998, SparkLowLevel::MotorType::kBrushless)
+  , m_left_motor(999)
+  , m_right_motor(1000)
+  , m_elevator_motors_pid(0.5, 0.0, 0.0)
+  , m_wrist_motors_pid(0.5, 0.0, 0.0)
   {
-    m_vertical_motors_pid.SetTolerance(NEOUnitToInch(0.5));
-    m_vertical_motor_right.Follow(m_vertical_motor_left);
+    m_elevator_motors_pid.SetTolerance(NEOUnitToInch(0.5));
+    m_right_motor.Follow(m_left_motor);
   }
 
-  frc2::CommandPtr Elevator::MoveWristToCommand(units::degree_t angle)
+  frc2::CommandPtr Elevator::MoveWristToCommand(WristType wrist, units::degree_t angle)
   {
+    m_wrist_motors_pid.SetSetpoint(NEOUnitToDegree(angle.value()));
+
+    SparkMax* wrist_motor;
+
+    if(wrist == WristType::kAlgae) //set wrist_motor to the right motor
+    {
+      wrist_motor = &m_algae_wrist_motor;
+    }
+    else if(wrist == WristType::kCoral)
+    {
+      wrist_motor = &m_coral_wrist_motor;
+    }
+    else
+    {
+      //if the enum is invalid, delete the wrist_motor pointer and end the command
+      delete wrist_motor;
+      return;
+    }
+
     return this->RunEnd(
-      [this, angle]
+      [this, angle, wrist_motor]
       {
-        m_wrist_motor.Set(m_wrist_motor_pid.Calculate(
-          NEOUnitToDegree(m_wrist_motor.GetEncoder().GetPosition()), NEOUnitToDegree(angle.value())));
+        //Run wrist motor in respect to the setpoint
+        wrist_motor->Set(m_wrist_motors_pid.Calculate(NEOUnitToDegree(wrist_motor->GetEncoder().GetPosition())));
       },
-      [this]
+      [this, wrist_motor]
       {
-        m_wrist_motor.StopMotor();
+        //When finished, stop the wrist motor and delete the wrist_motor pointer
+        wrist_motor->StopMotor();
+        delete wrist_motor;
       })
-      .Until([this] { return m_wrist_motor_pid.AtSetpoint(); });
+      .Until([this] { return m_wrist_motors_pid.AtSetpoint(); });
   }
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
+    m_elevator_motors_pid.SetSetpoint(NEOUnitToInch(height.value()));
+
     return this->RunEnd(
       [this, height]
       {
-        m_vertical_motor_left.Set(
+        m_left_motor.Set(
           ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
-          m_vertical_motors_pid.Calculate(
-            NEOUnitToInch(m_vertical_motor_left.GetSelectedSensorPosition()),
+          m_elevator_motors_pid.Calculate(
+            NEOUnitToInch(m_left_motor.GetSelectedSensorPosition()),
             NEOUnitToInch(height.value())));
       },
       [this]
       {
-        m_vertical_motor_left.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       })
-      .Until([this] { return m_vertical_motors_pid.AtSetpoint(); });
+      .Until([this] { return m_elevator_motors_pid.AtSetpoint(); });
   }
 
   frc2::CommandPtr Elevator::MoveToLevelCommand(int)
