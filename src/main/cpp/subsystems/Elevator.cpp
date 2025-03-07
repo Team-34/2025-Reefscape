@@ -68,8 +68,6 @@ namespace t34
       {
         //Run wrist motor in respect to the setpoint
         wrist_motor->Set(m_wrist_motors_pid.Calculate(wrist_motor->GetEncoder().GetPosition()));
-        //Run wrist motor in respect to the setpoint
-        wrist_motor->Set(m_wrist_motors_pid.Calculate(wrist_motor->GetEncoder().GetPosition()));
       },
       [this, wrist_motor]
       {
