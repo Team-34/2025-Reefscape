@@ -18,11 +18,18 @@ namespace t34
   , m_right_motor(1000)
   , m_elevator_motors_pid(0.5, 0.0, 0.0)
   , m_wrist_motors_pid(0.5, 0.0, 0.0)
+  , m_algae_wrist_motor(997, SparkLowLevel::MotorType::kBrushless)
+  , m_coral_wrist_motor(998, SparkLowLevel::MotorType::kBrushless)
+  , m_left_motor(999)
+  , m_right_motor(1000)
+  , m_elevator_motors_pid(0.5, 0.0, 0.0)
+  , m_wrist_motors_pid(0.5, 0.0, 0.0)
   {
     m_elevator_motors_pid.SetTolerance(Neo::LengthToNEOUnit(0.5_in));
     m_right_motor.Follow(m_left_motor);
   }
 
+  frc2::CommandPtr Elevator::MoveWristToCommand(WristType wrist, units::degree_t angle)
   frc2::CommandPtr Elevator::MoveWristToCommand(WristType wrist, units::degree_t angle)
   {
     m_wrist_motors_pid.SetSetpoint(NEOUnitToDegree(angle.value()));
@@ -44,18 +51,45 @@ namespace t34
       return;
     }
 
+    m_wrist_motors_pid.SetSetpoint(NEOUnitToDegree(angle.value()));
+
+    SparkMax* wrist_motor;
+
+    if(wrist == WristType::kAlgae) //set wrist_motor to the right motor
+    {
+      wrist_motor = &m_algae_wrist_motor;
+    }
+    else if(wrist == WristType::kCoral)
+    {
+      wrist_motor = &m_coral_wrist_motor;
+    }
+    else
+    {
+      //if the enum is invalid, delete the wrist_motor pointer and end the command
+      delete wrist_motor;
+      return;
+    }
+
     return this->RunEnd(
+      [this, angle, wrist_motor]
       [this, angle, wrist_motor]
       {
         //Run wrist motor in respect to the setpoint
         wrist_motor->Set(m_wrist_motors_pid.Calculate(NEOUnitToDegree(wrist_motor->GetEncoder().GetPosition())));
+        //Run wrist motor in respect to the setpoint
+        wrist_motor->Set(m_wrist_motors_pid.Calculate(NEOUnitToDegree(wrist_motor->GetEncoder().GetPosition())));
       },
+      [this, wrist_motor]
       [this, wrist_motor]
       {
         //When finished, stop the wrist motor and delete the wrist_motor pointer
         wrist_motor->StopMotor();
         delete wrist_motor;
+        //When finished, stop the wrist motor and delete the wrist_motor pointer
+        wrist_motor->StopMotor();
+        delete wrist_motor;
       })
+      .Until([this] { return m_wrist_motors_pid.AtSetpoint(); });
       .Until([this] { return m_wrist_motors_pid.AtSetpoint(); });
   }
 
@@ -67,6 +101,7 @@ namespace t34
       [this, height]
       {
         m_left_motor.Set(
+        m_left_motor.Set(
           ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
           m_elevator_motors_pid.Calculate(
             m_left_motor.GetSelectedSensorPosition(),
@@ -75,7 +110,9 @@ namespace t34
       [this]
       {
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       })
+      .Until([this] { return m_elevator_motors_pid.AtSetpoint(); });
       .Until([this] { return m_elevator_motors_pid.AtSetpoint(); });
   }
 
