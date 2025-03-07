@@ -12,8 +12,6 @@
 #include <wpinet/PortForwarder.h>
 #include "wpi/json.h"
 #include <string>
-#include <unistd.h>
-//#include <curl/curl.h>
 #include <vector>
 #include <chrono>
 #include <iostream>
@@ -23,12 +21,19 @@
 #include <frc/geometry/Pose3d.h>
 #include <frc/geometry/Rotation2d.h>
 #include <frc/geometry/Rotation3d.h>
+
+#ifdef __USE_GNU // Disabling when targeting Windows out to allow unit tests to run
+#include <unistd.h>
+//#include <curl/curl.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <cstring>
 #include <fcntl.h>
-    
+#else
+#include "Constants.h"
+#endif
+
 namespace LimelightHelpers
 {
     inline std::string sanitizeName(const std::string &name)
@@ -664,6 +669,7 @@ namespace LimelightHelpers
         inline const std::string _key_colorHSV{"cHSV"};
     }
 
+#ifdef __USE_GNU // Disabling when targeting Windows out to allow unit tests to run
     inline void PhoneHome() 
     {
         static int sockfd = -1;
@@ -716,6 +722,8 @@ namespace LimelightHelpers
             sockfd = -1;
         }
     }
+#endif // __USE_GNU
+
 
     inline void SetupPortForwarding(const std::string& limelightName) 
     {
