@@ -76,9 +76,6 @@ namespace t34
         //When finished, stop the wrist motor and delete the wrist_motor pointer
         wrist_motor->StopMotor();
         delete wrist_motor;
-        //When finished, stop the wrist motor and delete the wrist_motor pointer
-        wrist_motor->StopMotor();
-        delete wrist_motor;
       })
       .Until([this] { return m_wrist_motors_pid.AtSetpoint(); });
   }
