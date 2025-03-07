@@ -22,7 +22,7 @@ class DegreeTo550UnitTest : public TestWithParam<std::pair<units::degree_t, doub
 TEST_P(DegreeTo550UnitTest, ConvertsDegreesToNeo550Units) {
   auto [degrees, expected] = GetParam();
 
-  EXPECT_THAT(t34::Neo::DegreeTo550Unit(degrees), DoubleEq(expected));
+  EXPECT_THAT(t34::Neo::DegreeToNEOUnit(degrees), DoubleEq(expected));
 }
 
 INSTANTIATE_TEST_SUITE_P(NeoTests, DegreeTo550UnitTest, Values(
@@ -38,7 +38,7 @@ class InchTo550UnitTest : public TestWithParam<std::pair<units::inch_t, double>>
 TEST_P(InchTo550UnitTest, ConvertsInchTo550Unit) {
   auto [inches, expected] = GetParam();
 
-  EXPECT_THAT(t34::Neo::InchTo550Unit(inches), DoubleEq(expected));
+  EXPECT_THAT(t34::Neo::InchToNEOUnit(inches), DoubleEq(expected));
 }
 
 INSTANTIATE_TEST_SUITE_P(NeoTests, InchTo550UnitTest, Values(

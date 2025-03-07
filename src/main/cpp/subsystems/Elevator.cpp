@@ -5,6 +5,7 @@
 #include <utility>
 
 #include "subsystems/Elevator.h"
+#include "Neo.h"
 
 namespace t34
 {
@@ -17,7 +18,7 @@ namespace t34
   , m_vertical_motors_pid(0.5, 0.0, 0.0)
   , m_wrist_motor_pid(0.5, 0.0, 0.0)
   {
-    m_vertical_motors_pid.SetTolerance(NEOUnitToInch(0.5));
+    m_vertical_motors_pid.SetTolerance(Neo::InchToNEOUnit(0.5_in));
     m_vertical_motor_right.Follow(m_vertical_motor_left);
   }
 
@@ -27,7 +28,7 @@ namespace t34
       [this, angle]
       {
         m_wrist_motor.Set(m_wrist_motor_pid.Calculate(
-          NEOUnitToDegree(m_wrist_motor.GetEncoder().GetPosition()), NEOUnitToDegree(angle.value())));
+          m_wrist_motor.GetEncoder().GetPosition(), Neo::DegreeToNEOUnit(angle)));
       },
       [this]
       {
@@ -44,8 +45,8 @@ namespace t34
         m_vertical_motor_left.Set(
           ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
           m_vertical_motors_pid.Calculate(
-            NEOUnitToInch(m_vertical_motor_left.GetSelectedSensorPosition()),
-            NEOUnitToInch(height.value())));
+            m_vertical_motor_left.GetSelectedSensorPosition(),
+            Neo::InchToNEOUnit(height)));
       },
       [this]
       {
