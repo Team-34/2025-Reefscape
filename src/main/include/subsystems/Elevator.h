@@ -24,10 +24,17 @@ namespace t34
   class Elevator : public frc2::SubsystemBase
   {
   public:
+
+  enum class WristType
+  {
+    kAlgae,
+    kCoral
+  };
+
     Elevator();
 
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
-    frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
+    frc2::CommandPtr MoveWristToCommand(WristType wrist, units::degree_t angle);
     frc2::CommandPtr MoveUpOnceCommand();
     frc2::CommandPtr MoveDownOnceCommand();
     frc2::CommandPtr MoveToLevelCommand(int level);
@@ -35,13 +42,14 @@ namespace t34
   private:
     int m_level;
 
-    SparkMax m_wrist_motor;
+    SparkMax m_algae_wrist_motor;
+    SparkMax m_coral_wrist_motor;
 
-    VictorSPX m_vertical_motor_left;
-    VictorSPX m_vertical_motor_right;
+    VictorSPX m_left_motor;
+    VictorSPX m_right_motor;
 
-    frc::PIDController m_vertical_motors_pid;
-    frc::PIDController m_wrist_motor_pid;
+    frc::PIDController m_elevator_motors_pid;
+    frc::PIDController m_wrist_motors_pid;
   };
 
 } // namespace t34
