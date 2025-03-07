@@ -44,8 +44,8 @@ void AutoDriveCommand::Execute()
 {
 
   m_travelled = EncUnitsToInches(m_swerve->GetModulePositions()[0].distance.value() + m_init_dist);
-  m_current_x = m_travelled * cos(m_wheel_theta);
-  m_current_y = -m_travelled * sin(m_wheel_theta);
+  //m_current_x = m_travelled * cos(m_wheel_theta);
+  //m_current_y = -m_travelled * sin(m_wheel_theta);
   m_current_theta = m_swerve->GetYaw().Degrees();
   
   // m_x_drive = -8_in * ((m_x_translation - m_current_x) / (m_x_translation == 0_in ? 1_in : m_x_translation));
