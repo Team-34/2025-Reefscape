@@ -18,7 +18,7 @@ namespace t34
   , m_vertical_motors_pid(0.5, 0.0, 0.0)
   , m_wrist_motor_pid(0.5, 0.0, 0.0)
   {
-    m_vertical_motors_pid.SetTolerance(Neo::InchToNEOUnit(0.5_in));
+    m_vertical_motors_pid.SetTolerance(Neo::LengthToNEOUnit(0.5_in));
     m_vertical_motor_right.Follow(m_vertical_motor_left);
   }
 
@@ -28,7 +28,7 @@ namespace t34
       [this, angle]
       {
         m_wrist_motor.Set(m_wrist_motor_pid.Calculate(
-          m_wrist_motor.GetEncoder().GetPosition(), Neo::DegreeToNEOUnit(angle)));
+          m_wrist_motor.GetEncoder().GetPosition(), Neo::AngleToNEOUnit(angle)));
       },
       [this]
       {
@@ -46,7 +46,7 @@ namespace t34
           ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
           m_vertical_motors_pid.Calculate(
             m_vertical_motor_left.GetSelectedSensorPosition(),
-            Neo::InchToNEOUnit(height)));
+            Neo::LengthToNEOUnit(height)));
       },
       [this]
       {

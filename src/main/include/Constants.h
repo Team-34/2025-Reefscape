@@ -19,8 +19,6 @@ constexpr bool INVERT_GYRO{ true }; // Always ensure Gyro is CCW+ CW-
 constexpr double PI2{ M_PI * 2.0 };
 constexpr double _180_DIV_PI{ 180.0 / M_PI };
 constexpr double PI_DIV_180{ M_PI / 180.0 };
-constexpr double NEO550_RES{ 42 };
-constexpr double NEO550_SHAFT_CIRCUMFERENCE_INCH{ 0.125 * M_PI };
 constexpr double LIMELIGHT_DEGREE_SCALAR{ 23.188 / 20.25 };//{ 21.1726 / 22.5 };
 const units::inch_t BASE_HEIGHT_FROM_FLOOR{ 2.0 };
 

@@ -14,36 +14,25 @@ namespace t34
     /**
      * Converts inches into NEO550 encoder units.
      * 
-     * @returns inches * (1/NEO550_SHAFT_CIRCUMFERENCE_INCH) * NEO550_RES
+     * @returns length * (1/NEO550_SHAFT_CIRCUMFERENCE_INCH) * NEO550_RES
      */
-    inline double InchToNEOUnit(units::inch_t inches)
+    inline double LengthToNEOUnit(units::inch_t length)
     {
         // 42 encoder units = ~0.3927 inches
         // 1 inch = 1/NEO550_SHAFT_CIRCUMFERENCE_INCH = ~2.546 NEO550 revolutions
         // 1 inch = (1/NEO550_SHAFT_CIRCUMFERENCE_INCH) * NEO550_RES = ~106.952 encoder units
 
-        return (1.0/NEO550_SHAFT_CIRCUMFERENCE_INCH) * NEO550_RES * inches.value();
+        return (1.0/NEO550_SHAFT_CIRCUMFERENCE) * NEO550_RESOLUTION * length;
     }
 
     /**
      * Converts degrees into NEO550 encoder units.
      * 
-     * @returns (NEO550_RES / 360) * degrees
+     * @returns (NEO550_RES / 360) * angle
      */
-    inline double DegreeToNEOUnit(units::degree_t degrees)
+    inline double AngleToNEOUnit(units::degree_t angle)
     {
-        return (NEO550_RES / 360.0) * degrees.value();
+        return NEO550_RESOLUTION * angle;
     }
-
-    // inline constexpr double DegreeTo550Unit(units::degree_t degrees)
-    // {
-    //   return degrees * NEO550_RESOLUTION;
-    // }
-
-    // inline constexpr double InchTo550Unit(units::inch_t inches)
-    // {   
-    //   return DegreeTo550Unit(inches / NEO550_SHAFT_CIRCUMFERENCE);
-    // }
-
   } // namespace Neo
 } // namespace t34
