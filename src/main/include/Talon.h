@@ -8,8 +8,9 @@ namespace t34
 {
   namespace Talon
   {
-    constexpr auto SRX_RESOLUTION         { 4096.0 / 1_tr }; //4096 units per rotation
-    constexpr auto _775PRO_SHAFT_CIRCUMFERENCE{ (2 * (M_PI * (0.197_in / 2))) / 1_tr };
+    constexpr auto SRX_RESOLUTION{ 4096.0 / 1_tr };
+
+    constexpr auto _775PRO_SHAFT_CIRCUMFERENCE{ (M_PI * 0.197_in) / 1_tr };
 
     /**
      * Converts inches into 775PRO encoder units.

@@ -40,19 +40,19 @@ namespace t34
     frc2::CommandPtr MoveToLevelCommand(int level);
     frc2::CommandPtr MoveToRestCommand();
 
-    frc2::CommandPtr MoveElevatorByPower(double val);
-    frc2::CommandPtr MoveAlgaeWristByPower(double val);
-    frc2::CommandPtr MoveCoralWristByPower(double val);
+    frc2::CommandPtr MoveElevatorByPowerCommand(double val);
+    frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
+    frc2::CommandPtr MoveCoralWristByPowerCommand(double val);
 
   private:
     int m_level;
 
     bool m_at_rest;
 
-    units::inch_t m_init_height;
+    const units::inch_t m_init_height;
 
-    units::degree_t m_init_coral_angle;
-    units::degree_t m_init_algae_angle;
+    const units::degree_t m_init_coral_angle;
+    const units::degree_t m_init_algae_angle;
 
     SparkMax m_algae_wrist_motor;
     SparkMax m_coral_wrist_motor;

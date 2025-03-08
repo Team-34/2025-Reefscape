@@ -30,7 +30,7 @@ namespace t34
 
   frc2::CommandPtr Elevator::MoveWristToCommand(WristType wrist, units::degree_t angle)
   {
-    SparkMax* wrist_motor;
+    SparkMax* wrist_motor{ nullptr };
 
     if(wrist == WristType::kAlgae) //set wrist_motor to the right motor
     {
@@ -107,14 +107,12 @@ namespace t34
 
   frc2::CommandPtr Elevator::MoveUpOnceCommand()
   {
-    m_level += 1;
-    return this->MoveToLevelCommand(m_level); 
+    return this->MoveToLevelCommand(m_level + 1); 
   }
 
   frc2::CommandPtr Elevator::MoveDownOnceCommand()
   {
-    m_level -= 1;
-    return this->MoveToLevelCommand(m_level); 
+    return this->MoveToLevelCommand(m_level - 1); 
   }
 
   frc2::CommandPtr Elevator::MoveToRestCommand()
@@ -123,7 +121,7 @@ namespace t34
     return this->ElevateToCommand(18_in).AndThen(MoveWristToCommand(WristType::kAlgae, 0_deg));
   }
 
-  frc2::CommandPtr Elevator::MoveElevatorByPower(double val)
+  frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)
   {
     return this->RunOnce
     (
@@ -134,30 +132,14 @@ namespace t34
     );
   }
 
-  frc2::CommandPtr Elevator::MoveAlgaeWristByPower(double val)
+  frc2::CommandPtr Elevator::MoveAlgaeWristByPowerCommand(double val)
   {
-      
-    return this->RunOnce
-    (
-      [this, val]
-      {
-        m_algae_wrist_motor.Set(val);
-      }
-    );
-  
+    return this->RunOnce([this, val] { m_algae_wrist_motor.Set(val); });
   }
 
-  frc2::CommandPtr Elevator::MoveCoralWristByPower(double val)
+  frc2::CommandPtr Elevator::MoveCoralWristByPowerCommand(double val)
   {
-      
-    return this->RunOnce
-    (
-      [this, val]
-      {
-        m_coral_wrist_motor.Set(val);
-      }
-    );
-  
+    return this->RunOnce([this, val] { m_coral_wrist_motor.Set(val); });
   }
 
 } // namespace t34
