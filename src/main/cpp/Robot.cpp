@@ -5,13 +5,14 @@
 #include "Robot.h"
 #include "subsystems/LimelightUtil.h"
 
-Robot::Robot() {
+Robot::Robot() 
+{
   
 }
 
-void Robot::RobotPeriodic() {
+void Robot::RobotPeriodic() 
+{
   frc2::CommandScheduler::GetInstance().Run();
-
 }
 
 void Robot::DisabledInit() {}
@@ -20,7 +21,8 @@ void Robot::DisabledPeriodic() {}
 
 void Robot::DisabledExit() {}
 
-void Robot::AutonomousInit() {
+void Robot::AutonomousInit() 
+{
   m_autonomous_command = rc.GetAutonomousCommand();
 
   if (m_autonomous_command) {
@@ -32,7 +34,8 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::AutonomousExit() {}
 
-void Robot::TeleopInit() {
+void Robot::TeleopInit() 
+{
   if (m_autonomous_command)
   {
     m_autonomous_command->Cancel();
@@ -46,7 +49,8 @@ void Robot::TeleopPeriodic() {}
 
 void Robot::TeleopExit() {}
 
-void Robot::TestInit() {
+void Robot::TestInit() 
+{
   frc2::CommandScheduler::GetInstance().CancelAll();
 }
 
@@ -55,7 +59,8 @@ void Robot::TestPeriodic() {}
 void Robot::TestExit() {}
 
 #ifndef RUNNING_FRC_TESTS
-int main() {
+int main() 
+{
   return frc::StartRobot<Robot>();
 }
 #endif
