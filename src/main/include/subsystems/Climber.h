@@ -3,20 +3,26 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc/controller/PIDController.h>
 #include "Constants.h"
+#include "Neo.h"
 #include <frc2/command/CommandPtr.h>
 
 using namespace rev::spark;
 
-class Climber : public frc2::SubsystemBase {
-public:
-    Climber();
+namespace t34
+{
 
-    frc2::CommandPtr FlipArmCommand();
+    class Climber : public frc2::SubsystemBase {
+    public:
+        Climber();
+    
+        frc2::CommandPtr FlipArmCommand();
+    
+    private:
+        SparkMax m_motor;
+    
+        bool m_engaged;
+    
+        frc::PIDController m_pid_controller;
+    };
 
-private:
-    SparkMax m_motor;
-
-    bool m_engaged;
-
-    frc::PIDController m_pid_controller;
-};
+}
