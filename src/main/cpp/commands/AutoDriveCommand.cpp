@@ -26,9 +26,11 @@ units::inch_t drive_tolerance, units::degree_t rotation_tolerance)
 , m_current_theta(m_swerve->GetYaw().Degrees())
 , m_x_drive(0.0)
 , m_y_drive(0.0)
+, m_drive_pid(1.0, 0.0, 0.045)
+, m_rot_pid(0.5, 0.0, 0.1)
 , m_init_dist(swerve->GetModulePositions()[0].distance.value())
 , m_rot_speed(0.0)
-, m_invert_drives( (m_x_translation.value() > 0.0) ? -1.0 : 1.0 )
+, m_invert_drives( (m_x_translation.value() >= 0.0) ? 1.0 : -1.0 )
 , m_at_drive_setpoint(false)
 , m_at_steer_setpoint(false)
 {
@@ -37,92 +39,49 @@ units::inch_t drive_tolerance, units::degree_t rotation_tolerance)
 }
 
 // Called when the command is initially scheduled.
-void AutoDriveCommand::Initialize() {}
+void AutoDriveCommand::Initialize() 
+{
+  m_drive_pid.SetSetpoint(m_setpoint.value());
+  m_drive_pid.SetTolerance(1.0);
+
+  m_rot_pid.SetSetpoint(m_base_rotation.value());
+  m_rot_pid.SetTolerance(1.0);
+}
 
 // Called repeatedly when this Command is scheduled to run
 void AutoDriveCommand::Execute() 
 {
 
   m_travelled = EncUnitsToInches(m_swerve->GetModulePositions()[0].distance.value() + m_init_dist);
-  //m_current_x = m_travelled * cos(m_wheel_theta);
-  //m_current_y = -m_travelled * sin(m_wheel_theta);
+  m_current_x = m_travelled * cos(m_wheel_theta);
+  m_current_y = -m_travelled * sin(m_wheel_theta);
   m_current_theta = m_swerve->GetYaw().Degrees();
+
+  m_y_drive = m_drive_pid.Calculate(m_travelled.value());
+  m_x_drive = m_y_drive * tan(m_wheel_theta);
+  m_rot_speed = m_rot_pid.Calculate(m_current_theta.value());
   
-  // m_x_drive = -8_in * ((m_x_translation - m_current_x) / (m_x_translation == 0_in ? 1_in : m_x_translation));
-  // m_y_drive = -8_in * ((m_y_translation - m_current_y) / (m_y_translation == 0_in ? 1_in : m_y_translation)) * tan(m_wheel_theta);
-
-  // if (m_x_translation != 0_in)
-  // {
-  //   m_x_drive = 4_in * ((m_setpoint + m_travelled) / fabs(m_setpoint));
-  // }
-
-  // if (m_y_translation != 0_in)
-  // {
-  //   m_y_drive = 4_in * ((m_setpoint + m_travelled) / fabs(m_setpoint)) * tan(m_wheel_theta);
-  // }
-
-  // if (m_rot_speed != 0_deg)
-  // {
-  //   m_rot_speed = 1_deg * ((m_base_rotation - m_current_theta) / (m_base_rotation));
-  // }
-
-/**
- * Rotation should operate independently to the drive movement, so its setpoint is checked separate from the drive setpoint
- */
-  if (-m_rotation_tolerance < m_rot_speed && m_rot_speed < m_rotation_tolerance)
+    if (fabs(m_travelled) < fabs(m_setpoint) - 1_in)
     {
-      m_rot_speed = 0_deg;
-
-      m_at_steer_setpoint = true;
-    }
-    else
-    {
-      m_rot_speed = 1_deg * ((m_base_rotation - m_current_theta) / (m_base_rotation));
-
-      m_at_steer_setpoint = false;
-    }
-
-  if ((abs(m_setpoint) - m_drive_tolerance) < m_travelled)
-  {
-    
-    m_swerve->Drive(frc::Translation2d(
-    units::meter_t(0.0),
-    units::meter_t(0.0)),
-    m_rot_speed.value()
-    );
-
-    m_swerve->ResetToAbsolute();
-    m_at_drive_setpoint = true;
-  }
-  else
-  {
-
-    if (-m_drive_tolerance < m_x_drive && m_x_drive < m_drive_tolerance)
-    {
-      m_x_drive = 0_in;
-    }
-    else
-    {
-      m_x_drive = 4_in * ((m_setpoint + m_travelled) / fabs(m_setpoint));
-    }
-    if (-m_drive_tolerance < m_y_drive && m_y_drive < m_drive_tolerance)
-    {
-      m_y_drive = 0_in;
-    }
-    else
-    {
-      m_y_drive = 4_in * ((m_setpoint + m_travelled) / fabs(m_setpoint)) * tan(m_wheel_theta);
-    }
-
-    m_swerve->Drive(frc::Translation2d(
-    units::meter_t(m_invert_drives * m_x_drive.value()),
-    units::meter_t(-m_invert_drives * m_y_drive.value())),
-    m_rot_speed.value()
+      m_swerve->Drive(frc::Translation2d(
+      units::meter_t(m_invert_drives * m_y_drive),
+      units::meter_t(-m_x_drive)),
+      m_rot_speed
     );
 
     m_at_drive_setpoint = false;
+    }
+    else
+    {
+      m_swerve->Drive(frc::Translation2d(
+      units::meter_t(0.0),
+      units::meter_t(0.0)),
+    m_rot_speed
+    );
+
+    m_at_drive_setpoint = true;
+    }
   }
-}
 
 // Called once the command ends or is interrupted.
 void AutoDriveCommand::End(bool interrupted) {
@@ -133,5 +92,6 @@ void AutoDriveCommand::End(bool interrupted) {
 // Returns true when the command should end.
 bool AutoDriveCommand::IsFinished() {
 
-  return (m_at_drive_setpoint && m_at_steer_setpoint);
+  //return (m_at_drive_setpoint && m_at_steer_setpoint);
+  return m_at_drive_setpoint;
 }

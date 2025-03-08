@@ -16,7 +16,7 @@ Robot::Robot() {
 void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
 
-  frc::SmartDashboard::PutNumber("travelled", rc->swerve_drive->GetModulePositions()[0].distance.value());
+  frc::SmartDashboard::PutNumber("travelled", rc->AutoDrive.GetTravelled().value());
   frc::SmartDashboard::PutNumber("setpoint", rc->AutoDrive.GetSetpoint().value());
   frc::SmartDashboard::PutNumber("y", rc->AutoDrive.GetYTravelled().value());
   frc::SmartDashboard::PutNumber("x", rc->AutoDrive.GetXTravelled().value());
