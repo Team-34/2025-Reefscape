@@ -55,24 +55,24 @@ namespace t34 {
 
 
     // Left Forward Swerve Module
-    constexpr int ID_LEFT_FWD_DRIVE     {20};
-    constexpr int ID_LEFT_FWD_STEER     {21};
-    constexpr int ID_LEFT_FWD_CANCODER  {22};
+    constexpr int ID_LEFT_FWD_DRIVE     {23};
+    constexpr int ID_LEFT_FWD_STEER     {24};
+    constexpr int ID_LEFT_FWD_CANCODER  {25};
     
     // Right Forward Swerve Module    
-    constexpr int ID_RIGHT_FWD_DRIVE    {23};
-    constexpr int ID_RIGHT_FWD_STEER    {24};
-    constexpr int ID_RIGHT_FWD_CANCODER {25};
+    constexpr int ID_RIGHT_FWD_DRIVE    {20};
+    constexpr int ID_RIGHT_FWD_STEER    {21};
+    constexpr int ID_RIGHT_FWD_CANCODER {22};
     
     // Right Aft Swerve Module    
-    constexpr int ID_RIGHT_AFT_DRIVE    {26};
-    constexpr int ID_RIGHT_AFT_STEER    {27};
-    constexpr int ID_RIGHT_AFT_CANCODER {28};
+    constexpr int ID_RIGHT_AFT_DRIVE    {29};
+    constexpr int ID_RIGHT_AFT_STEER    {30};
+    constexpr int ID_RIGHT_AFT_CANCODER {31};
         
     // Left Aft Swerve Module    
-    constexpr int ID_LEFT_AFT_DRIVE     {29};
-    constexpr int ID_LEFT_AFT_STEER     {30};
-    constexpr int ID_LEFT_AFT_CANCODER  {31};
+    constexpr int ID_LEFT_AFT_DRIVE     {26};
+    constexpr int ID_LEFT_AFT_STEER     {27};
+    constexpr int ID_LEFT_AFT_CANCODER  {28};
 
     constexpr double LEFT_FWD_CANCODER_OFFSET  { -0.006836 };
     constexpr double LEFT_AFT_CANCODER_OFFSET  { -0.607910 };
