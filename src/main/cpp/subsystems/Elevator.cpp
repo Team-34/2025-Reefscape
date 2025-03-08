@@ -6,6 +6,7 @@
 
 #include "subsystems/Elevator.h"
 #include "Neo.h"
+#include "Talon.h"
 
 namespace t34
 {
@@ -35,13 +36,13 @@ namespace t34
     {
       wrist_motor = &m_algae_wrist_motor;
 
-      m_wrist_motors_pid.SetSetpoint(Neo::AngleToNEOUnit(m_init_algae_angle - angle));
+      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleToNEOUnit(m_init_algae_angle - angle));
     }
     else if(wrist == WristType::kCoral)
     {
       wrist_motor = &m_coral_wrist_motor;
 
-      m_wrist_motors_pid.SetSetpoint(Neo::AngleToNEOUnit(m_init_coral_angle - angle));
+      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleToNEOUnit(m_init_coral_angle - angle));
     }
     else
     {
@@ -54,7 +55,7 @@ namespace t34
       [this, angle, wrist_motor]
       {
         //Run wrist motor in respect to the setpoint
-        wrist_motor->Set(m_wrist_motors_pid.Calculate(wrist_motor->GetEncoder().GetPosition()));
+        wrist_motor->Set(m_wrist_motors_pid.Calculate(BOTH_WRIST_GEAR_RATIO * wrist_motor->GetEncoder().GetPosition()));
       },
       [this, wrist_motor]
       {
@@ -67,7 +68,7 @@ namespace t34
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
-    m_elevator_motors_pid.SetSetpoint(Neo::LengthToNEOUnit(height - m_init_height));
+    m_elevator_motors_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthToSRXUnit(height - m_init_height));
 
     return this->RunEnd(
       [this, height]
@@ -75,9 +76,9 @@ namespace t34
         //Run the elevator in respect to the given height
         m_left_motor.Set(
           ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
-          m_elevator_motors_pid.Calculate(
+          m_elevator_motors_pid.Calculate(ELEVATOR_WINCH_GEAR_RATIO *
             m_left_motor.GetSelectedSensorPosition(),
-            Neo::LengthToNEOUnit(height)));
+            Talon::LengthToSRXUnit(height)));
       },
       [this]
       {
