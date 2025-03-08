@@ -27,8 +27,7 @@ class AutoDriveCommand
    * @param rotation degrees that the robot should rotate. NOT THE WHEELS.
    * @param tolerance extra inches that the robot will consider "zero" at the destination
    */
-  AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::inch_t x_translation, units::inch_t y_translation, units::degree_t rotation,
-   units::inch_t drive_tolerance = 0.5_in, units::degree_t rotation_tolerance = 0.5_deg);
+  AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::inch_t x_translation, units::inch_t y_translation, units::degree_t rotation);
 
   void Initialize() override;
 
@@ -59,20 +58,15 @@ class AutoDriveCommand
 
   units::inch_t m_x_translation;
   units::inch_t m_y_translation;
-  units::inch_t m_drive_tolerance;
   units::inch_t m_setpoint;
 
   units::inch_t m_travelled;
   units::inch_t m_current_x;
   units::inch_t m_current_y;
-  // units::inch_t m_x_drive;
-  // units::inch_t m_y_drive;
 
   units::degree_t m_base_rotation;
   units::degree_t m_wheel_theta;
   units::degree_t m_current_theta;
-  //units::degree_t m_rot_speed;
-  units::degree_t m_rotation_tolerance;
 
   frc::PIDController m_drive_pid;
   frc::PIDController m_rot_pid;
@@ -85,5 +79,4 @@ class AutoDriveCommand
   double m_invert_drives;
 
   bool m_at_drive_setpoint;
-  bool m_at_steer_setpoint;
 };

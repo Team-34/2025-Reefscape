@@ -10,14 +10,11 @@ using namespace units::math;
  *  @param swerve a shared_ptr to the swerve drive subsystem that you're using
  *  @param x_translation the change in horizontal distance from the starting 
  */
-AutoDriveCommand::AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::inch_t x_translation, units::inch_t y_translation, units::degree_t rotation, 
-units::inch_t drive_tolerance, units::degree_t rotation_tolerance) 
+AutoDriveCommand::AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, units::inch_t x_translation, units::inch_t y_translation, units::degree_t rotation) 
 : m_swerve(swerve)
 , m_x_translation(x_translation)
 , m_y_translation(y_translation)
 , m_setpoint(sqrt((m_x_translation * m_x_translation) + (m_y_translation * m_y_translation)))
-, m_drive_tolerance((drive_tolerance) / m_setpoint.value())
-, m_rotation_tolerance((rotation_tolerance) / m_base_rotation.value())
 , m_travelled(0.0)
 , m_current_x(0.0)
 , m_current_y(0.0)
@@ -32,7 +29,6 @@ units::inch_t drive_tolerance, units::degree_t rotation_tolerance)
 , m_rot_speed(0.0)
 , m_invert_drives( (m_x_translation.value() >= 0.0) ? 1.0 : -1.0 )
 , m_at_drive_setpoint(false)
-, m_at_steer_setpoint(false)
 {
   AddRequirements(swerve.get());
 
