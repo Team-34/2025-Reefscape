@@ -40,6 +40,10 @@ namespace t34
     frc2::CommandPtr MoveToLevelCommand(int level);
     frc2::CommandPtr MoveToRestCommand();
 
+    frc2::CommandPtr MoveElevatorByPower(double val);
+    frc2::CommandPtr MoveAlgaeWristByPower(double val);
+    frc2::CommandPtr MoveCoralWristByPower(double val);
+
   private:
     int m_level;
 

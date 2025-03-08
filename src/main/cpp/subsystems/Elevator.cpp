@@ -47,7 +47,7 @@ namespace t34
     {
       //if the enum is invalid, delete the wrist_motor pointer and end the command
       delete wrist_motor;
-      return;
+      this->GetCurrentCommand()->Cancel();
     }
 
     return this->RunEnd(
@@ -120,6 +120,43 @@ namespace t34
   {
     //move 18 inches from start to provide space, and then move wrist.
     return this->ElevateToCommand(18_in).AndThen(MoveWristToCommand(WristType::kAlgae, 0_deg));
+  }
+
+  frc2::CommandPtr Elevator::MoveElevatorByPower(double val)
+  {
+    return this->RunOnce
+    (
+      [this, val]
+      {
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+      }
+    );
+  }
+
+  frc2::CommandPtr Elevator::MoveAlgaeWristByPower(double val)
+  {
+      
+    return this->RunOnce
+    (
+      [this, val]
+      {
+        m_algae_wrist_motor.Set(val);
+      }
+    );
+  
+  }
+
+  frc2::CommandPtr Elevator::MoveCoralWristByPower(double val)
+  {
+      
+    return this->RunOnce
+    (
+      [this, val]
+      {
+        m_coral_wrist_motor.Set(val);
+      }
+    );
+  
   }
 
 } // namespace t34
