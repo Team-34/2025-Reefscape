@@ -30,9 +30,10 @@ namespace t34
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
     frc2::CommandPtr MoveAlgaeWristToCommand(units::degree_t angle);
     frc2::CommandPtr MoveCoralWristToCommand(units::degree_t angle);
+
+    frc2::CommandPtr MoveToLevelCommand(int level);
     frc2::CommandPtr MoveUpOnceCommand();
     frc2::CommandPtr MoveDownOnceCommand();
-    frc2::CommandPtr MoveToLevelCommand(int level);
     frc2::CommandPtr MoveToRestCommand();
 
     frc2::CommandPtr MoveElevatorByPowerCommand(double val);
