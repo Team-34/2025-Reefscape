@@ -92,7 +92,7 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
 
         m_right_motor.Set(
           ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
-          m_elevator_motors_pid.Calculate(m_right_motor.GetSelectedSensorPosition())
+          m_elevator_motors_pid.Calculate(-m_right_motor.GetSelectedSensorPosition())
         );
       },
       [this]
