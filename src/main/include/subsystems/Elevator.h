@@ -25,16 +25,11 @@ namespace t34
   {
   public:
 
-  enum class WristType
-  {
-    kAlgae,
-    kCoral
-  };
-
     Elevator();
 
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
-    frc2::CommandPtr MoveWristToCommand(WristType wrist, units::degree_t angle);
+    frc2::CommandPtr MoveAlgaeWristToCommand(units::degree_t angle);
+    frc2::CommandPtr MoveCoralWristToCommand(units::degree_t angle);
     frc2::CommandPtr MoveUpOnceCommand();
     frc2::CommandPtr MoveDownOnceCommand();
     frc2::CommandPtr MoveToLevelCommand(int level);
@@ -60,8 +55,7 @@ namespace t34
     VictorSPX m_right_motor;
 
     frc::PIDController m_elevator_motors_pid;
-    frc::PIDController m_right_algae_wrist_pid;
-    frc::PIDController m_left_algae_wrist_pid;
+    frc::PIDController m_algae_wrist_pid;
     frc::PIDController m_coral_wrist_pid;
   };
 
