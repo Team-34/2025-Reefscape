@@ -20,12 +20,11 @@ namespace t34
   , m_elevator_motors_pid(0.5, 0.0, 0.0)
   , m_wrist_motors_pid(0.5, 0.0, 0.0)
   , m_init_height(16.5_in)
-    //The wrists' angles are from 0 to 180 degrees (0 is straight down, and 180 is straight up, and 90 is parallel to the floor)
+    //The wrists' angles are from 0 to 180 degrees (0 is straight down, 180 is straight up, and 90 is parallel to the floor)
   , m_init_algae_angle(155_deg) //65 degrees away from horizontal
   , m_init_coral_angle(0_deg) 
   {
-    m_elevator_motors_pid.SetTolerance(Neo::LengthToNEOUnit(0.5_in));
-    m_right_motor.Follow(m_left_motor);
+    m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
   }
 
   frc2::CommandPtr Elevator::MoveWristToCommand(WristType wrist, units::degree_t angle)
@@ -36,13 +35,13 @@ namespace t34
     {
       wrist_motor = &m_algae_wrist_motor;
 
-      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleToNEOUnit(angle - m_init_algae_angle));
+      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_algae_angle));
     }
     else if(wrist == WristType::kCoral)
     {
       wrist_motor = &m_coral_wrist_motor;
 
-      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleToNEOUnit(angle - m_init_coral_angle));
+      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_coral_angle));
     }
     else
     {
@@ -88,10 +87,10 @@ namespace t34
   {                               //  Coral Intake     Elevator height
     static const std::array<std::pair<units::degree_t, units::inch_t>, 5> presets {{
       { 85_deg, 0_in },
-      { 35_deg, 18_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
-      { 35_deg, 31.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
-      { 35_deg, 47.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
-      { 88_deg, 72_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
+      { 35_deg, 18_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
+      { 35_deg, 31.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
+      { 35_deg, 47.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
+      { 88_deg, 72_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
     }};
 
     m_level = std::clamp(level, 0, static_cast <int> (presets.size()) - 1);

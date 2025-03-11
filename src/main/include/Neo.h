@@ -16,7 +16,7 @@ namespace t34
      * 
      * @returns length * (1/NEO550_SHAFT_CIRCUMFERENCE_INCH) * NEO550_RES
      */
-    inline double LengthToNEOUnit(units::inch_t length)
+    inline double LengthTo550Unit(units::inch_t length)
     {
         // 42 encoder units = ~0.3927 inches
         // 1 inch = 1/NEO550_SHAFT_CIRCUMFERENCE_INCH = ~2.546 NEO550 revolutions
@@ -30,7 +30,7 @@ namespace t34
      * 
      * @returns (NEO550_RES / 360) * angle
      */
-    inline double AngleToNEOUnit(units::degree_t angle)
+    inline double AngleTo550Unit(units::degree_t angle)
     {
         return NEO550_RESOLUTION * angle;
     }
