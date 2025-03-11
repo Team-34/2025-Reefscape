@@ -47,8 +47,6 @@ namespace t34
   private:
     int m_level;
 
-    bool m_at_rest;
-
     const units::inch_t m_init_height;
 
     const units::degree_t m_init_coral_angle;

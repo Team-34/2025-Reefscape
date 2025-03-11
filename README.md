@@ -35,3 +35,14 @@ tA (total area of fiducial - in an unknown value - on camera) and distance (In f
 |0.122| 14.5| 
 |0.119| 15  | 
 
+## Wrist Axis
+
+The algae and coral intake wrists have a shared axis:
+
+| Angle |      Orientation     |
+|-------|----------------------|
+|  180° |    Straight upward   |
+|  90°  | Parallel to the floor| 
+|  0°   |  Straight downward   | 
+
+Additionally, the wrist's resting position is 65° up from being parallel from the floor, so its starting position is 165°

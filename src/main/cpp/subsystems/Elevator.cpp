@@ -13,7 +13,6 @@ namespace t34
 
   Elevator::Elevator()
   : m_level(0)
-  , m_at_rest(true)
   , m_algae_wrist_motor(997, SparkLowLevel::MotorType::kBrushless)
   , m_coral_wrist_motor(998, SparkLowLevel::MotorType::kBrushless)
   , m_left_motor(999)
@@ -21,8 +20,9 @@ namespace t34
   , m_elevator_motors_pid(0.5, 0.0, 0.0)
   , m_wrist_motors_pid(0.5, 0.0, 0.0)
   , m_init_height(18_in)
-  , m_init_algae_angle(70_deg) //90 degrees is straight up, 0 degrees is horizontal. This wrist CAN NOT move greater than 70 degrees.
-  , m_init_coral_angle(0_deg) //0 degrees is straight down. Rotating to the left is positive change.
+    //The wrists' angles are from 0 to 180 degrees (0 is straight down, and 180 is straight up, and 90 is parallel to the floor)
+  , m_init_algae_angle(155_deg) //65 degrees away from horizontal
+  , m_init_coral_angle(0_deg) 
   {
     m_elevator_motors_pid.SetTolerance(Neo::LengthToNEOUnit(0.5_in));
     m_right_motor.Follow(m_left_motor);
@@ -36,18 +36,16 @@ namespace t34
     {
       wrist_motor = &m_algae_wrist_motor;
 
-      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleToNEOUnit(m_init_algae_angle - angle));
+      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleToNEOUnit(angle - m_init_algae_angle));
     }
     else if(wrist == WristType::kCoral)
     {
       wrist_motor = &m_coral_wrist_motor;
 
-      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleToNEOUnit(m_init_coral_angle - angle));
+      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleToNEOUnit(angle - m_init_coral_angle));
     }
     else
     {
-      //if the enum is invalid, delete the wrist_motor pointer and end the command
-      delete wrist_motor;
       this->GetCurrentCommand()->Cancel();
     }
 
@@ -55,13 +53,12 @@ namespace t34
       [this, angle, wrist_motor]
       {
         //Run wrist motor in respect to the setpoint
-        wrist_motor->Set(m_wrist_motors_pid.Calculate(BOTH_WRIST_GEAR_RATIO * wrist_motor->GetEncoder().GetPosition()));
+        wrist_motor->Set(m_wrist_motors_pid.Calculate(wrist_motor->GetEncoder().GetPosition()));
       },
       [this, wrist_motor]
       {
         //When finished, stop the wrist motor and delete the wrist_motor pointer
         wrist_motor->StopMotor();
-        delete wrist_motor;
       })
       .Until([this] { return m_wrist_motors_pid.AtSetpoint(); });
   }
@@ -76,9 +73,8 @@ namespace t34
         //Run the elevator in respect to the given height
         m_left_motor.Set(
           ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
-          m_elevator_motors_pid.Calculate(ELEVATOR_WINCH_GEAR_RATIO *
-            m_left_motor.GetSelectedSensorPosition(),
-            Talon::LengthToSRXUnit(height)));
+          m_elevator_motors_pid.Calculate(m_left_motor.GetSelectedSensorPosition())
+        );
       },
       [this]
       {
