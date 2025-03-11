@@ -19,7 +19,7 @@ namespace t34
   , m_right_motor(1000)
   , m_elevator_motors_pid(0.5, 0.0, 0.0)
   , m_wrist_motors_pid(0.5, 0.0, 0.0)
-  , m_init_height(18_in)
+  , m_init_height(16.5_in)
     //The wrists' angles are from 0 to 180 degrees (0 is straight down, and 180 is straight up, and 90 is parallel to the floor)
   , m_init_algae_angle(155_deg) //65 degrees away from horizontal
   , m_init_coral_angle(0_deg) 
@@ -114,7 +114,7 @@ namespace t34
   frc2::CommandPtr Elevator::MoveToRestCommand()
   {
     //move 18 inches from start to provide space, and then move wrist.
-    return this->ElevateToCommand(18_in).AndThen(MoveWristToCommand(WristType::kAlgae, 0_deg));
+    return this->ElevateToCommand(m_init_height).AndThen(MoveWristToCommand(WristType::kAlgae, 0_deg));
   }
 
   frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)
