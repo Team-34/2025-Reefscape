@@ -40,7 +40,7 @@ tA (total area of fiducial - in an unknown value - on camera) and distance (In f
 The algae and coral intake wrists have a shared axis:
 
 | Angle |      Orientation     |
-|-------|----------------------|
+|------:|----------------------|
 |  180° |    Straight upward   |
 |  90°  | Parallel to the floor| 
 |  0°   |  Straight downward   | 

@@ -13,19 +13,24 @@ namespace t34
 
   Elevator::Elevator()
   : m_level(0)
-  , m_right_algae_wrist_motor(1, SparkLowLevel::MotorType::kBrushless)
-  , m_left_algae_wrist_motor(2, SparkLowLevel::MotorType::kBrushless)
-  , m_coral_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
-  , m_left_motor(11)
-  , m_right_motor(12)
-  , m_elevator_motors_pid(0.5, 0.0, 0.0)
-  , m_coral_wrist_pid(0.5, 0.0, 0.0)
-  , m_right_algae_wrist_pid(0.5, 0.0, 0.0)
-  , m_left_algae_wrist_pid(0.5, 0.0, 0.0)
+
   , m_init_height(16.5_in)
+
     //The wrists' angles are from 0 to 180 degrees (0 is straight down, 180 is straight up, and 90 is parallel to the floor)
   , m_init_algae_angle(155_deg) //65 degrees away from horizontal
   , m_init_coral_angle(0_deg) 
+
+  , m_right_algae_wrist_motor(1, SparkLowLevel::MotorType::kBrushless)
+  , m_left_algae_wrist_motor(2, SparkLowLevel::MotorType::kBrushless)
+  , m_coral_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
+
+  , m_left_motor(11)
+  , m_right_motor(12)
+
+  , m_elevator_motors_pid(0.5, 0.0, 0.0)
+  , m_right_algae_wrist_pid(0.5, 0.0, 0.0)
+  , m_left_algae_wrist_pid(0.5, 0.0, 0.0)
+  , m_coral_wrist_pid(0.5, 0.0, 0.0)
   {
     m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
     m_coral_wrist_pid.SetTolerance(Neo::AngleTo550Unit(0.25_deg));
@@ -42,12 +47,16 @@ namespace t34
       //wrist_motor = &m_algae_wrist_motor;
       m_left_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_algae_angle));
       m_right_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_algae_angle));
+      break;
     
     case(WristType::kCoral):
       //wrist_motor = &m_coral_wrist_motor;
       m_coral_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_coral_angle));
+      break;
+
     default:
       this->GetCurrentCommand()->Cancel();
+      break;
     }
 
     return this->RunEnd(
@@ -60,9 +69,11 @@ namespace t34
         case (WristType::kAlgae):
           m_left_algae_wrist_motor.Set(m_left_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetEncoder().GetPosition()));
           m_right_algae_wrist_motor.Set(m_right_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetEncoder().GetPosition()));
+          break;
         
         case (WristType::kCoral):
           m_coral_wrist_motor.Set(m_coral_wrist_pid.Calculate(m_left_algae_wrist_motor.GetEncoder().GetPosition()));
+          break;
         }
       },
       [this, wrist]
@@ -74,9 +85,11 @@ namespace t34
         case (WristType::kAlgae):
           m_left_algae_wrist_motor.StopMotor();
           m_right_algae_wrist_motor.StopMotor();
+          break;
         
         case (WristType::kCoral):
           m_coral_wrist_motor.StopMotor();
+          break;
         }
       })
       .Until([this, wrist] 
@@ -88,6 +101,9 @@ namespace t34
         
         case (WristType::kCoral):
           return m_coral_wrist_pid.AtSetpoint();
+
+        default:
+        return true;
         }
       });
   }
@@ -114,13 +130,13 @@ namespace t34
   }
 
   frc2::CommandPtr Elevator::MoveToLevelCommand(int level)
-  {                               //  Coral Intake     Elevator height
+  {                               //  Algae Intake     Elevator height
     static const std::array<std::pair<units::degree_t, units::inch_t>, 5> presets {{
-      { 85_deg, 0_in },
-      { 35_deg, 18_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-      { 35_deg, 31.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-      { 35_deg, 47.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-      { 88_deg, 72_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
+      { 5_deg, 0_in },
+      { 55_deg, 18_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
+      { 55_deg, 31.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
+      { 55_deg, 47.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
+      { 2_deg, 72_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
     }};
 
     m_level = std::clamp(level, 0, static_cast <int> (presets.size()) - 1);
