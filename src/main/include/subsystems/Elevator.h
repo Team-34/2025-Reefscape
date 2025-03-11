@@ -52,14 +52,17 @@ namespace t34
     const units::degree_t m_init_coral_angle;
     const units::degree_t m_init_algae_angle;
 
-    SparkMax m_algae_wrist_motor;
+    SparkMax m_right_algae_wrist_motor;
+    SparkMax m_left_algae_wrist_motor;
     SparkMax m_coral_wrist_motor;
 
     VictorSPX m_left_motor;
     VictorSPX m_right_motor;
 
     frc::PIDController m_elevator_motors_pid;
-    frc::PIDController m_wrist_motors_pid;
+    frc::PIDController m_right_algae_wrist_pid;
+    frc::PIDController m_left_algae_wrist_pid;
+    frc::PIDController m_coral_wrist_pid;
   };
 
 } // namespace t34

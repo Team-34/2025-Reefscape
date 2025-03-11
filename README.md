@@ -45,4 +45,4 @@ The algae and coral intake wrists have a shared axis:
 |  90°  | Parallel to the floor| 
 |  0°   |  Straight downward   | 
 
-Additionally, the wrist's resting position is 65° up from being parallel from the floor, so its starting position is 165°
+Additionally, the wrist's resting position is 65° up from being parallel from the floor, so its starting position is 155°

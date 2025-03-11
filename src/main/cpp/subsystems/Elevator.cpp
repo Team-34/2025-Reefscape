@@ -13,53 +13,83 @@ namespace t34
 
   Elevator::Elevator()
   : m_level(0)
-  , m_algae_wrist_motor(997, SparkLowLevel::MotorType::kBrushless)
-  , m_coral_wrist_motor(998, SparkLowLevel::MotorType::kBrushless)
-  , m_left_motor(999)
-  , m_right_motor(1000)
+  , m_right_algae_wrist_motor(1, SparkLowLevel::MotorType::kBrushless)
+  , m_left_algae_wrist_motor(2, SparkLowLevel::MotorType::kBrushless)
+  , m_coral_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
+  , m_left_motor(11)
+  , m_right_motor(12)
   , m_elevator_motors_pid(0.5, 0.0, 0.0)
-  , m_wrist_motors_pid(0.5, 0.0, 0.0)
+  , m_coral_wrist_pid(0.5, 0.0, 0.0)
+  , m_right_algae_wrist_pid(0.5, 0.0, 0.0)
+  , m_left_algae_wrist_pid(0.5, 0.0, 0.0)
   , m_init_height(16.5_in)
     //The wrists' angles are from 0 to 180 degrees (0 is straight down, 180 is straight up, and 90 is parallel to the floor)
   , m_init_algae_angle(155_deg) //65 degrees away from horizontal
   , m_init_coral_angle(0_deg) 
   {
     m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
+    m_coral_wrist_pid.SetTolerance(Neo::AngleTo550Unit(0.25_deg));
+    m_left_algae_wrist_pid.SetTolerance(Neo::AngleTo550Unit(0.25_deg));
+    m_right_algae_wrist_pid.SetTolerance(Neo::AngleTo550Unit(0.25_deg));
   }
 
   frc2::CommandPtr Elevator::MoveWristToCommand(WristType wrist, units::degree_t angle)
   {
-    SparkMax* wrist_motor{ nullptr };
-
-    if(wrist == WristType::kAlgae) //set wrist_motor to the right motor
+    //SparkMax* wrist_motor{ nullptr };
+    switch (wrist)
     {
-      wrist_motor = &m_algae_wrist_motor;
-
-      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_algae_angle));
-    }
-    else if(wrist == WristType::kCoral)
-    {
-      wrist_motor = &m_coral_wrist_motor;
-
-      m_wrist_motors_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_coral_angle));
-    }
-    else
-    {
+    case(WristType::kAlgae): //set wrist_motor to the right motor
+      //wrist_motor = &m_algae_wrist_motor;
+      m_left_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_algae_angle));
+      m_right_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_algae_angle));
+    
+    case(WristType::kCoral):
+      //wrist_motor = &m_coral_wrist_motor;
+      m_coral_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_coral_angle));
+    default:
       this->GetCurrentCommand()->Cancel();
     }
 
     return this->RunEnd(
-      [this, angle, wrist_motor]
+      [this, angle, wrist]
       {
         //Run wrist motor in respect to the setpoint
-        wrist_motor->Set(m_wrist_motors_pid.Calculate(wrist_motor->GetEncoder().GetPosition()));
+        //wrist_motor->Set(m_wrist_motors_pid.Calculate(wrist_motor->GetEncoder().GetPosition()));
+        switch (wrist)
+        {
+        case (WristType::kAlgae):
+          m_left_algae_wrist_motor.Set(m_left_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetEncoder().GetPosition()));
+          m_right_algae_wrist_motor.Set(m_right_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetEncoder().GetPosition()));
+        
+        case (WristType::kCoral):
+          m_coral_wrist_motor.Set(m_coral_wrist_pid.Calculate(m_left_algae_wrist_motor.GetEncoder().GetPosition()));
+        }
       },
-      [this, wrist_motor]
+      [this, wrist]
       {
-        //When finished, stop the wrist motor and delete the wrist_motor pointer
-        wrist_motor->StopMotor();
+        //When finished, stop the wrist motor
+        //wrist_motor->StopMotor();
+        switch (wrist)
+        {
+        case (WristType::kAlgae):
+          m_left_algae_wrist_motor.StopMotor();
+          m_right_algae_wrist_motor.StopMotor();
+        
+        case (WristType::kCoral):
+          m_coral_wrist_motor.StopMotor();
+        }
       })
-      .Until([this] { return m_wrist_motors_pid.AtSetpoint(); });
+      .Until([this, wrist] 
+      { 
+        switch (wrist)
+        {
+        case (WristType::kAlgae):
+          return m_left_algae_wrist_pid.AtSetpoint() && m_right_algae_wrist_pid.AtSetpoint();
+        
+        case (WristType::kCoral):
+          return m_coral_wrist_pid.AtSetpoint();
+        }
+      });
   }
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
@@ -129,7 +159,11 @@ namespace t34
 
   frc2::CommandPtr Elevator::MoveAlgaeWristByPowerCommand(double val)
   {
-    return this->RunOnce([this, val] { m_algae_wrist_motor.Set(val); });
+    return this->RunOnce([this, val] 
+    { 
+      m_left_algae_wrist_motor.Set(val);
+      m_right_algae_wrist_motor.Set(val); 
+    });
   }
 
   frc2::CommandPtr Elevator::MoveCoralWristByPowerCommand(double val)

@@ -28,7 +28,7 @@ namespace t34
     /**
      * Converts degrees into NEO550 encoder units.
      * 
-     * @returns (NEO550_RES / 360) * angle
+     * @returns angle * (NEO550_RES / 360)
      */
     inline double AngleTo550Unit(units::degree_t angle)
     {
