@@ -48,8 +48,8 @@ namespace t34
     const units::degree_t m_init_algae_angle;
     const units::degree_t m_init_coral_angle;
 
-    SparkMax m_right_algae_wrist_motor;
-    SparkMax m_left_algae_wrist_motor;
+    TalonSRX m_right_algae_wrist_motor;
+    TalonSRX m_left_algae_wrist_motor;
     SparkMax m_coral_wrist_motor;
 
     VictorSPX m_left_motor;

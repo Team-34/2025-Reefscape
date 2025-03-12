@@ -20,8 +20,8 @@ namespace t34
   , m_init_algae_angle(155_deg) //65 degrees away from horizontal
   , m_init_coral_angle(0_deg) 
 
-  , m_right_algae_wrist_motor(1, SparkLowLevel::MotorType::kBrushless)
-  , m_left_algae_wrist_motor(2, SparkLowLevel::MotorType::kBrushless)
+  , m_right_algae_wrist_motor(1)
+  , m_left_algae_wrist_motor(2)
   , m_coral_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
 
   , m_left_motor(11)
@@ -139,22 +139,35 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
 
   frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)
   {
-    return this->RunOnce
+    return this->RunEnd
     (
       [this, val]
       {
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
+      },
+      [this]
+      {
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0)
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       }
     );
   }
 
   frc2::CommandPtr Elevator::MoveAlgaeWristByPowerCommand(double val)
   {
-    return this->RunOnce([this, val] 
+    return this->RunEnd(
+      [this, val] 
     { 
       m_left_algae_wrist_motor.Set(val);
       m_right_algae_wrist_motor.Set(val); 
-    });
+    },
+    [this]
+    {
+      m_left_algae_wrist_motor.Set(0.0);
+      m_right_algae_wrist_motor.Set(0.0);
+    }
+    );
   }
 
   frc2::CommandPtr Elevator::MoveCoralWristByPowerCommand(double val)
