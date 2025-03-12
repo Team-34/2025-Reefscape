@@ -4,8 +4,7 @@
 
 #pragma once
 
-#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
-#include <ctre/phoenix/motorcontrol/can/VictorSPX.h>
+#include <ctre/phoenix6/TalonFX.hpp>
 #include <frc/controller/PIDController.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/CommandScheduler.h>
@@ -15,7 +14,7 @@
 #include "Constants.h"
 
 
-using namespace ctre::phoenix::motorcontrol::can;
+using namespace ctre::phoenix6::hardware;
 using namespace rev::spark;
 
 namespace t34
@@ -48,12 +47,13 @@ namespace t34
     const units::degree_t m_init_algae_angle;
     const units::degree_t m_init_coral_angle;
 
-    SparkMax m_right_algae_wrist_motor;
-    SparkMax m_left_algae_wrist_motor;
-    SparkMax m_coral_wrist_motor;
+    TalonFX m_right_algae_wrist_motor;
+    TalonFX m_left_algae_wrist_motor;
 
-    VictorSPX m_left_motor;
-    VictorSPX m_right_motor;
+    TalonFX m_left_motor;
+    TalonFX m_right_motor;
+
+    SparkMax m_coral_wrist_motor;
 
     frc::PIDController m_elevator_motors_pid;
     frc::PIDController m_algae_wrist_pid;
