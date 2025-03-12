@@ -14,13 +14,17 @@
 
 const int CONTROLLER_PORT = 0;
 
+const int BOTH_WRIST_GEAR_RATIO = 70; // 1:70
+const int ELEVATOR_WINCH_GEAR_RATIO = 100; // 1:100
+
 constexpr bool INVERT_GYRO{ true }; // Always ensure Gyro is CCW+ CW-
 
 constexpr double PI2{ M_PI * 2.0 };
 constexpr double _180_DIV_PI{ 180.0 / M_PI };
 constexpr double PI_DIV_180{ M_PI / 180.0 };
-constexpr double LIMELIGHT_DEGREE_SCALAR{ 23.188 / 20.25 };//{ 21.1726 / 22.5 };
+
 const units::inch_t BASE_HEIGHT_FROM_FLOOR{ 2.0 };
+const units::inch_t ELEVATOR_LOWEST_POINT_FROM_BASE{ 7.0 };
 
 //const std::string LIMELIGHT_TABLE_NAME{ "" };
 
