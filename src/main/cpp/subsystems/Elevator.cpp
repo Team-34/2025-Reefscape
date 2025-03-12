@@ -110,7 +110,7 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
       { 2_deg, 72_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
     }};
 
-    m_level = std::clamp(level, 0, static_cast <int> (presets.size()) - 1);
+    m_level = std::clamp(level, 0, static_cast<int>(presets.size()) - 1);
     
     auto [angle, height] = presets.at(level);
 
