@@ -103,7 +103,7 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
   frc2::CommandPtr Elevator::MoveToLevelCommand(int level)
   {                               //  Coral Intake     Elevator height
     static const std::array<std::pair<units::degree_t, units::inch_t>, 5> presets {{
-      { 5_deg, 3_in }, //The swerve modules are 2.75 inches above the elevator's lowest point. The 775Pros will collide with the modul;es if they are ran all the way to the bottom.
+      { 5_deg, 3_in }, //The swerve modules are 2.75 inches above the elevator's lowest point. The 775Pros will collide with the modules if they are ran all the way to the bottom.
       { 55_deg, 18_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
       { 55_deg, 31.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
       { 55_deg, 47.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
