@@ -11,6 +11,14 @@
 #include "T34CommandXboxController.h"
 #include "commands/ControllerDriveCommand.h"
 #include "subsystems/SwerveDrive.h"
+#include "subsystems/AlgaeIntake.h"
+#include "subsystems/Climber.h"
+#include "subsystems/CoralIntake.h"
+#include "subsystems/Elevator.h"
+#include "subsystems/Intake.h"
+
+
+using namespace t34;
 
 class RobotContainer
 {
@@ -18,6 +26,11 @@ public:
   RobotContainer();
   std::shared_ptr<t34::SwerveDrive> swerve_drive;
   std::shared_ptr<t34::T34CommandXboxController> ctrl;
+
+  AlgaeIntake m_al_intake;
+  CoralIntake m_co_intake;
+  Elevator m_elevator;
+  Climber m_climber;
 
   t34::ControllerDriveCommand m_default_command;
 

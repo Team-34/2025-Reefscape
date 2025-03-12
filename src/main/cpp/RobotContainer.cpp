@@ -15,7 +15,19 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() 
 {
-  
+  ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
+  ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
+
+  ctrl->A().WhileTrue(m_al_intake.RunInCommand(0.5));
+  ctrl->B().WhileTrue(m_al_intake.RunInCommand(-0.5));
+
+  ctrl->X().WhileTrue(m_co_intake.RunInCommand(0.5));
+  ctrl->Y().WhileTrue(m_co_intake.RunInCommand(-0.5));
+
+  ctrl->RightBumper().WhileTrue();
+
+  frc2::
+
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
