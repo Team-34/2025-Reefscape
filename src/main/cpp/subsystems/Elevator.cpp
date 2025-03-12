@@ -64,7 +64,7 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
     return this->RunEnd(
       [this, angle]
       {
-        m_coral_wrist_motor.Set(m_coral_wrist_pid.Calculate(m_left_algae_wrist_motor.GetEncoder().GetPosition()));
+        m_coral_wrist_motor.Set(m_coral_wrist_pid.Calculate(m_coral_wrist_motor.GetEncoder().GetPosition()));
       },
       [this]
       {
