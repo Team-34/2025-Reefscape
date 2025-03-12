@@ -10,21 +10,13 @@ t34::Climber::Climber()
 
 frc2::CommandPtr t34::Climber::FlipArmCommand()
 {
-    //static const double engagement_speed   {  0.5 };
-    //static const double disengagement_speed{ 33.0 };
-
-    double setpoint = (m_engaged == false ) ? Neo::AngleToNEOUnit(37_deg) : Neo::AngleToNEOUnit(0.5_deg);
+    double setpoint = Neo::AngleToNEOUnit(m_engaged ? 0.5_deg : 37_deg);
 
     return this->RunEnd(
 
-        [this, setpoint] {
-            // const auto speed = m_pid_controller.Calculate(
-            //     m_motor.GetEncoder().GetPosition(),
-            //     m_engaged ? engagement_speed : disengagement_speed);
-            // m_motor.Set(speed);
-
+        [this, setpoint] 
+        {
             m_pid_controller.Calculate(m_motor.GetEncoder().GetPosition(), setpoint);
-
         },
         [this]
         {
