@@ -36,6 +36,8 @@ namespace t34
     frc2::CommandPtr MoveDownOnceCommand();
     frc2::CommandPtr MoveToRestCommand();
 
+
+  
     frc2::CommandPtr MoveElevatorByPowerCommand(double val);
     frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
     frc2::CommandPtr MoveCoralWristByPowerCommand(double val);
