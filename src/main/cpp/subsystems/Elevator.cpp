@@ -129,7 +129,7 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
 
   frc2::CommandPtr Elevator::MoveToRestCommand()
   {
-    //move 18 inches from start to provide space, and then move wrist.
+    //move 16.5 inches from start to provide space, and then move wrist.
     return this->ElevateToCommand(m_init_height).AndThen(MoveAlgaeWristToCommand(0_deg));
   }
 
