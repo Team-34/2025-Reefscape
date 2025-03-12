@@ -43,13 +43,17 @@ namespace t34
     return this->RunEnd(
       [this, angle]
       {
-        m_left_algae_wrist_motor.Set(m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetEncoder().GetPosition()));
-        m_right_algae_wrist_motor.Set(m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetEncoder().GetPosition()));
+        m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
+          m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetSelectedSensorPosition()));
+
+        m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
+          m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetSelectedSensorPosition()));
       },
       [this]
       {
-        m_left_algae_wrist_motor.StopMotor();
-        m_right_algae_wrist_motor.StopMotor();
+        m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+
+        m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       })
       .Until([this] 
       { 
@@ -79,21 +83,21 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
-    m_elevator_motors_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthToSRXUnit(height - m_init_height));
+    m_elevator_motors_pid.SetSetpoint((ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthToSRXUnit(height - m_init_height)));
 
     return this->RunEnd(
       [this, height]
       {
+        auto speed = m_elevator_motors_pid.Calculate(m_left_motor.GetSelectedSensorPosition());
+
+        int invert = (height.value() > 0) ? 1.0 : -1.0; 
+
         //Run the elevator in respect to the given height
         m_left_motor.Set(
-          ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
-          m_elevator_motors_pid.Calculate(m_left_motor.GetSelectedSensorPosition())
-        );
+          ctre::phoenix::motorcontrol::ControlMode::PercentOutput, invert * speed);
 
         m_right_motor.Set(
-          ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
-          m_elevator_motors_pid.Calculate(-m_right_motor.GetSelectedSensorPosition())
-        );
+          ctre::phoenix::motorcontrol::ControlMode::PercentOutput, invert * -speed);
       },
       [this]
       {
@@ -148,7 +152,7 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
       },
       [this]
       {
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0)
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
         m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       }
     );
@@ -159,13 +163,13 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
     return this->RunEnd(
       [this, val] 
     { 
-      m_left_algae_wrist_motor.Set(val);
-      m_right_algae_wrist_motor.Set(val); 
+      m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+      m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val); 
     },
     [this]
     {
-      m_left_algae_wrist_motor.Set(0.0);
-      m_right_algae_wrist_motor.Set(0.0);
+      m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+      m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
     }
     );
   }

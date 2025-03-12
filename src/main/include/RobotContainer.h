@@ -11,10 +11,10 @@
 #include "T34CommandXboxController.h"
 #include "commands/ControllerDriveCommand.h"
 #include "subsystems/SwerveDrive.h"
-#include "AlgaeIntake.h"
-#include "Climber.h"
-#include "CoralIntake.h"
-#include "Elevator.h"
+#include "subsystems/AlgaeIntake.h"
+#include "subsystems/Climber.h"
+#include "subsystems/CoralIntake.h"
+#include "subsystems/Elevator.h"
 
 using namespace t34;
 

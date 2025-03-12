@@ -54,8 +54,8 @@ namespace t34
     TalonSRX m_left_algae_wrist_motor;
     SparkMax m_coral_wrist_motor;
 
-    VictorSPX m_left_motor;
-    VictorSPX m_right_motor;
+    TalonSRX m_left_motor;
+    TalonSRX m_right_motor;
 
     frc::PIDController m_elevator_motors_pid;
     frc::PIDController m_algae_wrist_pid;
