@@ -17,7 +17,7 @@ namespace t34
      * 
      * @returns length * (1/_775PRO_SHAFT_CIRCUMFERENCE_INCH) * SRX_RESOLUTION
      */
-    inline double LengthToSRXUnit(units::inch_t length)
+    inline double LengthTo775ProUnit(units::inch_t length)
     {
       return (1.0/_775PRO_SHAFT_CIRCUMFERENCE) * SRX_RESOLUTION * length;
     }
@@ -27,7 +27,7 @@ namespace t34
      * 
      * @returns (SRX_RESOLUTION / 360) * angles
      */
-    inline double AngleToSRXUnit(units::degree_t angle)
+    inline double AngleTo775ProUnit(units::degree_t angle)
     {
       return SRX_RESOLUTION * angle;
     }
