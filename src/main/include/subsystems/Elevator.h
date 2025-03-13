@@ -41,6 +41,8 @@ namespace t34
 
     frc2::CommandPtr MoveAlgaeWristByIncrementCommand(double increase);
 
+    void Periodic() override;
+
   private:
     int m_level;
 
@@ -49,8 +51,8 @@ namespace t34
     const units::degree_t m_init_algae_angle;
     const units::degree_t m_init_coral_angle;
 
-    TalonFX m_right_algae_wrist_motor;
-    TalonFX m_left_algae_wrist_motor;
+    TalonSRX m_right_algae_wrist_motor;
+    TalonSRX m_left_algae_wrist_motor;
 
     TalonSRX m_left_motor;
     TalonSRX m_right_motor;

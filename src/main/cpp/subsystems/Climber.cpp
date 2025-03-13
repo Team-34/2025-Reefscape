@@ -3,9 +3,10 @@
 namespace t34
 {
     Climber::Climber()
-    : m_motor(5)
+    : m_motor(37)
     , m_engaged(false)
     , m_pid_controller(0.1, 0.0, 0.0)
+    , m_lock(0)
     {
         frc2::CommandScheduler::GetInstance().RegisterSubsystem(this);
     }
@@ -26,7 +27,39 @@ namespace t34
             {
                 m_engaged = !m_engaged;
                 m_motor.StopMotor();
+
+                if (m_engaged)
+                {
+                    m_lock.Set(0.65);
+                }
+                else
+                {
+                    m_lock.Set(0.0);
+                }
             }
         ).Until([this]{ return m_pid_controller.AtSetpoint(); });
-    }    
+    }
+
+
+    frc2::CommandPtr Climber::RunArm(double power)
+    {
+        return this->RunEnd(
+        [this, power]
+        {
+            m_motor.Set(power);
+        },
+        [this]
+        {
+            m_motor.Set(0.0);
+        });
+    }
+
+    frc2::CommandPtr Climber::RunLock(double power)
+    {
+        return this->Run(
+        [this, power]
+        {
+            m_lock.Set(power);
+        });
+    }
 }

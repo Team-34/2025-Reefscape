@@ -19,8 +19,8 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() 
 {
-  ctrl->A().WhileTrue(m_algae_intake.RunInCommand());
-  ctrl->B().WhileTrue(m_algae_intake.RunOutCommand());
+  // ctrl->A().WhileTrue(m_algae_intake.RunInCommand());
+  // ctrl->B().WhileTrue(m_algae_intake.RunOutCommand());
 
   ctrl->X().WhileTrue(m_coral_intake.RunInCommand());
   ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand());
@@ -28,19 +28,23 @@ void RobotContainer::ConfigureBindings()
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
 
- ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristToCommand(90_deg));
- ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristToCommand(135_deg));
+  ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(0.25));
+  ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(-0.25));
+
+//  ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristToCommand(90_deg));
+//  ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristToCommand(135_deg));
 
   // ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(0.25));
   // ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(-0.25));
 
-  ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristToCommand(90_deg));
-  ctrl->POVLeft().WhileTrue(m_elevator.MoveCoralWristToCommand(135_deg));
+  ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(0.2));
+  ctrl->POVLeft().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(-0.2));
 
-  //ctrl->RightTrigger(0.75).OnTrue(m_climber.FlipArmCommand());
+  // ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristToCommand(90_deg));
+  // ctrl->POVLeft().WhileTrue(m_elevator.MoveCoralWristToCommand(135_deg));
 
-  
-  
+  ctrl->A().WhileTrue(m_climber.RunLock(0.65));
+  ctrl->B().WhileTrue(m_climber.RunLock(0.0));
 
 }
 

@@ -5,6 +5,7 @@
 #include "Constants.h"
 #include <frc2/command/CommandPtr.h>
 #include <ctre/phoenix6/TalonFX.hpp>
+#include <frc/Servo.h>
 
 using namespace ctre::phoenix6::hardware;
 
@@ -16,6 +17,11 @@ namespace t34
         Climber();
     
         frc2::CommandPtr FlipArmCommand();
+        frc2::CommandPtr RunArm(double power);
+        frc2::CommandPtr RunLock(double power);
+
+        inline double GetLockPosition() { return m_lock.GetPosition(); }
+        inline double GetArmPosition() { return m_motor.GetPosition().GetValueAsDouble(); }
     
     private:
         TalonFX m_motor;
@@ -23,5 +29,6 @@ namespace t34
         bool m_engaged;
     
         frc::PIDController m_pid_controller;
+        frc::Servo m_lock;
     };
 }
