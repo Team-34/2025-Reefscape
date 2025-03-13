@@ -4,23 +4,24 @@
 #include <frc/controller/PIDController.h>
 #include "Constants.h"
 #include <frc2/command/CommandPtr.h>
+#include <ctre/phoenix6/TalonFX.hpp>
 
-using namespace rev::spark;
+using namespace ctre::phoenix6::hardware;
 
 namespace t34
-{
-    
-    class Climber : public frc2::SubsystemBase {
+{   
+    class Climber : public frc2::SubsystemBase 
+    {
     public:
         Climber();
     
         frc2::CommandPtr FlipArmCommand();
     
     private:
-        SparkMax m_motor;
+        TalonFX m_motor;
     
         bool m_engaged;
     
         frc::PIDController m_pid_controller;
-};
+    };
 }

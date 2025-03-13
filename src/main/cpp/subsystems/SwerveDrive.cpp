@@ -103,7 +103,7 @@ namespace t34 {
                                     units::velocity::meters_per_second_t((translation.Y().value() / DRIVE_MAX_SPEED) * m_speed_scalar), 
                                     units::velocity::meters_per_second_t((translation.X().value() / DRIVE_MAX_SPEED )* m_speed_scalar), 
                                     units::radians_per_second_t(((rotation / STEER_MAX_SPEED) * m_speed_scalar)), 
-                                    frc::Rotation2d(units::degree_t(m_gyro->GetYaw() * -1.0)) // SHOULD THIS BE INVERTED????
+                                    frc::Rotation2d(units::degree_t(m_gyro->GetAngle() * -1.0)) // SHOULD THIS BE INVERTED????
                                 );
         } 
         else {
@@ -272,8 +272,11 @@ namespace t34 {
      * @return Rotation2d A rotation in a 2D coordinate frame.
      */    
     frc::Rotation2d SwerveDrive::GetYaw() {
-        auto yaw = m_gyro->GetYaw();
-        return INVERT_GYRO ? frc::Rotation2d(units::degree_t(m_filter.Calculate(360.0 - yaw))) : frc::Rotation2d(units::degree_t(m_filter.Calculate(yaw)));
+        units::degree_t yaw = m_gyro->GetYaw().GetValue();
+        double degrees = yaw.value();
+        return INVERT_GYRO
+            ? frc::Rotation2d(units::degree_t(m_filter.Calculate(360.0 - degrees))) 
+            : frc::Rotation2d(units::degree_t(m_filter.Calculate(degrees)));
     }
 
     /**

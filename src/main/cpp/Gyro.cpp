@@ -15,8 +15,10 @@ namespace t34 {
     }
 
     Gyro::Gyro()
-        : AHRS(studica::AHRS::NavXComType::kMXP_SPI) {
-
+        : ctre::phoenix6::hardware::Pigeon2(10, "RIO")
+    {
+        //: AHRS(studica::AHRS::NavXComType::kMXP_SPI) {
+        
     }
 
     /**

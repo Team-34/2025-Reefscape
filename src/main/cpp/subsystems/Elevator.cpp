@@ -58,6 +58,32 @@ namespace t34
       });
   }
 
+  frc2::CommandPtr Elevator::MoveAlgaeWristBySetpointCommand(double increase) {
+    
+    return this->RunEnd(
+      [this, increase]
+      {
+        m_right_algae_wrist_motor.Set(
+          m_algae_wrist_pid.Calculate(
+            m_right_algae_wrist_motor.GetPosition().GetValueAsDouble(), 
+            (m_algae_wrist_pid.GetSetpoint() + increase)));
+
+        m_left_algae_wrist_motor.Set(
+          m_algae_wrist_pid.Calculate(
+            m_left_algae_wrist_motor.GetPosition().GetValueAsDouble(), 
+            (m_algae_wrist_pid.GetSetpoint() + increase)));
+      },
+      [this]
+      {
+          m_left_algae_wrist_motor.StopMotor();
+          m_right_algae_wrist_motor.StopMotor();
+      })
+      .Until([this] 
+      { 
+        return m_algae_wrist_pid.AtSetpoint();
+      });
+  }
+
 frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
   {
     m_coral_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_coral_angle));
@@ -135,27 +161,51 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
 
   frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)
   {
-    return this->RunOnce
+    return this->RunEnd
     (
       [this, val]
       {
         m_left_motor.Set(val);
+        m_right_motor.Set(-val);
+      },
+      [this]
+      {
+        m_left_motor.Set(0.0);
+        m_right_motor.Set(0.0);
       }
     );
   }
 
   frc2::CommandPtr Elevator::MoveAlgaeWristByPowerCommand(double val)
   {
-    return this->RunOnce([this, val] 
-    { 
-      m_left_algae_wrist_motor.Set(val);
-      m_right_algae_wrist_motor.Set(val); 
-    });
+    return this->RunEnd
+    (
+      [this, val] 
+        { 
+          m_left_algae_wrist_motor.Set(val);
+          m_right_algae_wrist_motor.Set(val); 
+        },
+        [this]
+        {
+          m_left_algae_wrist_motor.Set(0.0);
+          m_right_algae_wrist_motor.Set(0.0); 
+        }
+    );
   }
 
   frc2::CommandPtr Elevator::MoveCoralWristByPowerCommand(double val)
   {
-    return this->RunOnce([this, val] { m_coral_wrist_motor.Set(val); });
+    return this->RunEnd
+    (
+      [this, val] 
+      { 
+        m_coral_wrist_motor.Set(val);  
+      },
+      [this]
+      {
+        m_coral_wrist_motor.Set(0.0);
+      }
+    );
   }
 
 } // namespace t34

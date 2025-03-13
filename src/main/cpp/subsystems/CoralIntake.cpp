@@ -9,7 +9,7 @@ namespace t34
 
   frc2::CommandPtr CoralIntake::RunInCommand()
   {
-    return this->StartEnd(
+    return this->RunEnd(
       [this] { this->m_motor.Set(-0.25); },
       [this] { this->m_motor.StopMotor(); }
     );
@@ -17,7 +17,7 @@ namespace t34
   
   frc2::CommandPtr CoralIntake::RunOutCommand()
   {
-    return this->StartEnd(
+    return this->RunEnd(
       [this] { this->m_motor.Set(0.5); },
       [this] { this->m_motor.StopMotor(); }
     );

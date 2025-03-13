@@ -9,7 +9,7 @@ namespace t34
 
   frc2::CommandPtr AlgaeIntake::RunInCommand()
   {
-    return this->StartEnd(
+    return this->RunEnd(
       [this] { m_motor.Set(-0.25); },
       [this] { m_motor.StopMotor(); }
     );
@@ -17,7 +17,7 @@ namespace t34
   
   frc2::CommandPtr AlgaeIntake::RunOutCommand()
   {
-    return this->StartEnd(
+    return this->RunEnd(
       [this] { m_motor.Set(0.7); },
       [this] { m_motor.StopMotor(); }
     );
