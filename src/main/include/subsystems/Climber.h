@@ -7,16 +7,20 @@
 
 using namespace rev::spark;
 
-class Climber : public frc2::SubsystemBase {
-public:
-    Climber();
-
-    frc2::CommandPtr FlipArmCommand();
-
-private:
-    SparkMax m_motor;
-
-    bool m_engaged;
-
-    frc::PIDController m_pid_controller;
+namespace t34
+{
+    
+    class Climber : public frc2::SubsystemBase {
+    public:
+        Climber();
+    
+        frc2::CommandPtr FlipArmCommand();
+    
+    private:
+        SparkMax m_motor;
+    
+        bool m_engaged;
+    
+        frc::PIDController m_pid_controller;
 };
+}
