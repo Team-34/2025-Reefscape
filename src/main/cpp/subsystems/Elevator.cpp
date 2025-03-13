@@ -3,7 +3,7 @@
 #include <units/length.h>
 #include <units/angle.h>
 #include <utility>
-
+#include <algorithm>
 #include "subsystems/Elevator.h"
 #include "Neo.h"
 #include "Talon.h"
@@ -39,6 +39,7 @@ namespace t34
 
   frc2::CommandPtr Elevator::MoveAlgaeWristToCommand(units::degree_t angle)
   {
+    std::clamp(angle, 0_deg, 115_deg);
     m_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Talon::AngleTo775ProUnit(angle - m_init_algae_angle));
 
     return this->RunEnd(
@@ -58,7 +59,7 @@ namespace t34
       });
   }
 
-  frc2::CommandPtr Elevator::MoveAlgaeWristBySetpointCommand(double increase) {
+  frc2::CommandPtr Elevator::MoveAlgaeWristByIncrementCommand(double increase) {
     
     return this->RunEnd(
       [this, increase]
@@ -86,6 +87,7 @@ namespace t34
 
 frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
   {
+    std::clamp(angle, 0_deg, 150_deg);
     m_coral_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_coral_angle));
 
     return this->RunEnd(
@@ -112,16 +114,16 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
       [this, height]
       {
         //Run the elevator in respect to the given height
-        m_left_motor.Set(m_elevator_motors_pid.Calculate(m_left_motor.GetPosition().GetValueAsDouble()));
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_elevator_motors_pid.Calculate(m_left_motor.GetIntegralAccumulator()));
 
-        m_right_motor.Set(
-          m_elevator_motors_pid.Calculate(-m_right_motor.GetPosition().GetValueAsDouble()));
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
+          m_elevator_motors_pid.Calculate(-m_right_motor.GetIntegralAccumulator()));
       },
       [this]
       {
         // stop motor
-        m_left_motor.Set(0.0);
-        m_right_motor.Set(0.0);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       })
       .Until([this] { return m_elevator_motors_pid.AtSetpoint(); });
   }
@@ -165,13 +167,13 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
     (
       [this, val]
       {
-        m_left_motor.Set(val);
-        m_right_motor.Set(-val);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
       },
       [this]
       {
-        m_left_motor.Set(0.0);
-        m_right_motor.Set(0.0);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       }
     );
   }

@@ -12,11 +12,11 @@
 #include <rev/SparkMax.h>
 #include <units/length.h>
 #include "Constants.h"
-
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 
 using namespace ctre::phoenix6::hardware;
 using namespace rev::spark;
-
+using namespace ctre::phoenix::motorcontrol::can;
 namespace t34
 {
 
@@ -39,7 +39,7 @@ namespace t34
     frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
     frc2::CommandPtr MoveCoralWristByPowerCommand(double val);
 
-    frc2::CommandPtr MoveAlgaeWristBySetpointCommand(double increase);
+    frc2::CommandPtr MoveAlgaeWristByIncrementCommand(double increase);
 
   private:
     int m_level;
@@ -52,8 +52,8 @@ namespace t34
     TalonFX m_right_algae_wrist_motor;
     TalonFX m_left_algae_wrist_motor;
 
-    TalonFX m_left_motor;
-    TalonFX m_right_motor;
+    TalonSRX m_left_motor;
+    TalonSRX m_right_motor;
 
     SparkMax m_coral_wrist_motor;
 
