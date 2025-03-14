@@ -5,7 +5,7 @@ namespace t34
     Climber::Climber()
     : m_motor(37)
     , m_engaged(false)
-    , m_flip_lock(false)
+    , m_lock_flipped_up(true)
     , m_pid_controller(0.1, 0.0, 0.0)
     , m_lock(0)
     {
@@ -66,17 +66,24 @@ namespace t34
 
     frc2::CommandPtr Climber::FlipLock()
     {
-        return this->Run(
+        double go_to = (m_lock_flipped_up) ? 0.4 : 0.0;
+
+        return this->RunEnd(
+        [this, go_to]
+        {
+
+            m_lock.Set(go_to);
+        },
+
         [this]
         {
-            if (m_flip_lock)
-            {
-                m_lock.Set(0.0);
-            }
-            else
-            {
-                m_lock.Set(0.65);
-            }
-        });
+            m_lock_flipped_up = !m_lock_flipped_up;
+        }
+        );
+        // ).Until(
+        //     [this, go_to] {
+
+        //         return m_lock.GetPosition() == go_to;
+        //     });
     }
 }

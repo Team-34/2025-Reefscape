@@ -12,7 +12,7 @@ RobotContainer::RobotContainer()
   , m_coral_intake()
   , m_climber()
   , m_elevator()
-  , m_auto_leave(swerve_drive, 0_in, -7_ft, 0_deg)
+  , m_auto_leave(swerve_drive, 0_in, 3_ft, 0_deg)
 {
   ConfigureBindings();
 }
@@ -57,5 +57,12 @@ void RobotContainer::ConfigureBindings()
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return frc2::cmd::Print("No autonomous command configured");
+  return frc2::cmd::RunEnd([this]
+  {
+    swerve_drive->Drive(frc::Translation2d(0_m, 0.3_m), 0.0);
+  },
+  [this]
+  {
+    swerve_drive->Drive(frc::Translation2d(0_m, 0_m), 0.0);
+  });
 }
