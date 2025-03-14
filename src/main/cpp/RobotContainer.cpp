@@ -30,6 +30,9 @@ void RobotContainer::ConfigureBindings()
   ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(0.25));
   ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(-0.25));
 
+  // ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristToCommand(0_deg));
+  // ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristByIncrementCommand(-0.25)); 
+
   ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(0.2));
   ctrl->POVLeft().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(-0.2));
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));

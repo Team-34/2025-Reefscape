@@ -220,7 +220,7 @@ namespace t34 {
      * Reset the odometer for all swerve modules.
      */
     void SwerveDrive::ResetOdometry(frc::Pose2d pose) {
-        m_swerve_odometry.ResetPosition(frc::Rotation2d(units::degree_t(m_gyro->GetAngle())), GetModulePositions(), pose);
+        m_swerve_odometry.ResetPosition(frc::Rotation2d(m_gyro->GetYaw().GetValue()), GetModulePositions(), pose);
     }  
 
     /**

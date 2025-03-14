@@ -9,7 +9,6 @@ namespace t34
     , m_pid_controller(0.1, 0.0, 0.0)
     , m_lock(0)
     {
-        //frc2::CommandScheduler::GetInstance().RegisterSubsystem(this);
     }
 
     frc2::CommandPtr Climber::FlipArmCommand()

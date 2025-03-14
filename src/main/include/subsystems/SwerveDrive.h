@@ -65,7 +65,7 @@ namespace t34 {
                 frc::Translation2d(units::meter_t(-SWERVE_MODULE_FROM_CENTER), units::meter_t(-SWERVE_MODULE_FROM_CENTER))  // Right Aft Module                                                                  
             };
 
-        frc::SwerveDriveOdometry<4> m_swerve_odometry { m_swerve_drive_kinematics, frc::Rotation2d(units::degree_t(m_gyro->GetAngle())), 
+        frc::SwerveDriveOdometry<4> m_swerve_odometry { m_swerve_drive_kinematics, frc::Rotation2d(m_gyro->GetYaw().GetValue()), 
                 {
                     frc::SwerveModulePosition{ m_swerve_modules[0].GetPosition().distance, m_swerve_modules[0].GetCanCoder() },
                     frc::SwerveModulePosition{ m_swerve_modules[1].GetPosition().distance, m_swerve_modules[1].GetCanCoder() },
