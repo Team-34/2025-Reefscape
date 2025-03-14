@@ -38,16 +38,20 @@ namespace t34
     m_algae_wrist_pid.SetTolerance( (0.25_deg) / 1_tr);
   }
 
-  frc2::CommandPtr Elevator::MoveAlgaeWristToCommand(units::degree_t angle)
-  {
-    std::clamp(angle, 0_deg, 115_deg);
-    m_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * ((angle - m_init_algae_angle) / 1_tr));
+  frc2::CommandPtr Elevator::MoveAlgaeWristToCommand(double enc_units)
+  {                                             //units::degree_t angle
+    //std::clamp(angle, 0_deg, 115_deg);
+    
+    double cl_enc_units = std::clamp(enc_units, 593.0, -9000.0);
+    //m_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * ((angle - m_init_algae_angle) / 1_tr));
+    m_algae_wrist_pid.SetSetpoint(cl_enc_units);
+                      //BOTH_WRIST_GEAR_RATIO * ((angle - m_init_algae_angle) / 1_tr)
 
     return this->RunEnd(
-      [this, angle]
+      [this, cl_enc_units]
       {
-        m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetSelectedSensorPosition()));
-        m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetSelectedSensorPosition()));
+        m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetSelectedSensorPosition()));
+        m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetSelectedSensorPosition()));
       },
       [this]
       {
@@ -163,7 +167,7 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
   frc2::CommandPtr Elevator::MoveToRestCommand()
   {
     //move 16.5 inches from start to provide space, and then move wrist.
-    return this->ElevateToCommand(m_init_height).AndThen(MoveAlgaeWristToCommand(0_deg));
+    //return this->ElevateToCommand(m_init_height).AndThen(MoveAlgaeWristToCommand(0_deg));
   }
 
   frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)
