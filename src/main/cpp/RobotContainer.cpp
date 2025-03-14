@@ -12,7 +12,7 @@ RobotContainer::RobotContainer()
   , m_coral_intake()
   , m_climber()
   , m_elevator()
-  , m_auto_leave(swerve_drive, 0_in, 7_ft, 0_deg)
+  , m_auto_leave(swerve_drive, 0_in, -7_ft, 0_deg)
 {
   ConfigureBindings();
 }
@@ -24,6 +24,8 @@ void RobotContainer::ConfigureBindings()
 
   ctrl->X().WhileTrue(m_coral_intake.RunInCommand());
   ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand());
+  ctrl->A().WhileTrue(m_algae_intake.RunInCommand());
+  ctrl->B().WhileTrue(m_algae_intake.RunOutCommand());
 
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
@@ -31,20 +33,26 @@ void RobotContainer::ConfigureBindings()
   ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(0.25));
   ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(-0.25));
 
-//  ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristToCommand(90_deg));
-//  ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristToCommand(135_deg));
 
-  // ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(0.25));
-  // ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(-0.25));
+
+  //ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristToCommand(90_deg));
+  //ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristToCommand(135_deg));
+
+  //ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(0.25));
+  //ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(-0.25));
 
   ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(0.2));
   ctrl->POVLeft().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(-0.2));
 
+  ctrl->RightTrigger(0.5).WhileTrue(m_climber.RunArm(0.1));
+  ctrl->LeftTrigger(0.5).WhileTrue(m_climber.RunArm(-0.1));
+  ctrl->Start().OnTrue(m_climber.FlipLock());
+
   // ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristToCommand(90_deg));
   // ctrl->POVLeft().WhileTrue(m_elevator.MoveCoralWristToCommand(135_deg));
 
-  ctrl->A().WhileTrue(m_climber.RunLock(0.65));
-  ctrl->B().WhileTrue(m_climber.RunLock(0.0));
+  // ctrl->A().WhileTrue(m_climber.RunLock(0.65));
+  // ctrl->B().WhileTrue(m_climber.RunLock(0.0));
 
 }
 
