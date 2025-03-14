@@ -38,17 +38,17 @@ namespace t34
     m_algae_wrist_pid.SetTolerance( (0.25_deg) / 1_tr);
   }
 
-  frc2::CommandPtr Elevator::MoveAlgaeWristToCommand(double enc_units)
+  frc2::CommandPtr Elevator::MoveAlgaeWristToCommand(double encoder_units)
   {                                             //units::degree_t angle
     //std::clamp(angle, 0_deg, 115_deg);
     
-    double cl_enc_units = std::clamp(enc_units, 593.0, -9000.0);
+    double clamped_encoder_units = std::clamp(encoder_units, -9000.0, 593.0);
     //m_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * ((angle - m_init_algae_angle) / 1_tr));
-    m_algae_wrist_pid.SetSetpoint(cl_enc_units);
+    m_algae_wrist_pid.SetSetpoint(clamped_encoder_units);
                       //BOTH_WRIST_GEAR_RATIO * ((angle - m_init_algae_angle) / 1_tr)
 
     return this->RunEnd(
-      [this, cl_enc_units]
+      [this, clamped_encoder_units]
       {
         m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetSelectedSensorPosition()));
         m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetSelectedSensorPosition()));
