@@ -39,6 +39,8 @@ namespace t34
     frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
     frc2::CommandPtr MoveCoralWristByPowerCommand(double val);
 
+
+    frc2::CommandPtr ElevateCoralWristToCommand(int movelevelby);
     frc2::CommandPtr MoveAlgaeWristByIncrementCommand(double increase);
 
     void Periodic() override;
