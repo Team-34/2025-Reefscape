@@ -103,7 +103,7 @@ namespace t34 {
                                     units::velocity::meters_per_second_t((translation.Y().value() / DRIVE_MAX_SPEED) * m_speed_scalar), 
                                     units::velocity::meters_per_second_t((translation.X().value() / DRIVE_MAX_SPEED )* m_speed_scalar), 
                                     units::radians_per_second_t(((rotation / STEER_MAX_SPEED) * m_speed_scalar)), 
-                                    frc::Rotation2d(units::degree_t(m_gyro->GetAngle() * -1.0)) // SHOULD THIS BE INVERTED????
+                                    frc::Rotation2d(-m_gyro->GetYaw().GetValue()) // SHOULD THIS BE INVERTED????
                                 );
         } 
         else {
