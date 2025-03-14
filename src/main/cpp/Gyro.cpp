@@ -31,4 +31,11 @@ namespace t34 {
         Reset(); 
     }
 
+    // frc2::CommandPtr Gyro::ZeroYawCommand()
+    // {
+    //     this->RunOnce([this]{ 
+    //         ZeroYaw(); 
+    //     });
+    // }
+
 }

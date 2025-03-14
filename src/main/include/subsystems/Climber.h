@@ -28,7 +28,7 @@ namespace t34
         TalonFX m_motor;
     
         bool m_engaged;
-        bool m_lock_flipped_up;;
+        bool m_lock_flipped_up;
     
         frc::PIDController m_pid_controller;
         frc::Servo m_lock;

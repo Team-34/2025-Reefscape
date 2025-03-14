@@ -156,6 +156,13 @@ namespace t34 {
         }
     }
 
+    frc2::CommandPtr SwerveDrive::ZeroYawCommand()
+    {
+        return this->RunOnce([this]{ 
+            m_gyro->ZeroYaw(); 
+        });
+    }
+
     /**
      * Currently not implemented. Will be required for use
      * with PathPlanner.

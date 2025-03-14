@@ -9,7 +9,7 @@ namespace t34
     , m_pid_controller(0.1, 0.0, 0.0)
     , m_lock(0)
     {
-        frc2::CommandScheduler::GetInstance().RegisterSubsystem(this);
+        //frc2::CommandScheduler::GetInstance().RegisterSubsystem(this);
     }
 
     frc2::CommandPtr Climber::FlipArmCommand()
@@ -66,24 +66,14 @@ namespace t34
 
     frc2::CommandPtr Climber::FlipLock()
     {
-        double go_to = (m_lock_flipped_up) ? 0.4 : 0.0;
 
-        return this->RunEnd(
-        [this, go_to]
-        {
+        //double go_to = (m_lock_flipped_up) ? 0.4 : 0.0;
 
-            m_lock.Set(go_to);
-        },
-
+        return this->RunOnce(
         [this]
         {
+            m_lock.Set((m_lock_flipped_up) ? 0.65 : 0.25);
             m_lock_flipped_up = !m_lock_flipped_up;
-        }
-        );
-        // ).Until(
-        //     [this, go_to] {
-
-        //         return m_lock.GetPosition() == go_to;
-        //     });
+        });
     }
 }

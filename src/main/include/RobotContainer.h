@@ -16,7 +16,7 @@
 #include "subsystems/CoralIntake.h"
 #include "subsystems/Climber.h"
 #include "subsystems/Elevator.h"
-
+#include "Gyro.h"
 
 class RobotContainer
 {
@@ -29,7 +29,7 @@ public:
   t34::CoralIntake m_coral_intake;
   t34::Climber m_climber;
   t34::Elevator m_elevator;
-
+  
   AutoDriveCommand m_auto_leave;
 
 
