@@ -7,10 +7,10 @@
 #include "subsystems/Elevator.h"
 #include "Neo.h"
 #include "Talon.h"
+#include <rev/config/SparkBaseConfig.h>
 
 namespace t34
 {
-
   Elevator::Elevator()
   : m_level(0)
 
@@ -35,6 +35,21 @@ namespace t34
     m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
     m_coral_wrist_pid.SetTolerance(Neo::AngleTo550Unit(0.25_deg));
     m_algae_wrist_pid.SetTolerance(Neo::AngleTo550Unit(0.25_deg));
+
+    SparkBaseConfig coral_wrist_motor_config;
+    coral_wrist_motor_config.encoder
+      .PositionConversionFactor(1)
+      .VelocityConversionFactor(1);
+    coral_wrist_motor_config.closedLoop
+      .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+      .P(0.5)
+      .I(0)
+      .D(0)
+      .OutputRange(-1, 1);
+    m_coral_wrist_motor.Configure(
+      coral_wrist_motor_config,
+      SparkBase::ResetMode::kResetSafeParameters,
+      SparkBase::PersistMode::kPersistParameters);
   }
 
   frc2::CommandPtr Elevator::MoveAlgaeWristToCommand(units::degree_t angle)
@@ -58,25 +73,17 @@ namespace t34
       });
   }
 
-frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
+  frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
   {
-    m_coral_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_coral_angle));
-
-    return this->RunEnd(
-      [this, angle]
+    const units::turn_t turns{ angle };
+    return this->RunOnce(
+      [this, turns]
       {
-        m_coral_wrist_motor.Set(m_coral_wrist_pid.Calculate(m_coral_wrist_motor.GetEncoder().GetPosition()));
-      },
-      [this]
-      {
-          m_coral_wrist_motor.StopMotor();
-      })
-      .Until([this] 
-      { 
-        return m_coral_wrist_pid.AtSetpoint();
-      });
+        m_coral_wrist_motor.GetClosedLoopController()
+          .SetReference(turns.value(), SparkLowLevel::ControlType::kPosition);
+      }
+    );
   }
-
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
@@ -157,5 +164,16 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
   {
     return this->RunOnce([this, val] { m_coral_wrist_motor.Set(val); });
   }
+
+  void Elevator::InitSendable(wpi::SendableBuilder& builder) {
+    SubsystemBase::InitSendable(builder);
+
+    // Publish the solenoid state to telemetry.
+    builder.AddDoubleProperty(
+        "Coral Wrist Motor Position (turns)",
+        [this] { return m_coral_wrist_motor.GetEncoder().GetPosition(); },
+        nullptr);
+  }
+
 
 } // namespace t34

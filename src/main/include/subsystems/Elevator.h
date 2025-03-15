@@ -39,6 +39,8 @@ namespace t34
     frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
     frc2::CommandPtr MoveCoralWristByPowerCommand(double val);
 
+    void InitSendable(wpi::SendableBuilder& builder) override;
+
   private:
     int m_level;
 
