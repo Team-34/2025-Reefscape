@@ -14,6 +14,7 @@ namespace t34
 
   Elevator::Elevator()
   : m_level(0)
+  , m_coral_level(0)
 
   , m_init_height(16_in)
 
@@ -112,6 +113,38 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
       });
   }
 
+  frc2::CommandPtr Elevator::MoveCoralWristToCommand(double encoder_units)
+  {
+
+    bool run_up = m_coral_wrist_motor.GetEncoder().GetPosition() < encoder_units;
+    //m_coral_wrist_pid.SetSetpoint(encoder_units);//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
+
+
+
+    return this->RunEnd(
+      [this, run_up]
+      {
+        //m_coral_wrist_motor.Set(m_coral_wrist_pid.Calculate(m_coral_wrist_motor.GetEncoder().GetPosition()));
+
+        m_coral_wrist_motor.Set((run_up) ? 0.3 : -0.3);
+      },
+      [this]
+      {
+          m_coral_wrist_motor.StopMotor();
+      })
+      .Until([this, encoder_units, run_up] 
+      { 
+        if (run_up)
+        {
+          return m_coral_wrist_motor.GetEncoder().GetPosition() >= (encoder_units - 0.1);
+        }
+        else
+        {
+          return m_coral_wrist_motor.GetEncoder().GetPosition() <= (encoder_units + 0.1);
+        }
+      });
+  }
+
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
@@ -164,11 +197,11 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
     return this->MoveToLevelCommand(m_level - 1); 
   }
 
-  frc2::CommandPtr Elevator::MoveToRestCommand()
-  {
-    //move 16.5 inches from start to provide space, and then move wrist.
-    //return this->ElevateToCommand(m_init_height).AndThen(MoveAlgaeWristToCommand(0_deg));
-  }
+  // frc2::CommandPtr Elevator::MoveToRestCommand()
+  // {
+  //   //move 16.5 inches from start to provide space, and then move wrist.
+  //   return this->ElevateToCommand(m_init_height).AndThen(MoveAlgaeWristToCommand(0_deg));
+  // }
 
   frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)
   {
@@ -219,34 +252,45 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
     );
   }
 
-  // frc2::CommandPtr Elevator::ElevateCoralWristToCommand(int movelevelby)
-  // {
-  //   m_coral_wrist_pid.SetSetpoint();
+  frc2::CommandPtr Elevator::MoveToCoralLevelCommand(int level)
+  {
+    static const std::array<double, 5> presets {{
+      0.0, 4.0, 13.666, 19.83, 23.0
+    }};
 
-  //   return this->RunEnd(
-  //     [this, height]
-  //     {
+    m_coral_level = std::clamp(level, 0, static_cast<int>(presets.size()) - 1);
 
-  //       auto speed = m_elevator_motors_pid.Calculate(m_left_motor.GetSelectedSensorPosition());
+    // m_coral_level = std::clamp(level, 0, 4);
 
-  //       //Run the elevator in respect to the given height
-  //       m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+    // switch (m_coral_level)
+    // {
+    //   case 0:
+    //     return MoveCoralWristToCommand(0.0);
+    //     break;
+    //   case 1:
+    //     return MoveCoralWristToCommand(4.0);
+    //     break;
+    // }
 
-  //       m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
-  //     },
-  //     [this]
-  //     {
-  //       // stop motor
-  //       m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-  //       m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-  //     })
-  //     .Until([this] { return m_elevator_motors_pid.AtSetpoint(); });
-  // }
+    return MoveCoralWristToCommand(presets.at(m_coral_level));
+  }
+
+  frc2::CommandPtr Elevator::IncrementCoralDown()
+  {
+    return this->MoveToCoralLevelCommand(m_coral_level + 1);  
+  }
+
+  frc2::CommandPtr Elevator::IncrementCoralUp()
+  {
+    return this->MoveToCoralLevelCommand(m_coral_level - 1); 
+  }
+
 
   void Elevator::Periodic() {
       frc::SmartDashboard::PutNumber("Left Algae Wrist Encoder", m_left_algae_wrist_motor.GetSelectedSensorPosition());
       frc::SmartDashboard::PutNumber("Right Algae Wrist Encoder", m_right_algae_wrist_motor.GetSelectedSensorPosition());
       frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_coral_wrist_motor.GetEncoder().GetPosition());
+      frc::SmartDashboard::PutNumber("Coral Setpoint", m_coral_wrist_pid.GetSetpoint());
   }
 
 } // namespace t34

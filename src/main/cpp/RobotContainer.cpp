@@ -30,18 +30,18 @@ void RobotContainer::ConfigureBindings()
   ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(0.5));
   ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(-0.5));
 
-  //ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristToCommand(-6500));
-  //ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristByIncrementCommand(-0.25)); 
+  // ctrl->POVRight().WhileTrue(m_elevator.IncrementCoralUp());
+  // ctrl->POVLeft().WhileTrue(m_elevator.IncrementCoralDown());
+  ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(0.5));
+  ctrl->POVLeft().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(-0.5));
 
-  ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(0.4));
-  ctrl->POVLeft().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(-0.4));
-  ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.75));
-  ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.75));
+  ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(1.0));
+  ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-1.0));
 
-  ctrl->RightTrigger(0.5).WhileTrue(m_climber.RunArm(0.3));
-  ctrl->LeftTrigger(0.5).WhileTrue(m_climber.RunArm(-0.1));
+  // ctrl->RightTrigger(0.5).WhileTrue(m_climber.RunArm(0.3));
+  // ctrl->LeftTrigger(0.5).WhileTrue(m_climber.RunArm(-0.1));
 
-  ctrl->Start().OnTrue(m_climber.FlipLock());
+  // ctrl->Start().OnTrue(m_climber.FlipLock());
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
 
   // ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristToCommand(90_deg));

@@ -28,12 +28,14 @@ namespace t34
 
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
     frc2::CommandPtr MoveAlgaeWristToCommand(double enc_units); //units::degree_t angle
+
     frc2::CommandPtr MoveCoralWristToCommand(units::degree_t angle);
+    frc2::CommandPtr MoveCoralWristToCommand(double encoder_units);
 
     frc2::CommandPtr MoveToLevelCommand(int level);
     frc2::CommandPtr MoveUpOnceCommand();
     frc2::CommandPtr MoveDownOnceCommand();
-    frc2::CommandPtr MoveToRestCommand();
+    //frc2::CommandPtr MoveToRestCommand();
 
     frc2::CommandPtr MoveElevatorByPowerCommand(double val);
     frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
@@ -43,10 +45,15 @@ namespace t34
     frc2::CommandPtr ElevateCoralWristToCommand(int movelevelby);
     frc2::CommandPtr MoveAlgaeWristByIncrementCommand(double increase);
 
+    frc2::CommandPtr MoveToCoralLevelCommand(int level);
+    frc2::CommandPtr IncrementCoralUp();
+    frc2::CommandPtr IncrementCoralDown();
+
     void Periodic() override;
 
   private:
     int m_level;
+    int m_coral_level;
 
     const units::inch_t m_init_height;
 
