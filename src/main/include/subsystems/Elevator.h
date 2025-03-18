@@ -15,6 +15,7 @@
 #include "Constants.h"
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <rev/SparkClosedLoopController.h>
+#include <rev/config/SparkMaxConfigAccessor.h>
 
 using namespace ctre::phoenix6::hardware;
 using namespace rev::spark;

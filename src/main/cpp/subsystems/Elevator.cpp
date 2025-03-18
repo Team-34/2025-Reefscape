@@ -33,13 +33,11 @@ namespace t34
 
   , m_elevator_motors_pid(0.5, 0.0, 0.0)
   , m_algae_wrist_pid(0.5, 0.0, 0.0)
-  , m_coral_wrist_pid(0.25, 0.0, 0.0)
+  , m_coral_wrist_pid(m_coral_wrist_motor)
   {
     m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
     //m_coral_wrist_pid.SetTolerance( (0.25_deg) / 1_tr );
-    m_coral_wrist_pid{
-      
-    }
+  
 
     m_algae_wrist_pid.SetTolerance( (0.25_deg) / 1_tr);
 
@@ -116,7 +114,7 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
     return this->RunEnd(
       [this, angle]
       {
-        m_coral_wrist_motor.Set(m_coral_wrist_pid.Calculate(m_coral_wrist_motor.GetEncoder().GetPosition()));
+        m_coral_wrist_motor.Set(m_coral_wrist_pid.SetReference(m_coral_wrist_motor.GetEncoder().GetPosition(), rev::spark::SparkLowLevel::ControlType::kVelocity));
       },
       [this]
       {
@@ -124,7 +122,7 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
       })
       .Until([this] 
       { 
-        return m_coral_wrist_pid.AtSetpoint();
+        return m_algae_wrist_pid.AtSetpoint();
       });
   }
 
@@ -209,13 +207,13 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
     (
       [this, val] 
         { 
-          m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
-          m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val); 
+          m_left_algae_wrist_motor.Set(val);
+          m_right_algae_wrist_motor.Set(-val); 
         },
         [this]
         {
-          m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-          m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0); 
+          m_left_algae_wrist_motor.Set(0.0);
+          m_right_algae_wrist_motor.Set(0.0); 
         }
     );
   }
@@ -260,8 +258,8 @@ frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
   // }
 
   void Elevator::Periodic() {
-      frc::SmartDashboard::PutNumber("Left Algae Wrist Encoder", m_left_algae_wrist_motor.GetSelectedSensorPosition());
-      frc::SmartDashboard::PutNumber("Right Algae Wrist Encoder", m_right_algae_wrist_motor.GetSelectedSensorPosition());
+      frc::SmartDashboard::PutNumber("Left Algae Wrist Encoder", m_left_algae_wrist_motor.GetEncoder().GetPosition());
+      frc::SmartDashboard::PutNumber("Right Algae Wrist Encoder", m_right_algae_wrist_motor.GetEncoder().GetPosition());
       frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_coral_wrist_motor.GetEncoder().GetPosition());
   }
 
