@@ -3,7 +3,7 @@
 namespace t34
 {    
   CoralIntake::CoralIntake()
-    : m_motor(30, rev::spark::SparkLowLevel::MotorType::kBrushless)
+    : m_motor(4, rev::spark::SparkLowLevel::MotorType::kBrushless)
   {
   } 
 

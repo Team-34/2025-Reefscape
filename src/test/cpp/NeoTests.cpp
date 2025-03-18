@@ -22,7 +22,7 @@ class DegreeTo550UnitTest : public TestWithParam<std::pair<units::degree_t, doub
 TEST_P(DegreeTo550UnitTest, ConvertsDegreesToNeo550Units) {
   auto [degrees, expected] = GetParam();
 
-  EXPECT_THAT(t34::Neo::AngleToNEOUnit(degrees), DoubleEq(expected));
+  EXPECT_THAT(t34::Neo::AngleTo550Unit(degrees), DoubleEq(expected));
 }
 
 INSTANTIATE_TEST_SUITE_P(NeoTests, DegreeTo550UnitTest, Values(
