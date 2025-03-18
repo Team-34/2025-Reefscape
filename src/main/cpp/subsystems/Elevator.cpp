@@ -21,8 +21,10 @@ namespace t34
   , m_init_algae_angle(155_deg) //65 degrees away from horizontal
   , m_init_coral_angle(0_deg) 
 
-  , m_right_algae_wrist_motor(1)
-  , m_left_algae_wrist_motor(2)
+  , m_right_algae_wrist_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
+  , m_left_algae_wrist_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
+
+  , m_config{}
 
   , m_left_motor(11)
   , m_right_motor(12)
@@ -34,8 +36,22 @@ namespace t34
   , m_coral_wrist_pid(0.25, 0.0, 0.0)
   {
     m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
-    m_coral_wrist_pid.SetTolerance( (0.25_deg) / 1_tr );
+    //m_coral_wrist_pid.SetTolerance( (0.25_deg) / 1_tr );
+    m_coral_wrist_pid{
+      
+    }
+
     m_algae_wrist_pid.SetTolerance( (0.25_deg) / 1_tr);
+
+    m_config
+      .Inverted(true)
+      .SetIdleMode(SparkMaxConfig::IdleMode::kBrake);
+    m_config.encoder
+      .PositionConversionFactor(1000)
+      .VelocityConversionFactor(1000);
+    m_config.closedLoop
+      .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+      .Pid(1.0, 0.0, 0.0);
   }
 
   frc2::CommandPtr Elevator::MoveAlgaeWristToCommand(double encoder_units)
@@ -50,13 +66,13 @@ namespace t34
     return this->RunEnd(
       [this, clamped_encoder_units]
       {
-        m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetSelectedSensorPosition()));
-        m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetSelectedSensorPosition()));
+        m_left_algae_wrist_motor.Set(m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetEncoder().GetPosition()));
+        m_right_algae_wrist_motor.Set(m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetEncoder().GetPosition()));
       },
       [this]
       {
-        m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_left_algae_wrist_motor.Set(0.0);
+        m_right_algae_wrist_motor.Set(0.0);
       })
       .Until([this] 
       { 

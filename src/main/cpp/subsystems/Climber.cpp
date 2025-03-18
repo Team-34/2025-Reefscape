@@ -8,6 +8,7 @@ namespace t34
     , m_lock_flipped_up(true)
     , m_pid_controller(0.1, 0.0, 0.0)
     , m_lock(0)
+    
     {
     }
 

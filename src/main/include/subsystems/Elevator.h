@@ -10,9 +10,11 @@
 #include <frc2/command/CommandScheduler.h>
 #include <frc2/command/SubsystemBase.h>
 #include <rev/SparkMax.h>
+#include <rev/config/SparkMaxConfig.h>
 #include <units/length.h>
 #include "Constants.h"
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
+#include <rev/SparkClosedLoopController.h>
 
 using namespace ctre::phoenix6::hardware;
 using namespace rev::spark;
@@ -53,17 +55,18 @@ namespace t34
     const units::degree_t m_init_algae_angle;
     const units::degree_t m_init_coral_angle;
 
-    TalonSRX m_right_algae_wrist_motor;
-    TalonSRX m_left_algae_wrist_motor;
+    SparkMax m_right_algae_wrist_motor;
+    SparkMax m_left_algae_wrist_motor;
+    SparkMax m_coral_wrist_motor;
+
+    SparkMaxConfig m_config{};
 
     TalonSRX m_left_motor;
     TalonSRX m_right_motor;
 
-    SparkMax m_coral_wrist_motor;
-
     frc::PIDController m_elevator_motors_pid;
     frc::PIDController m_algae_wrist_pid;
-    frc::PIDController m_coral_wrist_pid;
+    SparkClosedLoopController m_coral_wrist_pid;
   };
 
 } // namespace t34

@@ -1,9 +1,10 @@
 //uses sparkmax for now
 #pragma once
 #include <rev/SparkMax.h>
+#include <rev/config/SparkMaxConfig.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/InstantCommand.h>
-#include <rev/config/SparkMaxConfig.h>
+#include <rev/config/SparkMaxConfigAccessor.h>
 #include "Intake.h"
 using namespace rev::spark;
 
@@ -19,5 +20,9 @@ namespace t34
         
     private:
         SparkMax m_motor;
+        SparkMaxConfig m_config{};
+        
+        
+
     };
 }
