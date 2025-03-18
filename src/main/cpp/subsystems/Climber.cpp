@@ -4,41 +4,38 @@ namespace t34
 {
     Climber::Climber()
     : m_motor(37)
-    , m_engaged(false)
+    , m_flipped_out(false)
     , m_lock_flipped_up(true)
-    , m_pid_controller(0.1, 0.0, 0.0)
+    , m_pid_controller(0.4, 0.0, 0.0)
     , m_lock(0)
     {
+        m_pid_controller.SetTolerance(0.15);
     }
 
-    frc2::CommandPtr Climber::FlipArmCommand()
+
+    frc2::CommandPtr Climber::Climb() 
     {
-        static const double engagement_speed   {  0.5 };
-        static const double disengagement_speed{ 33.0 };
+        double setpoint = m_flipped_out ? 0.0 : 33.0;
+
+        m_pid_controller.SetSetpoint(setpoint);
 
         return this->RunEnd(
-            [this] {
-                const auto speed = m_pid_controller.Calculate(
-                    m_motor.GetPosition().GetValueAsDouble(),
-                    m_engaged ? engagement_speed : disengagement_speed);
-                m_motor.Set(speed);
-            },
-            [this]
-            {
-                m_engaged = !m_engaged;
-                m_motor.StopMotor();
+        [this]
+        {
+            m_motor.Set(m_pid_controller.Calculate(m_motor.GetPosition().GetValueAsDouble()));
 
-                if (m_engaged)
-                {
-                    m_lock.Set(0.0);
-                }
-                else
-                {
-                    m_lock.Set(0.65);
-                }
-            }
-        ).Until([this]{ return m_pid_controller.AtSetpoint(); });
+        }, [this]
+        {
+            m_motor.Set(0.0);
+            FlipLock();
+
+        }).Until(
+            [this]
+        {
+            return m_pid_controller.AtSetpoint();
+        });
     }
+
 
 
     frc2::CommandPtr Climber::RunArm(double power)
@@ -63,16 +60,9 @@ namespace t34
         });
     }
 
-    frc2::CommandPtr Climber::FlipLock()
+    void Climber::FlipLock()
     {
-
-        //double go_to = (m_lock_flipped_up) ? 0.4 : 0.0;
-
-        return this->RunOnce(
-        [this]
-        {
-            m_lock.Set((m_lock_flipped_up) ? 0.65 : 0.25);
-            m_lock_flipped_up = !m_lock_flipped_up;
-        });
+        m_lock.Set((m_lock_flipped_up) ? 0.65 : 0.25);
+        m_lock_flipped_up = !m_lock_flipped_up;
     }
 }

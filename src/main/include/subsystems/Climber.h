@@ -16,10 +16,11 @@ namespace t34
     public:
         Climber();
     
-        frc2::CommandPtr FlipArmCommand();
+        frc2::CommandPtr Climb();
         frc2::CommandPtr RunArm(double power);
         frc2::CommandPtr RunLock(double power);
-        frc2::CommandPtr FlipLock();
+        
+        void FlipLock();
 
         inline double GetLockPosition() { return m_lock.GetPosition(); }
         inline double GetArmPosition() { return m_motor.GetPosition().GetValueAsDouble(); }
@@ -27,7 +28,7 @@ namespace t34
     private:
         TalonFX m_motor;
     
-        bool m_engaged;
+        bool m_flipped_out;
         bool m_lock_flipped_up;
     
         frc::PIDController m_pid_controller;
