@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "RobotContainer.h"
+#include "subsystems/AlgaeIntake.h"
+#include "subsystems/CoralIntake.h"
 
 RobotContainer::RobotContainer() 
   : swerve_drive(new t34::SwerveDrive())
@@ -27,13 +29,13 @@ void RobotContainer::ConfigureBindings()
   ctrl->A().WhileTrue(m_algae_intake.RunInCommand());
   ctrl->B().WhileTrue(m_algae_intake.RunOutCommand());
 
-  ctrl->RightBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(0.5));
-  ctrl->LeftBumper().WhileTrue(m_elevator.MoveAlgaeWristByPowerCommand(-0.5));
+  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveAlgaeWristByPowerCommand(0.5));
+  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveAlgaeWristByPowerCommand(-0.5));
 
   // ctrl->POVRight().WhileTrue(m_elevator.IncrementCoralUp());
   // ctrl->POVLeft().WhileTrue(m_elevator.IncrementCoralDown());
-  ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(0.5));
-  ctrl->POVLeft().WhileTrue(m_elevator.MoveCoralWristByPowerCommand(-0.5));
+  ctrl->POVRight().WhileTrue(m_coral_intake.MoveCoralWristByPowerCommand(0.5));
+  ctrl->POVLeft().WhileTrue(m_coral_intake.MoveCoralWristByPowerCommand(-0.5));
 
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(1.0));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-1.0));
