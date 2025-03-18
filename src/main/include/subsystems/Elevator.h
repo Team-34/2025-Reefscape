@@ -30,7 +30,7 @@ namespace t34
     Elevator();
 
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
-    frc2::CommandPtr MoveAlgaeWristToCommand(double enc_units); //units::degree_t angle
+    frc2::CommandPtr MoveAlgaeWristToCommand(units::degree_t angle); //units::degree_t angle
     frc2::CommandPtr MoveCoralWristToCommand(units::degree_t angle);
 
     frc2::CommandPtr MoveToLevelCommand(int level);
@@ -67,7 +67,6 @@ namespace t34
 
     frc::PIDController m_elevator_motors_pid;
     frc::PIDController m_algae_wrist_pid;
-    SparkClosedLoopController m_coral_wrist_pid;
   };
 
 } // namespace t34

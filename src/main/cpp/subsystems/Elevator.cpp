@@ -14,30 +14,27 @@ namespace t34
 
   Elevator::Elevator()
   : m_level(0)
-
   , m_init_height(16_in)
-
     //The wrists' angles are from 0 to 180 degrees (0 is straight down, 180 is straight up, and 90 is parallel to the floor)
   , m_init_algae_angle(155_deg) //65 degrees away from horizontal
   , m_init_coral_angle(0_deg) 
-
   , m_right_algae_wrist_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
   , m_left_algae_wrist_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
-
   , m_config{}
-
   , m_left_motor(11)
   , m_right_motor(12)
-
   , m_coral_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
-
   , m_elevator_motors_pid(0.5, 0.0, 0.0)
   , m_algae_wrist_pid(0.5, 0.0, 0.0)
-  , m_coral_wrist_pid(m_coral_wrist_motor)
+  
   {
     m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
     //m_coral_wrist_pid.SetTolerance( (0.25_deg) / 1_tr );
   
+    m_coral_wrist_motor.Configure(m_config, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
+    m_left_algae_wrist_motor.Configure(m_config, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
+    m_right_algae_wrist_motor.Configure(m_config, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
+
 
     m_algae_wrist_pid.SetTolerance( (0.25_deg) / 1_tr);
 
@@ -52,19 +49,19 @@ namespace t34
       .Pid(1.0, 0.0, 0.0);
   }
 
-  frc2::CommandPtr Elevator::MoveAlgaeWristToCommand(double encoder_units)
-  {                                             //units::degree_t angle
+  frc2::CommandPtr Elevator::MoveAlgaeWristToCommand(units::degree_t angle)
+  {                                             
     //std::clamp(angle, 0_deg, 115_deg);
     
-    double clamped_encoder_units = std::clamp(encoder_units, -9000.0, 593.0);
+    double clamped_angle = std::clamp(angle.value(), 0.0, 120.0);
     //m_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * ((angle - m_init_algae_angle) / 1_tr));
-    m_algae_wrist_pid.SetSetpoint(clamped_encoder_units);
+    m_algae_wrist_pid.SetSetpoint(clamped_angle);
                       //BOTH_WRIST_GEAR_RATIO * ((angle - m_init_algae_angle) / 1_tr)
 
     return this->RunEnd(
-      [this, clamped_encoder_units]
+      [this, clamped_angle]
       {
-        m_left_algae_wrist_motor.Set(m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetEncoder().GetPosition()));
+        m_left_algae_wrist_motor.SetReference(m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetEncoder().GetPosition()));
         m_right_algae_wrist_motor.Set(m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetEncoder().GetPosition()));
       },
       [this]
@@ -78,51 +75,49 @@ namespace t34
       });
   }
 
-  frc2::CommandPtr Elevator::MoveAlgaeWristByIncrementCommand(double increase) {
+  // frc2::CommandPtr Elevator::MoveAlgaeWristByIncrementCommand(double increase) {
     
-    return this->RunEnd(
-      [this, increase]
-      {
-        m_right_algae_wrist_motor.Set(
-          ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
-          m_algae_wrist_pid.Calculate(
-            m_right_algae_wrist_motor.GetSelectedSensorPosition(), 
-            (m_algae_wrist_pid.GetSetpoint() + increase)));
+  //   return this->RunEnd(
+  //     [this, increase]
+  //     {
+  //       m_right_algae_wrist_motor.Set(m_right_algae_wrist_motor.GetClosedLoopController() 
+  //           (m_algae_wrist_pid.GetSetpoint() + increase)));
 
-        m_left_algae_wrist_motor.Set(
-        ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
-          m_algae_wrist_pid.Calculate(
-            m_left_algae_wrist_motor.GetSelectedSensorPosition(), 
-            (m_algae_wrist_pid.GetSetpoint() + increase)));
-      },
-      [this]
-      {
-          m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-          m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-      })
-      .Until([this] 
-      { 
-        return m_algae_wrist_pid.AtSetpoint();
-      });
-  }
+  //       m_left_algae_wrist_motor.Set(
+  //       ctre::phoenix::motorcontrol::ControlMode::PercentOutput,
+  //         m_algae_wrist_pid.Calculate(
+  //           m_left_algae_wrist_motor.GetSelectedSensorPosition(), 
+  //           (m_algae_wrist_pid.GetSetpoint() + increase)));
+  //     },
+  //     [this]
+  //     {
+  //         m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //         m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //     })
+  //     .Until([this] 
+  //     { 
+  //       return m_algae_wrist_pid.AtSetpoint();
+  //     });
+  // }
 
 frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
   {
     std::clamp(angle, 0_deg, 150_deg);
-    m_coral_wrist_pid.SetSetpoint(-426.755 + (0.0438 * (angle.value() - m_init_algae_angle.value())));//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
+    //m_coral_wrist_pid.SetSetpoint(-426.755 + (0.0438 * (angle.value() - m_init_algae_angle.value())));//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
+    //-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr))
+    //(0.0, rev::spark::SparkLowLevel::ControlType::kVelocity, rev::spark::ClosedLoopSlot::kSlot0, 0.0, rev::spark::SparkClosedLoopController::ArbFFUnits::kPercentOut);
+    
+    double setpoint = -426.755 + (0.0438 * (angle.value() - m_init_algae_angle.value()));
 
-    return this->RunEnd(
-      [this, angle]
+    return this->RunOnce(
+      [this, angle, setpoint]
       {
-        m_coral_wrist_motor.Set(m_coral_wrist_pid.SetReference(m_coral_wrist_motor.GetEncoder().GetPosition(), rev::spark::SparkLowLevel::ControlType::kVelocity));
-      },
-      [this]
-      {
-          m_coral_wrist_motor.StopMotor();
-      })
-      .Until([this] 
+        m_coral_wrist_motor.GetClosedLoopController().SetReference(setpoint, rev::spark::SparkLowLevel::ControlType::kVelocity);
+      }
+      )
+      .Until([this, setpoint] 
       { 
-        return m_algae_wrist_pid.AtSetpoint();
+        return m_coral_wrist_motor.GetEncoder().GetPosition() == setpoint ;
       });
   }
 
