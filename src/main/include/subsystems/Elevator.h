@@ -13,6 +13,8 @@
 #include <units/length.h>
 #include "Constants.h"
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
+#include "subsystems/CoralIntake.h"
+#include "subsystems/AlgaeIntake.h"
 
 using namespace ctre::phoenix6::hardware;
 using namespace rev::spark;
@@ -27,10 +29,6 @@ namespace t34
     Elevator();
 
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
-    frc2::CommandPtr MoveAlgaeWristToCommand(double enc_units); //units::degree_t angle
-
-    frc2::CommandPtr MoveCoralWristToCommand(units::degree_t angle);
-    frc2::CommandPtr MoveCoralWristToCommand(double encoder_units);
 
     frc2::CommandPtr MoveToLevelCommand(int level);
     frc2::CommandPtr MoveUpOnceCommand();
@@ -38,39 +36,18 @@ namespace t34
     //frc2::CommandPtr MoveToRestCommand();
 
     frc2::CommandPtr MoveElevatorByPowerCommand(double val);
-    frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
-    frc2::CommandPtr MoveCoralWristByPowerCommand(double val);
-
-
-    frc2::CommandPtr ElevateCoralWristToCommand(int movelevelby);
-    frc2::CommandPtr MoveAlgaeWristByIncrementCommand(double increase);
-
-    frc2::CommandPtr MoveToCoralLevelCommand(int level);
-    frc2::CommandPtr IncrementCoralUp();
-    frc2::CommandPtr IncrementCoralDown();
-
-    void Periodic() override;
 
   private:
     int m_level;
-    int m_coral_level;
 
     const units::inch_t m_init_height;
 
-    const units::degree_t m_init_algae_angle;
-    const units::degree_t m_init_coral_angle;
-
-    TalonSRX m_right_algae_wrist_motor;
-    TalonSRX m_left_algae_wrist_motor;
+    CoralIntake m_coral_intake;
 
     TalonSRX m_left_motor;
     TalonSRX m_right_motor;
 
-    SparkMax m_coral_wrist_motor;
-
     frc::PIDController m_elevator_motors_pid;
-    frc::PIDController m_algae_wrist_pid;
-    frc::PIDController m_coral_wrist_pid;
   };
 
 } // namespace t34
