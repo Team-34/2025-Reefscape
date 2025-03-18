@@ -6,19 +6,16 @@ namespace t34
     : m_motor(37)
     , m_flipped_out(false)
     , m_lock_flipped_up(true)
-    , m_pid_controller(0.2, 0.0, 0.0)
+    , m_pid_controller(0.4, 0.0, 0.0)
     , m_lock(0)
     {
         m_pid_controller.SetTolerance(0.15);
     }
 
-    
-
-
 
     frc2::CommandPtr Climber::Climb() 
     {
-        double setpoint = m_flipped_out ? 0.0 : 120.0;
+        double setpoint = m_flipped_out ? 0.0 : 33.0;
 
         m_pid_controller.SetSetpoint(setpoint);
 
@@ -31,6 +28,7 @@ namespace t34
         {
             m_motor.Set(0.0);
             FlipLock();
+
         }).Until(
             [this]
         {
