@@ -34,10 +34,14 @@ namespace t34
 
         frc2::CommandPtr MoveCoralWristToCommand(units::degree_t angle);
         frc2::CommandPtr MoveCoralWristToCommand(double encoder_units);
+
         frc2::CommandPtr MoveCoralWristByPowerCommand(double val);
+
         frc2::CommandPtr MoveToCoralLevelCommand(int level);
+
         frc2::CommandPtr IncrementCoralUp();
         frc2::CommandPtr IncrementCoralDown();
+        
         frc2::CommandPtr ElevateCoralWristToCommand(int movelevelby);
         
     private:
