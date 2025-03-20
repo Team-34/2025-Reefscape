@@ -42,8 +42,6 @@ namespace t34
         frc2::CommandPtr IncrementCoralUp();
         frc2::CommandPtr IncrementCoralDown();
         
-        frc2::CommandPtr ElevateCoralWristToCommand(int movelevelby);
-        
     private:
         SparkMax m_motor;
 
@@ -51,8 +49,8 @@ namespace t34
 
         const units::degree_t m_init_coral_angle;
 
-        SparkMax m_coral_wrist_motor;
+        SparkMax m_wrist_motor;
 
-        frc::PIDController m_coral_wrist_pid;
+        frc::PIDController m_wrist_pid;
     };
 }

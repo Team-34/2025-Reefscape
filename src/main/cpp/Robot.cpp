@@ -14,7 +14,7 @@ void Robot::RobotPeriodic()
 {
   frc2::CommandScheduler::GetInstance().Run();
 
-  frc::SmartDashboard::PutNumber("Arm Position", 1.295 + (rc.m_climber.GetArmPosition() * 0.507));
+  //frc::SmartDashboard::PutNumber("Arm Position", 1.295 + (rc.m_climber.GetArmPosition() * 0.507));
 }
 
 void Robot::DisabledInit() {}

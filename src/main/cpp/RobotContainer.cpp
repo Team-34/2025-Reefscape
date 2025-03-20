@@ -11,8 +11,8 @@ RobotContainer::RobotContainer()
   , ctrl(new t34::T34CommandXboxController(0))
   , m_default_command(swerve_drive, ctrl)
   , m_algae_intake()
-  , m_coral_intake()
-  , m_climber()
+  //, m_coral_intake()
+  //, m_climber()
   , m_elevator()
   , m_auto_leave(swerve_drive, 0_in, 3_ft, 0_deg)
 {
@@ -21,36 +21,22 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() 
 {
-  // ctrl->A().WhileTrue(m_algae_intake.RunInCommand());
-  // ctrl->B().WhileTrue(m_algae_intake.RunOutCommand());
-
-  ctrl->X().WhileTrue(m_coral_intake.RunInCommand());
-  ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand());
+  // ctrl->X().WhileTrue(m_coral_intake.RunInCommand());
+  // ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand());
   ctrl->A().WhileTrue(m_algae_intake.RunInCommand());
   ctrl->B().WhileTrue(m_algae_intake.RunOutCommand());
 
   ctrl->RightBumper().WhileTrue(m_algae_intake.MoveAlgaeWristByPowerCommand(0.5));
   ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveAlgaeWristByPowerCommand(-0.5));
 
-  // ctrl->POVRight().WhileTrue(m_elevator.IncrementCoralUp());
-  // ctrl->POVLeft().WhileTrue(m_elevator.IncrementCoralDown());
-  ctrl->POVRight().WhileTrue(m_coral_intake.MoveCoralWristByPowerCommand(0.5));
-  ctrl->POVLeft().WhileTrue(m_coral_intake.MoveCoralWristByPowerCommand(-0.5));
+  // ctrl->POVRight().WhileTrue(m_coral_intake.MoveCoralWristByPowerCommand(0.5));
+  // ctrl->POVLeft().WhileTrue(m_coral_intake.MoveCoralWristByPowerCommand(-0.5));
+  // ctrl->POVRight().WhileTrue(m_coral_intake.MoveCoralWristToCommand(8.0));
 
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(1.0));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-1.0));
 
-  // ctrl->RightTrigger(0.5).WhileTrue(m_climber.RunArm(0.3));
-  // ctrl->LeftTrigger(0.5).WhileTrue(m_climber.RunArm(-0.1));
-
-  // ctrl->Start().OnTrue(m_climber.FlipLock());
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
-
-  // ctrl->POVRight().WhileTrue(m_elevator.MoveCoralWristToCommand(90_deg));
-  // ctrl->POVLeft().WhileTrue(m_elevator.MoveCoralWristToCommand(135_deg));
-
-  // ctrl->A().WhileTrue(m_climber.RunLock(0.65));
-  // ctrl->B().WhileTrue(m_climber.RunLock(0.0));
 
 }
 

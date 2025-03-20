@@ -6,10 +6,12 @@ namespace t34
     : m_motor(4, rev::spark::SparkLowLevel::MotorType::kBrushless)
     , m_coral_level(0)
     , m_init_coral_angle(0_deg) 
-    , m_coral_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
-    , m_coral_wrist_pid(0.25, 0.0, 0.0)
+    , m_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
+    , m_wrist_pid(0.25, 0.0, 0.0)
   {
-    m_coral_wrist_pid.SetTolerance( (0.25_deg) / 1_tr );
+    m_wrist_pid.SetTolerance( (0.25_deg) / 1_tr );
+
+    this->Register();
   } 
 
   frc2::CommandPtr CoralIntake::MoveCoralWristByPowerCommand(double val)
@@ -18,11 +20,11 @@ namespace t34
     (
       [this, val] 
       { 
-        m_coral_wrist_motor.Set(-val);  
+        m_wrist_motor.Set(-val);  
       },
       [this]
       {
-        m_coral_wrist_motor.Set(0.0);
+        m_wrist_motor.Set(0.0);
       }
     );
   }
@@ -64,31 +66,30 @@ namespace t34
  frc2::CommandPtr CoralIntake::MoveCoralWristToCommand(double encoder_units)
   {
 
-    bool run_up = m_coral_wrist_motor.GetEncoder().GetPosition() < encoder_units;
-    //m_coral_wrist_pid.SetSetpoint(encoder_units);//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
+    bool run_up = m_wrist_motor.GetEncoder().GetPosition() < encoder_units;
+    //m_wrist_pid.SetSetpoint(encoder_units);//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
 
 
 
     return this->RunEnd(
       [this, run_up]
       {
-        //m_coral_wrist_motor.Set(m_coral_wrist_pid.Calculate(m_coral_wrist_motor.GetEncoder().GetPosition()));
 
-        m_coral_wrist_motor.Set((run_up) ? 0.3 : -0.3);
+        m_wrist_motor.Set((run_up) ? 0.3 : -0.3);
       },
       [this]
       {
-          m_coral_wrist_motor.StopMotor();
+          m_wrist_motor.StopMotor();
       })
       .Until([this, encoder_units, run_up] 
       { 
         if (run_up)
         {
-          return m_coral_wrist_motor.GetEncoder().GetPosition() >= (encoder_units - 0.1);
+          return m_wrist_motor.GetEncoder().GetPosition() >= (encoder_units - 0.1);
         }
         else
         {
-          return m_coral_wrist_motor.GetEncoder().GetPosition() <= (encoder_units + 0.1);
+          return m_wrist_motor.GetEncoder().GetPosition() <= (encoder_units + 0.1);
         }
       });
   }
@@ -96,20 +97,20 @@ namespace t34
 frc2::CommandPtr CoralIntake::MoveCoralWristToCommand(units::degree_t angle)
   {
     std::clamp(angle, 0_deg, 150_deg);
-    m_coral_wrist_pid.SetSetpoint(-426.755 + (0.0438 * (angle.value() - m_init_coral_angle.value())));//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
+    m_wrist_pid.SetSetpoint(-426.755 + (0.0438 * (angle.value() - m_init_coral_angle.value())));//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
 
     return this->RunEnd(
       [this, angle]
       {
-        m_coral_wrist_motor.Set(m_coral_wrist_pid.Calculate(m_coral_wrist_motor.GetEncoder().GetPosition()));
+        m_wrist_motor.Set(m_wrist_pid.Calculate(m_wrist_motor.GetEncoder().GetPosition()));
       },
       [this]
       {
-          m_coral_wrist_motor.StopMotor();
+          m_wrist_motor.StopMotor();
       })
       .Until([this] 
       { 
-        return m_coral_wrist_pid.AtSetpoint();
+        return m_wrist_pid.AtSetpoint();
       });
   }
 
@@ -131,8 +132,8 @@ frc2::CommandPtr CoralIntake::MoveCoralWristToCommand(units::degree_t angle)
 
  void CoralIntake::Periodic()
   {
-    frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_coral_wrist_motor.GetEncoder().GetPosition());
-    frc::SmartDashboard::PutNumber("Coral Setpoint", m_coral_wrist_pid.GetSetpoint());
+    frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
+    frc::SmartDashboard::PutNumber("Coral Setpoint", m_wrist_pid.GetSetpoint());
 
   }
 }
