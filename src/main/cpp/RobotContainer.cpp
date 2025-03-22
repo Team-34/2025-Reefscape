@@ -4,18 +4,16 @@
 
 #include "RobotContainer.h"
 
-RobotContainer::RobotContainer() 
-  : swerve_drive(new t34::SwerveDrive())
-  , ctrl(new t34::T34CommandXboxController(0))
-  , m_default_command(swerve_drive, ctrl)
-  
+#include <frc2/command/Commands.h>
+
+RobotContainer::RobotContainer()
 {
-  ConfigureBindings();
+    ConfigureBindings();
 }
 
-void RobotContainer::ConfigureBindings() 
+void RobotContainer::ConfigureBindings()
 {
-  // Note that X is defined as forward according to WPILib convention,
+    // Note that X is defined as forward according to WPILib convention,
     // and Y is defined as to the left according to WPILib convention.
     drivetrain.SetDefaultCommand(
         // Drivetrain will execute this command periodically
@@ -44,6 +42,7 @@ void RobotContainer::ConfigureBindings()
     drivetrain.RegisterTelemetry([this](auto const &state) { logger.Telemeterize(state); });
 }
 
-frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
-  return frc2::cmd::Print("No autonomous command configured");
+frc2::CommandPtr RobotContainer::GetAutonomousCommand()
+{
+    return frc2::cmd::Print("No autonomous command configured");
 }

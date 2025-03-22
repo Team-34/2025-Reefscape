@@ -3,15 +3,12 @@
 // the WPILib BSD license file in the root directory of this project.
 
 #include "Robot.h"
-#include "subsystems/LimelightUtil.h"
 
-Robot::Robot() 
-{
-  
-}
+#include <frc2/command/CommandScheduler.h>
 
-void Robot::RobotPeriodic() 
-{
+Robot::Robot() {}
+
+void Robot::RobotPeriodic() {
   frc2::CommandScheduler::GetInstance().Run();
 }
 
@@ -21,12 +18,11 @@ void Robot::DisabledPeriodic() {}
 
 void Robot::DisabledExit() {}
 
-void Robot::AutonomousInit() 
-{
-  m_autonomous_command = rc.GetAutonomousCommand();
+void Robot::AutonomousInit() {
+  m_autonomousCommand = m_container.GetAutonomousCommand();
 
-  if (m_autonomous_command) {
-    m_autonomous_command->Schedule();
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Schedule();
   }
 }
 
@@ -34,12 +30,9 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::AutonomousExit() {}
 
-void Robot::TeleopInit() 
-{
-  if (m_autonomous_command)
-  {
-    m_autonomous_command->Cancel();
-    m_autonomous_command.reset();
+void Robot::TeleopInit() {
+  if (m_autonomousCommand) {
+    m_autonomousCommand->Cancel();
   }
 }
 
@@ -47,8 +40,7 @@ void Robot::TeleopPeriodic() {}
 
 void Robot::TeleopExit() {}
 
-void Robot::TestInit() 
-{
+void Robot::TestInit() {
   frc2::CommandScheduler::GetInstance().CancelAll();
 }
 
@@ -57,8 +49,7 @@ void Robot::TestPeriodic() {}
 void Robot::TestExit() {}
 
 #ifndef RUNNING_FRC_TESTS
-int main() 
-{
+int main() {
   return frc::StartRobot<Robot>();
 }
 #endif

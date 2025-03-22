@@ -5,27 +5,11 @@
 #pragma once
 
 #include <frc2/command/CommandPtr.h>
-#include <frc2/command/Commands.h>
-#include <frc2/command/Command.h>
-#include <frc2/command/CommandPtr.h>
-#include "T34CommandXboxController.h"
-#include "commands/ControllerDriveCommand.h"
-#include "subsystems/SwerveDrive.h"
+#include <frc2/command/button/CommandXboxController.h>
+#include "subsystems/CommandSwerveDrivetrain.h"
 #include "Telemetry.h"
 
-class RobotContainer
-{
-public:
-  RobotContainer();
-  std::shared_ptr<t34::SwerveDrive> swerve_drive;
-  std::shared_ptr<t34::T34CommandXboxController> ctrl;
-
-  t34::ControllerDriveCommand m_default_command;
-  subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
-
-
-  frc2::CommandPtr GetAutonomousCommand();
-
+class RobotContainer {
 private:
     units::meters_per_second_t MaxSpeed = TunerConstants::kSpeedAt12Volts; // kSpeedAt12Volts desired top speed
     units::radians_per_second_t MaxAngularRate = 0.75_tps; // 3/4 of a rotation per second max angular velocity
@@ -42,6 +26,14 @@ private:
     Telemetry logger{MaxSpeed};
 
     frc2::CommandXboxController joystick{0};
-  
-  void ConfigureBindings();
+
+public:
+    subsystems::CommandSwerveDrivetrain drivetrain{TunerConstants::CreateDrivetrain()};
+
+    RobotContainer();
+
+    frc2::CommandPtr GetAutonomousCommand();
+
+private:
+    void ConfigureBindings();
 };

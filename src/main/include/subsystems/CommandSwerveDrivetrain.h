@@ -8,7 +8,7 @@
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/sysid/SysIdRoutine.h>
 
-#include "Generated/TunerConstants.h"
+#include "generated/TunerConstants.h"
 
 using namespace ctre::phoenix6;
 
