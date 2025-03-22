@@ -21,18 +21,13 @@ namespace t34
   , m_elevator_motors_pid(0.5, 0.0, 0.0)
   {
     m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
+
+    Register();
   }
 
   void Elevator::ElevateTo(units::inch_t height)
   {
     m_elevator_motors_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
-
-    auto speed = m_elevator_motors_pid.Calculate(m_left_motor.GetSelectedSensorPosition());
-
-    //Run the elevator in respect to the given height
-    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-
-    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
   }
 
   void Elevator::Stop()
@@ -90,8 +85,15 @@ namespace t34
     );
   }
 
+  void Elevator::Periodic()
+  {
+    auto pos = m_elevator_motors_pid.Calculate(m_left_motor.GetSelectedSensorPosition());
 
+    //Run the elevator in respect to the given height
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, pos);
 
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, -pos);
+  }
      
 
 } // namespace t34

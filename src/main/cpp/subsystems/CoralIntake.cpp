@@ -122,15 +122,16 @@ namespace t34
       });
   }
 
-frc2::CommandPtr CoralIntake::MoveCoralWristToCommand(units::degree_t angle)
+  frc2::CommandPtr CoralIntake::MoveCoralWristToCommand(units::degree_t angle)
   {
-    std::clamp(angle, 0_deg, 150_deg);
-    m_wrist_pid.SetSetpoint(-426.755 + (0.0438 * (angle.value() - m_init_coral_angle.value())));//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
+    angle = std::clamp(angle, 45_deg, 158_deg);
+    m_wrist_pid.SetSetpoint((angle.value() - m_init_coral_angle.value()) / 7.45);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
 
     return this->RunEnd(
       [this, angle]
       {
         m_wrist_motor.Set(m_wrist_pid.Calculate(m_wrist_motor.GetEncoder().GetPosition()));
+        
       },
       [this]
       {

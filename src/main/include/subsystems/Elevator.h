@@ -40,6 +40,10 @@ namespace t34
 
     inline units::inch_t GetInitHeight() { return m_init_height; }    
 
+    inline double GetEncoderUnits() { return m_right_motor.GetSelectedSensorPosition(); }
+
+    void Periodic() override;
+
   private:
     int m_level;
 
