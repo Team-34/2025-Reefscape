@@ -35,6 +35,13 @@ namespace t34
         frc2::CommandPtr MoveCoralWristToCommand(units::degree_t angle);
         frc2::CommandPtr MoveCoralWristToCommand(double encoder_units);
 
+        void MoveCoralWristTo(units::degree_t angle);
+        void MoveCoralWristTo(double encoder_units);
+
+        void StopWrist();
+
+        bool EndCondition(); 
+
         frc2::CommandPtr MoveCoralWristByPowerCommand(double val);
 
         frc2::CommandPtr MoveToCoralLevelCommand(int level);
@@ -43,6 +50,10 @@ namespace t34
         frc2::CommandPtr IncrementCoralDown();
         
     private:
+        bool m_run_up;
+
+        double m_encoder_setpoint;
+
         SparkMax m_motor;
 
         int m_coral_level;

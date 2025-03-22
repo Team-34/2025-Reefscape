@@ -8,10 +8,10 @@
 // For more information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 
-MoveToLevelCommand::MoveToLevelCommand(t34::CoralIntake *coral_intake, t34::AlgaeIntake *algae_intake, t34::Elevator *elevator, int level) 
-: m_coral_intake(coral_intake)
+MoveToLevelCommand::MoveToLevelCommand(t34::Elevator *elevator, t34::AlgaeIntake *algae_intake, t34::CoralIntake *coral_intake, int level) 
+: m_elevator(elevator)
 , m_algae_intake(algae_intake)
-, m_elevator(elevator)
+, m_coral_intake(coral_intake)
 , m_level(level)
 
 {
@@ -22,18 +22,18 @@ MoveToLevelCommand::MoveToLevelCommand(t34::CoralIntake *coral_intake, t34::Alga
 
   if (m_level == 0)
   {
-    AddCommands( 
-      *m_algae_intake->MoveAlgaeWristToCommand(algae_angle).Unwrap().get(), 
-      *m_coral_intake->MoveCoralWristToCommand(coral_angle).Unwrap().get(),
-      *m_elevator->ElevateToCommand(elevator_height).Unwrap().get()
+    AddCommands(
+      MoveCoralWristToCommand(m_coral_intake, coral_angle),
+      MoveAlgaeWristToCommand(m_algae_intake, algae_angle),
+      ElevateToCommand(m_elevator, elevator_height)
     );
   }
   else
   {
     AddCommands(
-      *m_elevator->ElevateToCommand(elevator_height).Unwrap().get(), 
-      *m_algae_intake->MoveAlgaeWristToCommand(algae_angle).Unwrap().get(), 
-      *m_coral_intake->MoveCoralWristToCommand(coral_angle).Unwrap().get()
+      ElevateToCommand(m_elevator, elevator_height),
+      MoveCoralWristToCommand(m_coral_intake, coral_angle),
+      MoveAlgaeWristToCommand(m_algae_intake, algae_angle)
     );
   }
 

@@ -31,11 +31,17 @@ namespace t34
 
         void Periodic() override;
 
-        frc2::CommandPtr MoveAlgaeWristToCommand(double enc_units);
-        frc2::CommandPtr MoveAlgaeWristToCommand(units::degree_t angle);
+        // frc2::CommandPtr MoveAlgaeWristToCommand(double enc_units);
+        // frc2::CommandPtr MoveAlgaeWristToCommand(units::degree_t angle);
         frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
         frc2::CommandPtr MoveAlgaeWristByIncrementCommand(double increase);
 
+        void MoveAlgaeWristTo(double enc_units);
+        void MoveAlgaeWristTo(units::degree_t angle);
+
+        void StopWrist();
+
+        bool EndCondition() { return m_algae_wrist_pid.AtSetpoint(); }
         
     private:
         ctre::phoenix6::hardware::TalonFX m_motor;

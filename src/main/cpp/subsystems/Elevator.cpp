@@ -23,29 +23,49 @@ namespace t34
     m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
   }
 
-  frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
+  void Elevator::ElevateTo(units::inch_t height)
   {
     m_elevator_motors_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
 
-    return this->RunEnd(
-      [this, height]
-      {
+    auto speed = m_elevator_motors_pid.Calculate(m_left_motor.GetSelectedSensorPosition());
 
-        auto speed = m_elevator_motors_pid.Calculate(m_left_motor.GetSelectedSensorPosition());
+    //Run the elevator in respect to the given height
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
 
-        //Run the elevator in respect to the given height
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-
-        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
-      },
-      [this]
-      {
-        // stop motor
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-      })
-      .Until([this] { return m_elevator_motors_pid.AtSetpoint(); });
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
   }
+
+  void Elevator::Stop()
+  {
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  }
+
+  // frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
+  // {
+  //   m_elevator_motors_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
+
+  //   return this->RunEnd(
+  //     [this, height]
+  //     {
+
+  //       auto speed = m_elevator_motors_pid.Calculate(m_left_motor.GetSelectedSensorPosition());
+
+  //       //Run the elevator in respect to the given height
+  //       m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
+
+  //       m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
+  //     },
+  //     [this]
+  //     {
+  //       // stop motor
+  //       m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //       m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //     })
+  //     .Until([this] { return m_elevator_motors_pid.AtSetpoint(); });
+  // }
+
+  
 
   // frc2::CommandPtr Elevator::MoveToRestCommand()
   // {

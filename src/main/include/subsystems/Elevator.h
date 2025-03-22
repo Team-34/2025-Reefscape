@@ -28,7 +28,11 @@ namespace t34
 
     Elevator();
 
-    frc2::CommandPtr ElevateToCommand(units::inch_t height);
+    //frc2::CommandPtr ElevateToCommand(units::inch_t height);
+    void ElevateTo(units::inch_t height);
+    void Stop();
+
+    inline bool EndCondition() { return m_elevator_motors_pid.AtSetpoint(); };
 
     //frc2::CommandPtr MoveToRestCommand();
 
