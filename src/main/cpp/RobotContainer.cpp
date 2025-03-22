@@ -31,7 +31,7 @@ void RobotContainer::ConfigureBindings()
 
   // ctrl->POVRight().WhileTrue(m_coral_intake.MoveCoralWristByPowerCommand(0.5));
   // ctrl->POVLeft().WhileTrue(m_coral_intake.MoveCoralWristByPowerCommand(-0.5));
-  //ctrl->POVRight().WhileTrue(m_coral_intake.MoveCoralWristToCommand(8.0));
+  ctrl->POVRight().WhileTrue(m_coral_intake.MoveCoralWristToCommand(8.0));
 
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(1.0));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-1.0));

@@ -30,19 +30,16 @@ namespace t34
 
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
 
-    frc2::CommandPtr MoveToLevelCommand(int level);
-    frc2::CommandPtr MoveUpOnceCommand();
-    frc2::CommandPtr MoveDownOnceCommand();
     //frc2::CommandPtr MoveToRestCommand();
 
     frc2::CommandPtr MoveElevatorByPowerCommand(double val);
+
+    inline units::inch_t GetInitHeight() { return m_init_height; }    
 
   private:
     int m_level;
 
     const units::inch_t m_init_height;
-
-    CoralIntake m_coral_intake;
 
     TalonSRX m_left_motor;
     TalonSRX m_right_motor;

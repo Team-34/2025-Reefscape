@@ -13,6 +13,8 @@
 #include <units/length.h>
 #include <units/angle.h>
 
+#include "Talon.h"
+
 using namespace ctre::phoenix6::hardware;
 using namespace rev::spark;
 using namespace ctre::phoenix::motorcontrol::can;
@@ -29,7 +31,8 @@ namespace t34
 
         void Periodic() override;
 
-        frc2::CommandPtr MoveAlgaeWristToCommand(double enc_units); //units::degree_t angle
+        frc2::CommandPtr MoveAlgaeWristToCommand(double enc_units);
+        frc2::CommandPtr MoveAlgaeWristToCommand(units::degree_t angle);
         frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
         frc2::CommandPtr MoveAlgaeWristByIncrementCommand(double increase);
 

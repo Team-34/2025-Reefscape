@@ -15,17 +15,40 @@ namespace t34
     m_algae_wrist_pid.SetTolerance( (0.25_deg) / 1_tr);
   } 
 
- frc2::CommandPtr AlgaeIntake::MoveAlgaeWristToCommand(double encoder_units)
-  {                                             //units::degree_t angle
-    //std::clamp(angle, 0_deg, 115_deg);
+  frc2::CommandPtr AlgaeIntake::MoveAlgaeWristToCommand(double encoder_units)
+  {                                  
     
     double clamped_encoder_units = std::clamp(encoder_units, -9000.0, 593.0);
+
     //m_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * ((angle - m_init_algae_angle) / 1_tr));
     m_algae_wrist_pid.SetSetpoint(clamped_encoder_units);
-                      //BOTH_WRIST_GEAR_RATIO * ((angle - m_init_algae_angle) / 1_tr)
 
     return this->RunEnd(
       [this, clamped_encoder_units]
+      {
+        m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetSelectedSensorPosition()));
+        m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetSelectedSensorPosition()));
+      },
+      [this]
+      {
+        m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+      })
+      .Until([this] 
+      { 
+        return m_algae_wrist_pid.AtSetpoint();
+      });
+  }
+
+  frc2::CommandPtr AlgaeIntake::MoveAlgaeWristToCommand(units::degree_t angle)
+  {
+    units::inch_t m_clamped_degrees = std::clamp(angle, 0_deg, 160_deg);
+
+    //m_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * ((angle - m_init_algae_angle) / 1_tr));
+    m_algae_wrist_pid.SetSetpoint(Talon::AngleTo775ProUnit(m_clamped_degrees));
+
+    return this->RunEnd(
+      [this, m_clamped_degrees]
       {
         m_left_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetSelectedSensorPosition()));
         m_right_algae_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetSelectedSensorPosition()));

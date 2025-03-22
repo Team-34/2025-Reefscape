@@ -47,33 +47,6 @@ namespace t34
       .Until([this] { return m_elevator_motors_pid.AtSetpoint(); });
   }
 
-  frc2::CommandPtr Elevator::MoveToLevelCommand(int level)
-  {                               //  Coral Intake     Elevator height
-    static const std::array<std::pair<units::degree_t, units::inch_t>, 5> presets {{
-      { 5_deg, 3_in }, //The swerve modules are 2.75 inches above the elevator's lowest point. The 775Pros will collide with the modules if they are ran all the way to the bottom.
-      { 55_deg, 18_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-      { 55_deg, 31.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-      { 55_deg, 47.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-      { 2_deg, 72_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-    }};
-
-    m_level = std::clamp(level, 0, static_cast<int>(presets.size()) - 1);
-    
-    auto [angle, height] = presets.at(level);
-
-    return ElevateToCommand(height).AndThen(m_coral_intake.MoveCoralWristToCommand(angle));
-  };
-
-  frc2::CommandPtr Elevator::MoveUpOnceCommand()
-  {
-    return this->MoveToLevelCommand(m_level + 1); 
-  }
-
-  frc2::CommandPtr Elevator::MoveDownOnceCommand()
-  {
-    return this->MoveToLevelCommand(m_level - 1); 
-  }
-
   // frc2::CommandPtr Elevator::MoveToRestCommand()
   // {
   //   //move 16.5 inches from start to provide space, and then move wrist.
