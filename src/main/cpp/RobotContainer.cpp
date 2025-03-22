@@ -11,7 +11,7 @@ RobotContainer::RobotContainer()
   , ctrl(new t34::T34CommandXboxController(0))
   , m_default_command(swerve_drive, ctrl)
   , m_algae_intake()
-  //, m_coral_intake()
+  , m_coral_intake()
   //, m_climber()
   , m_elevator()
   , m_auto_leave(swerve_drive, 0_in, 3_ft, 0_deg)
@@ -31,7 +31,7 @@ void RobotContainer::ConfigureBindings()
 
   // ctrl->POVRight().WhileTrue(m_coral_intake.MoveCoralWristByPowerCommand(0.5));
   // ctrl->POVLeft().WhileTrue(m_coral_intake.MoveCoralWristByPowerCommand(-0.5));
-  // ctrl->POVRight().WhileTrue(m_coral_intake.MoveCoralWristToCommand(8.0));
+  //ctrl->POVRight().WhileTrue(m_coral_intake.MoveCoralWristToCommand(8.0));
 
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(1.0));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-1.0));
