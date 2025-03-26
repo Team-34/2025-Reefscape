@@ -32,8 +32,8 @@ void RobotContainer::ConfigureBindings()
   ctrl->RightBumper().OnTrue(m_algae_intake.MoveAlgaeWristByIncrementCommand(5));
   ctrl->LeftBumper().OnTrue(m_algae_intake.MoveAlgaeWristByPowerCommand(-0.5));
 
-  ctrl->POVRight().OnTrue(m_coral_intake.MoveCoralWristToCommand(100_deg));
-  ctrl->POVLeft().OnTrue(m_coral_intake.MoveCoralWristToCommand(0_deg));
+  ctrl->POVRight().OnTrue(m_coral_intake.MoveCoralWristToCommand(12.0));
+  ctrl->POVLeft().OnTrue(m_coral_intake.MoveCoralWristToCommand(0));
 
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(1.0));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-1.0));

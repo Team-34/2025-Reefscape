@@ -94,32 +94,38 @@ namespace t34
  frc2::CommandPtr CoralIntake::MoveCoralWristToCommand(double encoder_units)
   {
 
-    bool run_up = m_wrist_motor.GetEncoder().GetPosition() < encoder_units;
+    //bool run_up = m_wrist_motor.GetEncoder().GetPosition() < encoder_units;
     //m_wrist_pid.SetSetpoint(encoder_units);//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
+    
 
+    // return this->RunEnd(
+    //   [this, run_up]
+    //   {
 
+    //     m_wrist_motor.Set((run_up) ? 0.3 : -0.3);
+    //   },
+    //   [this]
+    //   {
+    //       m_wrist_motor.StopMotor();
+    //   })
+    //   .Until([this, encoder_units, run_up] 
+    //   { 
+    //     if (run_up)
+    //     {
+    //       return m_wrist_motor.GetEncoder().GetPosition() >= (encoder_units - 0.1);
+    //     }
+    //     else
+    //     {
+    //       return m_wrist_motor.GetEncoder().GetPosition() <= (encoder_units + 0.1);
+    //     }
+    //   });
 
-    return this->RunEnd(
-      [this, run_up]
+    return this->RunOnce(
+      [this, encoder_units]
       {
-
-        m_wrist_motor.Set((run_up) ? 0.3 : -0.3);
-      },
-      [this]
-      {
-          m_wrist_motor.StopMotor();
-      })
-      .Until([this, encoder_units, run_up] 
-      { 
-        if (run_up)
-        {
-          return m_wrist_motor.GetEncoder().GetPosition() >= (encoder_units - 0.1);
-        }
-        else
-        {
-          return m_wrist_motor.GetEncoder().GetPosition() <= (encoder_units + 0.1);
-        }
-      });
+        m_encoder_setpoint = encoder_units;
+      }
+    );
   }
 
   frc2::CommandPtr CoralIntake::MoveCoralWristToCommand(units::degree_t angle)
@@ -163,6 +169,8 @@ namespace t34
   {
     frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
     frc::SmartDashboard::PutNumber("Coral Setpoint", m_wrist_pid.GetSetpoint());
+
+    m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
 
   }
 }

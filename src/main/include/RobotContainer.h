@@ -18,6 +18,8 @@
 #include "subsystems/Elevator.h"
 #include "Gyro.h"
 
+#include <frc/AnalogEncoder.h>
+
 class RobotContainer
 {
 public:

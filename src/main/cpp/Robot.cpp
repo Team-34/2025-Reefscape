@@ -13,8 +13,6 @@ Robot::Robot()
 void Robot::RobotPeriodic() 
 {
   frc2::CommandScheduler::GetInstance().Run();
-
-  frc::SmartDashboard::PutNumber("Elevator Left Encoder Units", rc.m_elevator.GetEncoderUnits());
   
 }
 
