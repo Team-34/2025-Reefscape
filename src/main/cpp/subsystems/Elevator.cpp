@@ -105,11 +105,25 @@ namespace t34
     );
   }
 
-  void Elevator::UpdatePosition()
+  double Elevator::UpdatePosition(double acc, double last, double next)
   {
-    m_encoder_accumulation += (m_encoder.Get() - m_last_reading);
 
-    m_last_reading = m_encoder.Get();
+    if (0.75 < last && next < 0.25)
+    {
+	    acc += 1.0 + (next - last);
+    }
+
+    else if (0.75 < next && last < 0.25)
+    {
+	    acc -= 1.0 - (next - last);
+    }
+
+    else
+    {
+	    acc += next - last;
+    }
+
+    return acc;
   }
 
   units::inch_t Elevator::GetPosition()
@@ -122,7 +136,11 @@ namespace t34
     frc::SmartDashboard::PutNumber("Elevator Encoder Units with accum", GetPositionAsEncVal());
     frc::SmartDashboard::PutNumber("Elevator Encoder Units", m_encoder.Get());
 
-    UpdatePosition();
+    double next_reading = m_encoder.Get();
+
+    m_encoder_accumulation = UpdatePosition(m_encoder_accumulation, m_last_reading, next_reading );
+    m_last_reading = next_reading;
+
   }
      
 

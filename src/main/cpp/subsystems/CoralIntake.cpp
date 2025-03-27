@@ -1,4 +1,5 @@
 #include "subsystems/CoralIntake.h"
+#include <array>
 
 namespace t34
 {    
