@@ -17,8 +17,7 @@ namespace t34 {
     Gyro::Gyro()
         : ctre::phoenix6::hardware::Pigeon2(10, "RIO")
     {
-        //: AHRS(studica::AHRS::NavXComType::kMXP_SPI) {
-        
+
     }
 
     /**
@@ -30,12 +29,5 @@ namespace t34 {
     void Gyro::ZeroYaw() { 
         Reset(); 
     }
-
-    // frc2::CommandPtr Gyro::ZeroYawCommand()
-    // {
-    //     this->RunOnce([this]{ 
-    //         ZeroYaw(); 
-    //     });
-    // }
 
 }

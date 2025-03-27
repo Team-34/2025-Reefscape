@@ -12,8 +12,6 @@ namespace t34 {
 
         void ZeroYaw();
 
-        //frc2::CommandPtr ZeroYawCommand();
-        
     private: // METHODS
         Gyro();
     };

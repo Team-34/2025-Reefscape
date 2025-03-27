@@ -18,7 +18,7 @@ MoveToLevelCommand::MoveToLevelCommand(t34::Elevator *elevator, t34::AlgaeIntake
 
   m_level = std::clamp(level, 0, static_cast<int>(presets.size()) - 1);
     
-  auto [algae_angle, coral_angle, elevator_height] = presets.at(level);
+  auto [algae_angle, coral_angle, elevator_height] = presets.at(m_level);
 
   if (m_level == 0)
   {

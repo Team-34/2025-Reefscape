@@ -33,13 +33,15 @@ class MoveToLevelCommand
 
   int m_level;
 
-                            //Algae Intake    Coral Intake   Elevator height
-const std::array<std::tuple<units::degree_t, units::degree_t, units::inch_t>, 5> presets {{
-  { 0_deg, 5_deg, 3_in }, //The swerve modules are 2.75 inches above the elevator's lowest point. The 775Pros will collide with the modules if they are ran all the way to the bottom.
-  { 90_deg, 55_deg, 18_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
-  { 90_deg, 55_deg, 31.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
-  { 90_deg, 55_deg, 47.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
-  { 90_deg, 2_deg, 72_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
-}};
+                               //Algae Intake    Coral Intake   Elevator height
+  const std::array<std::tuple<units::degree_t, units::degree_t, units::inch_t>, 5> presets {{
+    // The swerve modules are 2.75 inches above the elevator's lowest point.
+    // The 775Pros will collide with the modules if they are run all the way to the bottom.
+    { 0_deg, 5_deg, 3_in }, 
+    { 90_deg, 55_deg, 18_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
+    { 90_deg, 55_deg, 31.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
+    { 90_deg, 55_deg, 47.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
+    { 90_deg, 2_deg, 72_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE },
+  }};
 
 };
