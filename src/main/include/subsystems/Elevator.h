@@ -45,9 +45,10 @@ namespace t34
 
     void Periodic() override;
 
-    double UpdatePosition(double acc, double last, double next);
 
   private:
+
+    double UpdatePosition(double acc, double last, double next);
 
     int m_level;
 

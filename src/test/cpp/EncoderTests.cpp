@@ -30,5 +30,7 @@ TEST_P(UpdateEncoderUnitTest, update_pos_handles_roll_over) {
 
 INSTANTIATE_TEST_SUITE_P(EncoderTests, UpdateEncoderUnitTest, Values(
   std::make_tuple(0.9, 0.9, 0.1, 1.1),
-  std::make_tuple(0.9, 0.1, 0.9, 0.7)
+  std::make_tuple(0.9, 0.1, 0.9, 0.7),
+  std::make_tuple(15.6, 0.9, 0.15, 15.85),
+  std::make_tuple(-15.6, 0.9, 0.15, -15.35)
 ));
