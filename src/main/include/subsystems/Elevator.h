@@ -41,7 +41,7 @@ namespace t34
 
     inline units::inch_t GetInitHeight() { return m_init_height; }    
     
-    inline double GetPositionAsEncVal() { return m_encoder_accumulation * 360.0; }
+    inline double GetPositionAsEncVal() { return m_encoder_accumulation; }
 
     void Periodic() override;
 
