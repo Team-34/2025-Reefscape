@@ -69,11 +69,8 @@ void AutoDriveCommand::Execute()
     }
     else
     {
-      m_swerve->Drive(frc::Translation2d(
-      units::meter_t(0.0),
-      units::meter_t(0.0)),
-    m_rot_speed
-    );
+      m_swerve->Drive(frc::Translation2d(0_m, 0_m), 
+      m_rot_speed);
 
     m_at_drive_setpoint = true;
     }

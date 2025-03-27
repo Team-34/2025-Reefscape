@@ -47,8 +47,6 @@ void Robot::TeleopInit()
     m_autonomous_command.reset();
   }
 
-  //rc.m_auto_leave.Cancel();
-
   frc2::CommandScheduler::GetInstance().SetDefaultCommand(rc.swerve_drive.get(), std::move(rc.m_default_command));
 }
 
