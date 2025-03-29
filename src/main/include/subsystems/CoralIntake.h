@@ -16,6 +16,7 @@
 #include <units/length.h>
 #include <units/angle.h>
 #include <frc/DigitalInput.h>
+#include <frc2/command/button/Trigger.h>
 
 using namespace rev::spark;
 using namespace ctre::phoenix6::hardware;
@@ -45,12 +46,12 @@ namespace t34
         frc2::CommandPtr MoveToLevelCommand(int level);
         frc2::CommandPtr IncrementUp();
         frc2::CommandPtr IncrementDown();
-
-        
         
     private:
+        inline bool IsWristLimitHit() const { return !m_limit_switch.Get(); }
 
         void ResetWristEncoder();
+        frc2::CommandPtr ResetWristEncoderCommand();
 
         SparkMax m_motor;
 

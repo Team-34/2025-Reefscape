@@ -11,9 +11,9 @@ namespace t34
     , m_run_up(false)
     , m_encoder_setpoint(0.0)
     , m_limit_switch(3)
-    // , m_limit_hit([this] { return m_limit_switch.Get(); })
+    , m_limit_hit([this] { return IsWristLimitHit(); })
   {
-    // m_limit_hit.OnTrue([this] { ResetWristEncoder(); });
+    m_limit_hit.OnTrue(ResetWristEncoderCommand());
   } 
 
   frc2::CommandPtr CoralIntake::MoveWristByPowerCommand(double val)
@@ -127,5 +127,10 @@ namespace t34
   void CoralIntake::ResetWristEncoder()
   {
     m_wrist_motor.GetEncoder().SetPosition(0);
+  }
+
+  frc2::CommandPtr CoralIntake::ResetWristEncoderCommand()
+  {
+    return RunOnce([this] { ResetWristEncoder(); });
   }
 }
