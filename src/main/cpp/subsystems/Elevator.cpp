@@ -21,7 +21,7 @@ namespace t34
   , m_left_motor(11)
   , m_right_motor(12)
   , m_pid(0.5, 0.0, 0.0)
-  , m_encoder(2)
+  , m_encoder(0)
   {
     m_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
 
