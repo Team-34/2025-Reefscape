@@ -15,6 +15,7 @@
 #include <cmath>
 #include <units/length.h>
 #include <units/angle.h>
+#include <frc/DigitalInput.h>
 
 using namespace rev::spark;
 using namespace ctre::phoenix6::hardware;
@@ -44,8 +45,13 @@ namespace t34
         frc2::CommandPtr MoveToLevelCommand(int level);
         frc2::CommandPtr IncrementUp();
         frc2::CommandPtr IncrementDown();
+
+        
         
     private:
+
+        void ResetWristEncoder();
+
         SparkMax m_motor;
 
         int m_coral_level;
@@ -57,5 +63,10 @@ namespace t34
         bool m_run_up;
 
         double m_encoder_setpoint;
+
+        frc::DigitalInput m_limit_switch;
+
+        frc2::Trigger m_limit_hit;
+
    };
 }

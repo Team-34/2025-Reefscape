@@ -10,8 +10,10 @@ namespace t34
     , m_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
     , m_run_up(false)
     , m_encoder_setpoint(0.0)
+    , m_limit_switch(0)
+    , m_limit_hit([this] { return m_limit_switch.Get(); })
   {
-    Register();
+    m_limit_hit.OnTrue([this] { ResetWristEncoder(); });
   } 
 
   frc2::CommandPtr CoralIntake::MoveWristByPowerCommand(double val)
@@ -117,7 +119,13 @@ namespace t34
  void CoralIntake::Periodic()
   {
     frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
+    frc::SmartDashboard::PutBoolean("Coral Wrist Limit Switch State: ", m_limit_switch.Get());
 
     m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
+  }
+  
+  void CoralIntake::ResetWristEncoder()
+  {
+    m_wrist_motor.GetEncoder().SetPosition(0);
   }
 }
