@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #pragma once
 
 #include <frc2/command/CommandPtr.h>
@@ -17,7 +13,6 @@
 #include "subsystems/Climber.h"
 #include "subsystems/Elevator.h"
 #include "Gyro.h"
-
 #include <frc/AnalogEncoder.h>
 
 class RobotContainer
@@ -29,7 +24,6 @@ public:
   t34::ControllerDriveCommand m_default_command;
   t34::AlgaeIntake m_algae_intake;
   t34::CoralIntake m_coral_intake;
-  //t34::Climber m_climber;
   t34::Elevator m_elevator;
   
   AutoDriveCommand m_auto_leave;
@@ -39,9 +33,5 @@ public:
   frc2::CommandPtr GetAutonomousCommand();
 
 private:
-  
-  
-  
-  
   void ConfigureBindings();
 };

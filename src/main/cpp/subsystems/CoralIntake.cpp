@@ -11,7 +11,6 @@ namespace t34
     , m_run_up(false)
     , m_encoder_setpoint(0.0)
   {
-
     Register();
   } 
 
@@ -30,25 +29,13 @@ namespace t34
     );
   }
 
-   frc2::CommandPtr CoralIntake::MoveToLevelCommand(int level)
+  frc2::CommandPtr CoralIntake::MoveToLevelCommand(int level)
   {
     static const std::array<double, 5> presets {{
       0.0, 4.0, 13.666, 19.83, 23.0
     }};
 
     m_coral_level = std::clamp(level, 0, static_cast<int>(presets.size()) - 1);
-
-    // m_coral_level = std::clamp(level, 0, 4);
-
-    // switch (m_coral_level)
-    // {
-    //   case 0:
-    //     return MoveCoralWristToCommand(0.0);
-    //     break;
-    //   case 1:
-    //     return MoveCoralWristToCommand(4.0);
-    //     break;
-    // }
 
     return MoveWristToCommand(presets.at(m_coral_level));
   }
@@ -69,8 +56,7 @@ namespace t34
 
     m_run_up = m_wrist_motor.GetEncoder().GetPosition() < enc_units;
 
-    //m_wrist_pid.SetSetpoint(encoder_units);//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
-      m_wrist_motor.Set((m_run_up) ? 0.3 : -0.3);
+    m_wrist_motor.Set((m_run_up) ? 0.3 : -0.3);
   }
 
   void CoralIntake::StopWrist()
@@ -92,33 +78,6 @@ namespace t34
 
  frc2::CommandPtr CoralIntake::MoveWristToCommand(double encoder_units)
   {
-
-    //bool run_up = m_wrist_motor.GetEncoder().GetPosition() < encoder_units;
-    //m_wrist_pid.SetSetpoint(encoder_units);//-(angle.value() - m_init_algae_angle.value()) * 11.923);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
-    
-
-    // return this->RunEnd(
-    //   [this, run_up]
-    //   {
-
-    //     m_wrist_motor.Set((run_up) ? 0.3 : -0.3);
-    //   },
-    //   [this]
-    //   {
-    //       m_wrist_motor.StopMotor();
-    //   })
-    //   .Until([this, encoder_units, run_up] 
-    //   { 
-    //     if (run_up)
-    //     {
-    //       return m_wrist_motor.GetEncoder().GetPosition() >= (encoder_units - 0.1);
-    //     }
-    //     else
-    //     {
-    //       return m_wrist_motor.GetEncoder().GetPosition() <= (encoder_units + 0.1);
-    //     }
-    //   });
-
     return this->RunOnce(
       [this, encoder_units]
       {
@@ -136,7 +95,7 @@ namespace t34
       {
         m_wrist_motor.GetClosedLoopController().SetReference((angle.value() - m_init_coral_angle.value()) / 7.45, rev::spark::SparkLowLevel::ControlType::kPosition);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
       }
-      );
+    );
   }
 
   frc2::CommandPtr CoralIntake::RunInCommand()
@@ -160,6 +119,5 @@ namespace t34
     frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
 
     m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
-
   }
 }

@@ -1,5 +1,5 @@
-//uses sparkmax for now
 #pragma once
+
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/InstantCommand.h>
@@ -28,8 +28,6 @@ namespace t34
 
         void Periodic() override;
 
-        // frc2::CommandPtr MoveAlgaeWristToCommand(double enc_units);
-        // frc2::CommandPtr MoveAlgaeWristToCommand(units::degree_t angle);
         frc2::CommandPtr MoveWristByPowerCommand(double val);
         frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
 

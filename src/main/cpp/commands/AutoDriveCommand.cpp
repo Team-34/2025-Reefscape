@@ -31,7 +31,6 @@ AutoDriveCommand::AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, uni
 , m_at_drive_setpoint(false)
 {
   AddRequirements(swerve.get());
-
 }
 
 // Called when the command is initially scheduled.
@@ -39,7 +38,6 @@ void AutoDriveCommand::Initialize()
 {
   m_drive_pid.SetSetpoint(m_setpoint.value());
   m_drive_pid.SetTolerance(1.0);
-
   m_rot_pid.SetSetpoint(m_base_rotation.value());
   m_rot_pid.SetTolerance(1.0);
 }
@@ -47,12 +45,10 @@ void AutoDriveCommand::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void AutoDriveCommand::Execute() 
 {
-
   m_travelled = EncUnitsToInches(m_swerve->GetModulePositions()[0].distance.value() + m_init_dist);
   m_current_x = m_travelled * cos(m_wheel_theta);
   m_current_y = -m_travelled * sin(m_wheel_theta);
   m_current_theta = m_swerve->GetYaw().Degrees();
-
   m_y_drive = m_drive_pid.Calculate(m_travelled.value());
   m_x_drive = m_y_drive * tan(m_wheel_theta);
   m_rot_speed = m_rot_pid.Calculate(m_current_theta.value());
@@ -69,10 +65,8 @@ void AutoDriveCommand::Execute()
     }
     else
     {
-      m_swerve->Drive(frc::Translation2d(0_m, 0_m), 
-      m_rot_speed);
-
-    m_at_drive_setpoint = true;
+      m_swerve->Drive(frc::Translation2d(0_m, 0_m), m_rot_speed);
+      m_at_drive_setpoint = true;
     }
   }
 
@@ -84,7 +78,5 @@ void AutoDriveCommand::End(bool interrupted) {
 
 // Returns true when the command should end.
 bool AutoDriveCommand::IsFinished() {
-
-  //return (m_at_drive_setpoint && m_at_steer_setpoint);
   return m_at_drive_setpoint;
 }

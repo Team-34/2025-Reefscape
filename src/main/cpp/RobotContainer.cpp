@@ -21,22 +21,13 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() 
 {
-  // ctrl->X().WhileTrue(m_coral_intake.RunInCommand());
-  // ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand());
-
   ctrl->RightTrigger(0.75).WhileTrue(m_climber.RunArm(0.1));
   ctrl->LeftTrigger(0.75).WhileTrue(m_climber.RunArm(-0.1));
-
-  // ctrl->RightBumper().WhileTrue(m_algae_intake.MoveAlgaeWristByPowerCommand(0.5));
-  // ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveAlgaeWristByPowerCommand(-0.5));
   ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristByPowerCommand(-0.5));
-
   ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
   ctrl->POVLeft().OnTrue(m_coral_intake.MoveWristToCommand(0));
-
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
-
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
 }
 

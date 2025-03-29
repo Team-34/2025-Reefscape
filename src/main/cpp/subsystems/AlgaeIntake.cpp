@@ -10,15 +10,12 @@ namespace t34
     , m_init_algae_angle(155_deg) //65 degrees away from horizontal
     , m_right_wrist_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
     , m_left_wrist_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
-  {
-
-  } 
+  {} 
 
   void AlgaeIntake::MoveWristTo(double enc_units)
   {
     m_left_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
     m_right_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
-
   }
 
   void AlgaeIntake::MoveWristTo(units::degree_t angle)
@@ -37,7 +34,6 @@ namespace t34
         m_right_wrist_motor.GetClosedLoopController().SetReference( angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
         }
     );
-
   }
 
  frc2::CommandPtr AlgaeIntake::MoveWristByPowerCommand(double val)
@@ -51,11 +47,5 @@ namespace t34
         }
     );
   }
-
-  void AlgaeIntake::Periodic()
-  {
-  // frc::SmartDashboard::PutNumber("Left Algae Wrist Encoder", m_left_wrist_motor.GetAbsoluteEncoder());
-  //frc::SmartDashboard::PutNumber("Right Algae Wrist Encoder", m_right_wrist_motor.GetAbsoluteEncoder());
-  }
-
+  void AlgaeIntake::Periodic() {}
 }

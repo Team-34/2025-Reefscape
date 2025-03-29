@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #pragma once
 
 #include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
@@ -11,7 +7,6 @@
 #include <frc2/command/SubsystemBase.h>
 #include <units/length.h>
 #include <frc/AnalogEncoder.h>
-
 #include "Constants.h"
 #include "subsystems/CoralIntake.h"
 #include "subsystems/AlgaeIntake.h"
@@ -51,7 +46,8 @@ namespace t34
 
     double m_last_reading;
 
-    double m_encoder_accumulation; //The USDigital MA3 encoder gets a looped 0-1 value, so it's required to get the total units
+    //The USDigital MA3 encoder gets a looped 0-1 value, so it's required to get the total units
+    double m_encoder_accumulation; 
 
     const units::inch_t m_init_height;
 
@@ -59,8 +55,6 @@ namespace t34
     TalonSRX m_right_motor;
 
     frc::AnalogEncoder m_encoder;
-
     frc::PIDController m_pid;
   };
-
-} // namespace t34
+}

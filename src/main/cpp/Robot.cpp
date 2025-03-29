@@ -5,10 +5,7 @@
 #include "Robot.h"
 #include "subsystems/LimelightUtil.h"
 
-Robot::Robot() 
-{
-  
-}
+Robot::Robot() {}
 
 void Robot::RobotPeriodic() 
 {

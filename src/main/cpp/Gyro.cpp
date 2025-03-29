@@ -1,9 +1,7 @@
 #include "Gyro.h"
-
 #include "Constants.h"
 
 namespace t34 {
-
     static std::unique_ptr<Gyro> g_gyro{ nullptr };
 
     Gyro* Gyro::Get() {
@@ -16,9 +14,7 @@ namespace t34 {
 
     Gyro::Gyro()
         : ctre::phoenix6::hardware::Pigeon2(10, "RIO")
-    {
-
-    }
+    {}
 
     /**
      * Resets the Gyro Z (Yaw) axis to a heading of zero. 
@@ -29,5 +25,4 @@ namespace t34 {
     void Gyro::ZeroYaw() { 
         Reset(); 
     }
-
 }

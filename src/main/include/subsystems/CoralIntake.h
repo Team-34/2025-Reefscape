@@ -1,5 +1,5 @@
-//uses sparkmax for now
 #pragma once
+
 #include <rev/SparkMax.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc2/command/InstantCommand.h>
@@ -31,21 +31,17 @@ namespace t34
 
         frc2::CommandPtr RunInCommand();
         frc2::CommandPtr RunOutCommand();
-
         frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
         frc2::CommandPtr MoveWristToCommand(double encoder_units);
 
         void MoveWristTo(units::degree_t angle);
         void MoveWristTo(double encoder_units);
-
         void StopWrist();
 
         bool EndCondition(); 
 
         frc2::CommandPtr MoveWristByPowerCommand(double val);
-
         frc2::CommandPtr MoveToLevelCommand(int level);
-
         frc2::CommandPtr IncrementUp();
         frc2::CommandPtr IncrementDown();
         

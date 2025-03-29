@@ -11,7 +11,6 @@
 
 namespace t34
 {
-
   Elevator::Elevator()
   : m_level(0)
   , m_last_reading(0.0)
@@ -50,20 +49,11 @@ namespace t34
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
-    //m_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
     m_pid.SetSetpoint(height.value());
 
     return this->RunEnd(
       [this, height]
       {
-
-        // auto speed = m_elevator_motors_pid.Calculate(m_left_motor.GetSelectedSensorPosition());
-
-        // //Run the elevator in respect to the given height
-        // m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, speed);
-
-        // m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
-
         auto pos = m_pid.Calculate(GetPosition().value());
 
         //Run the elevator in respect to the given height
@@ -79,14 +69,6 @@ namespace t34
       })
       .Until([this] { return m_pid.AtSetpoint(); });
   }
-
-  
-
-  // frc2::CommandPtr Elevator::MoveToRestCommand()
-  // {
-  //   //move 16.5 inches from start to provide space, and then move wrist.
-  //   return this->ElevateToCommand(m_init_height).AndThen(MoveAlgaeWristToCommand(0_deg));
-  // }
 
   frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)
   {
@@ -107,7 +89,6 @@ namespace t34
 
   double Elevator::UpdatePosition(double acc, double last, double next)
   {
-
     if (0.75 < last && next < 0.25)
     {
 	    acc += 1.0 + (next - last);
@@ -146,6 +127,4 @@ namespace t34
     m_last_reading = next_reading;
 
   }
-     
-
 }
