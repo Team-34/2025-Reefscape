@@ -10,7 +10,7 @@ namespace t34
     , m_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
     , m_run_up(false)
     , m_encoder_setpoint(0.0)
-    , m_limit_switch(3)
+    , m_limit_switch(2)
     , m_limit_hit([this] { return IsWristLimitHit(); })
   {
     m_limit_hit.OnTrue(ResetWristEncoderCommand());
