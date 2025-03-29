@@ -1,21 +1,17 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #pragma once
 
-#include <ctre/phoenix6/TalonFX.hpp>
+#include <ctre/phoenix/motorcontrol/can/TalonSRX.h>
 #include <frc/controller/PIDController.h>
 #include <frc2/command/CommandPtr.h>
 #include <frc2/command/CommandScheduler.h>
 #include <frc2/command/SubsystemBase.h>
-#include <rev/SparkMax.h>
 #include <units/length.h>
+#include <frc/AnalogEncoder.h>
 #include "Constants.h"
+#include "subsystems/CoralIntake.h"
+#include "subsystems/AlgaeIntake.h"
 
-
-using namespace ctre::phoenix6::hardware;
-using namespace rev::spark;
+using namespace ctre::phoenix::motorcontrol::can;
 
 namespace t34
 {
@@ -27,37 +23,38 @@ namespace t34
     Elevator();
 
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
-    frc2::CommandPtr MoveAlgaeWristToCommand(units::degree_t angle);
-    frc2::CommandPtr MoveCoralWristToCommand(units::degree_t angle);
+    void ElevateTo(units::inch_t height);
+    void Stop();
 
-    frc2::CommandPtr MoveToLevelCommand(int level);
-    frc2::CommandPtr MoveUpOnceCommand();
-    frc2::CommandPtr MoveDownOnceCommand();
-    frc2::CommandPtr MoveToRestCommand();
+    units::inch_t GetPosition();
 
-    frc2::CommandPtr MoveElevatorByPowerCommand(double val);
-    frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
-    frc2::CommandPtr MoveCoralWristByPowerCommand(double val);
+    inline bool EndCondition() { return m_pid.AtSetpoint(); };
+
+    //frc2::CommandPtr MoveToRestCommand();
+
+    frc2::CommandPtr MoveElevatorByPowerCommand(double val);    
+    
+    inline double GetPositionAsEncVal() { return m_encoder_accumulation; }
+
+    void Periodic() override;
+
+    double UpdatePosition(double acc, double last, double next);
 
   private:
+
     int m_level;
+
+    double m_last_reading;
+
+    //The USDigital MA3 encoder gets a looped 0-1 value, so it's required to get the total units
+    double m_encoder_accumulation; 
 
     const units::inch_t m_init_height;
 
-    const units::degree_t m_init_algae_angle;
-    const units::degree_t m_init_coral_angle;
+    TalonSRX m_left_motor;
+    TalonSRX m_right_motor;
 
-    TalonFX m_right_algae_wrist_motor;
-    TalonFX m_left_algae_wrist_motor;
-
-    TalonFX m_left_motor;
-    TalonFX m_right_motor;
-
-    SparkMax m_coral_wrist_motor;
-
-    frc::PIDController m_elevator_motors_pid;
-    frc::PIDController m_algae_wrist_pid;
-    frc::PIDController m_coral_wrist_pid;
+    frc::PIDController m_pid;
+    frc::AnalogEncoder m_encoder;
   };
-
-} // namespace t34
+}

@@ -38,7 +38,7 @@ class InchTo550UnitTest : public TestWithParam<std::pair<units::inch_t, double>>
 TEST_P(InchTo550UnitTest, ConvertsInchTo550Unit) {
   auto [inches, expected] = GetParam();
 
-  EXPECT_THAT(t34::Neo::LengthToNEOUnit(inches), DoubleEq(expected));
+  EXPECT_THAT(t34::Neo::LengthTo550Unit(inches), DoubleEq(expected));
 }
 
 INSTANTIATE_TEST_SUITE_P(NeoTests, InchTo550UnitTest, Values(

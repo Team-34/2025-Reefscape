@@ -84,7 +84,7 @@ namespace t34 {
         // Setup drive configuration 
         configs::TalonFXConfigurator& drive_configurator = m_drive->GetConfigurator();
         drive_config.MotorOutput.Inverted = signals::InvertedValue::Clockwise_Positive;
-        drive_config.MotorOutput.NeutralMode = signals::NeutralModeValue::Brake;
+        drive_config.MotorOutput.NeutralMode = signals::NeutralModeValue::Coast;
         drive_config.CurrentLimits.SupplyCurrentLimitEnable = DRIVE_ENABLE_CURRENT_LIMIT;
         drive_config.CurrentLimits.SupplyCurrentLimit = units::current::ampere_t(DRIVE_CONTINUOUS_CURRENT_LIMIT);
         drive_config.CurrentLimits.SupplyCurrentLowerLimit = units::current::ampere_t(DRIVE_PEAK_CURRENT_LIMIT);

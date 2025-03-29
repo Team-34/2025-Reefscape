@@ -5,14 +5,12 @@
 #include "Robot.h"
 #include "subsystems/LimelightUtil.h"
 
-Robot::Robot() 
-{
-  
-}
+Robot::Robot() {}
 
 void Robot::RobotPeriodic() 
 {
   frc2::CommandScheduler::GetInstance().Run();
+  
 }
 
 void Robot::DisabledInit() {}
@@ -28,6 +26,7 @@ void Robot::AutonomousInit()
   if (m_autonomous_command) {
     m_autonomous_command->Schedule();
   }
+
 }
 
 void Robot::AutonomousPeriodic() {}

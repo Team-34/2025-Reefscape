@@ -3,159 +3,128 @@
 #include <units/length.h>
 #include <units/angle.h>
 #include <utility>
-
+#include <algorithm>
 #include "subsystems/Elevator.h"
 #include "Neo.h"
 #include "Talon.h"
+#include <frc/smartdashboard/SmartDashboard.h>
 
 namespace t34
 {
-
   Elevator::Elevator()
   : m_level(0)
-
-  , m_init_height(16.5_in)
-
+  , m_last_reading(0.0)
+  , m_encoder_accumulation(0.0)
+  , m_init_height(16_in)
     //The wrists' angles are from 0 to 180 degrees (0 is straight down, 180 is straight up, and 90 is parallel to the floor)
-  , m_init_algae_angle(155_deg) //65 degrees away from horizontal
-  , m_init_coral_angle(0_deg) 
-
-  , m_right_algae_wrist_motor(1)
-  , m_left_algae_wrist_motor(2)
-
   , m_left_motor(11)
   , m_right_motor(12)
-
-  , m_coral_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
-
-  , m_elevator_motors_pid(0.5, 0.0, 0.0)
-  , m_algae_wrist_pid(0.5, 0.0, 0.0)
-  , m_coral_wrist_pid(0.5, 0.0, 0.0)
+  , m_pid(0.5, 0.0, 0.0)
+  , m_encoder(0)
   {
-    m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
-    m_coral_wrist_pid.SetTolerance(Neo::AngleTo550Unit(0.25_deg));
-    m_algae_wrist_pid.SetTolerance(Neo::AngleTo550Unit(0.25_deg));
+    m_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
+
+    TalonSRXConfiguration motor_config;
+
+    motor_config.continuousCurrentLimit = 30;
+    motor_config.peakCurrentDuration = 1500;
+    motor_config.peakCurrentLimit = 40;
+
+    m_left_motor.ConfigAllSettings(motor_config);
+    m_right_motor.ConfigAllSettings(motor_config);
+    
+    Register();
   }
 
-  frc2::CommandPtr Elevator::MoveAlgaeWristToCommand(units::degree_t angle)
+  void Elevator::ElevateTo(units::inch_t height)
   {
-    m_algae_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Talon::AngleTo775ProUnit(angle - m_init_algae_angle));
-
-    return this->RunEnd(
-      [this, angle]
-      {
-        m_left_algae_wrist_motor.Set(m_algae_wrist_pid.Calculate(m_left_algae_wrist_motor.GetPosition().GetValueAsDouble()));
-        m_right_algae_wrist_motor.Set(m_algae_wrist_pid.Calculate(m_right_algae_wrist_motor.GetPosition().GetValueAsDouble()));
-      },
-      [this]
-      {
-        m_left_algae_wrist_motor.StopMotor();
-        m_right_algae_wrist_motor.StopMotor();
-      })
-      .Until([this] 
-      { 
-        return m_algae_wrist_pid.AtSetpoint();
-      });
+    m_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
   }
 
-frc2::CommandPtr Elevator::MoveCoralWristToCommand(units::degree_t angle)
+  void Elevator::Stop()
   {
-    m_coral_wrist_pid.SetSetpoint(BOTH_WRIST_GEAR_RATIO * Neo::AngleTo550Unit(angle - m_init_coral_angle));
-
-    return this->RunEnd(
-      [this, angle]
-      {
-        m_coral_wrist_motor.Set(m_coral_wrist_pid.Calculate(m_coral_wrist_motor.GetEncoder().GetPosition()));
-      },
-      [this]
-      {
-          m_coral_wrist_motor.StopMotor();
-      })
-      .Until([this] 
-      { 
-        return m_coral_wrist_pid.AtSetpoint();
-      });
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
   }
-
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
-    m_elevator_motors_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
+    m_pid.SetSetpoint(height.value());
 
     return this->RunEnd(
       [this, height]
       {
-        //Run the elevator in respect to the given height
-        m_left_motor.Set(m_elevator_motors_pid.Calculate(m_left_motor.GetPosition().GetValueAsDouble()));
+        auto pos = m_pid.Calculate(GetPosition().value());
 
-        m_right_motor.Set(
-          m_elevator_motors_pid.Calculate(-m_right_motor.GetPosition().GetValueAsDouble()));
+        //Run the elevator in respect to the given height
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, pos);
+
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, -pos);
       },
       [this]
       {
         // stop motor
-        m_left_motor.Set(0.0);
-        m_right_motor.Set(0.0);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       })
-      .Until([this] { return m_elevator_motors_pid.AtSetpoint(); });
-  }
-
-  frc2::CommandPtr Elevator::MoveToLevelCommand(int level)
-  {                               //  Coral Intake     Elevator height
-    static const std::array<std::pair<units::degree_t, units::inch_t>, 5> presets {{
-      { 5_deg, 3_in }, //The swerve modules are 2.75 inches above the elevator's lowest point. The 775Pros will collide with the modules if they are ran all the way to the bottom.
-      { 55_deg, 18_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-      { 55_deg, 31.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-      { 55_deg, 47.875_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-      { 2_deg, 72_in - BASE_HEIGHT_FROM_FLOOR - ELEVATOR_LOWEST_POINT_FROM_BASE - m_init_height },
-    }};
-
-    m_level = std::clamp(level, 0, static_cast<int>(presets.size()) - 1);
-    
-    auto [angle, height] = presets.at(level);
-
-    return ElevateToCommand(height).AndThen(MoveCoralWristToCommand(angle));
-  };
-
-  frc2::CommandPtr Elevator::MoveUpOnceCommand()
-  {
-    return this->MoveToLevelCommand(m_level + 1); 
-  }
-
-  frc2::CommandPtr Elevator::MoveDownOnceCommand()
-  {
-    return this->MoveToLevelCommand(m_level - 1); 
-  }
-
-  frc2::CommandPtr Elevator::MoveToRestCommand()
-  {
-    //move 16.5 inches from start to provide space, and then move wrist.
-    return this->ElevateToCommand(m_init_height).AndThen(MoveAlgaeWristToCommand(0_deg));
+      .Until([this] { return m_pid.AtSetpoint(); });
   }
 
   frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)
   {
-    return this->RunOnce
+    return this->RunEnd
     (
       [this, val]
       {
-        m_left_motor.Set(val);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+      },
+      [this]
+      {
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       }
     );
   }
 
-  frc2::CommandPtr Elevator::MoveAlgaeWristByPowerCommand(double val)
+  double Elevator::UpdatePosition(double acc, double last, double next)
   {
-    return this->RunOnce([this, val] 
-    { 
-      m_left_algae_wrist_motor.Set(val);
-      m_right_algae_wrist_motor.Set(val); 
-    });
+    if (0.75 < last && next < 0.25)
+    {
+	    acc += 1.0 + (next - last);
+    }
+
+    else if (0.75 < next && last < 0.25)
+    {
+	    acc -= 1.0 - (next - last);
+    }
+
+    else
+    {
+	    acc += next - last;
+    }
+
+    frc::SmartDashboard::PutNumber("Elevator Acc", acc);
+    frc::SmartDashboard::PutNumber("Elevator Last", last);
+    frc::SmartDashboard::PutNumber("Elevator Next", next);
+
+    return acc;
   }
 
-  frc2::CommandPtr Elevator::MoveCoralWristByPowerCommand(double val)
+  units::inch_t Elevator::GetPosition()
   {
-    return this->RunOnce([this, val] { m_coral_wrist_motor.Set(val); });
+    return units::inch_t(GetPositionAsEncVal() * 1); //replace 1 with scalar to an inch
   }
 
-} // namespace t34
+  void Elevator::Periodic()
+  {
+    double next_reading = m_encoder.Get();
+
+    frc::SmartDashboard::PutNumber("Elevator Encoder Units with accum", m_encoder_accumulation);
+    frc::SmartDashboard::PutNumber("Elevator Encoder Units", next_reading);
+
+    m_encoder_accumulation = UpdatePosition(m_encoder_accumulation, m_last_reading, next_reading);
+    m_last_reading = next_reading;
+
+  }
+}

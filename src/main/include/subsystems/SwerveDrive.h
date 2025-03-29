@@ -4,6 +4,7 @@
 #include "subsystems/SwerveModule.h"
 
 #include <frc2/command/SubsystemBase.h>
+#include <frc2/command/CommandPtr.h>
 
 namespace t34 {
 
@@ -16,6 +17,8 @@ namespace t34 {
         void Drive(frc::Translation2d translation, double rotation, bool field_relative = true, bool is_open_loop = false);
         void DriveAuto(frc::ChassisSpeeds speeds);
         void Stop();
+
+        frc2::CommandPtr ZeroYawCommand();
 
 
         frc::ChassisSpeeds GetRobotRelativeSpeeds();
@@ -62,7 +65,7 @@ namespace t34 {
                 frc::Translation2d(units::meter_t(-SWERVE_MODULE_FROM_CENTER), units::meter_t(-SWERVE_MODULE_FROM_CENTER))  // Right Aft Module                                                                  
             };
 
-        frc::SwerveDriveOdometry<4> m_swerve_odometry { m_swerve_drive_kinematics, frc::Rotation2d(units::degree_t(m_gyro->GetAngle())), 
+        frc::SwerveDriveOdometry<4> m_swerve_odometry { m_swerve_drive_kinematics, frc::Rotation2d(m_gyro->GetYaw().GetValue()), 
                 {
                     frc::SwerveModulePosition{ m_swerve_modules[0].GetPosition().distance, m_swerve_modules[0].GetCanCoder() },
                     frc::SwerveModulePosition{ m_swerve_modules[1].GetPosition().distance, m_swerve_modules[1].GetCanCoder() },
