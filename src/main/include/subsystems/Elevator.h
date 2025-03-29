@@ -54,7 +54,7 @@ namespace t34
     TalonSRX m_left_motor;
     TalonSRX m_right_motor;
 
-    frc::AnalogEncoder m_encoder;
     frc::PIDController m_pid;
+    frc::AnalogEncoder m_encoder;
   };
 }
