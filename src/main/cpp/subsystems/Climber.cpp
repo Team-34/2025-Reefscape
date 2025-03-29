@@ -55,4 +55,9 @@ namespace t34
         m_lock.Set((m_lock_flipped_up) ? 0.65 : 0.25);
         m_lock_flipped_up = !m_lock_flipped_up;
     }
+
+    void Climber::Periodic()
+    {
+        frc::SmartDashboard::PutNumber("Climber Encoder Val: ", m_motor.GetPosition().GetValueAsDouble());
+    }
 }
