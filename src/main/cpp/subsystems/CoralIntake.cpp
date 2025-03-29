@@ -10,10 +10,10 @@ namespace t34
     , m_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
     , m_run_up(false)
     , m_encoder_setpoint(0.0)
-    , m_limit_switch(0)
-    , m_limit_hit([this] { return m_limit_switch.Get(); })
+    , m_limit_switch(3)
+    // , m_limit_hit([this] { return m_limit_switch.Get(); })
   {
-    m_limit_hit.OnTrue([this] { ResetWristEncoder(); });
+    // m_limit_hit.OnTrue([this] { ResetWristEncoder(); });
   } 
 
   frc2::CommandPtr CoralIntake::MoveWristByPowerCommand(double val)
