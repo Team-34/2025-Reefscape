@@ -29,6 +29,8 @@ void RobotContainer::ConfigureBindings()
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
+  ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand());
+  ctrl->X().WhileTrue(m_coral_intake.RunInCommand());
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
