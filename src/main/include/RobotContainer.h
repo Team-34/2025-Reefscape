@@ -34,13 +34,14 @@ public:
   
   AutoDriveCommand m_auto_leave;
 
+  t34::Climber m_climber;
 
   frc2::CommandPtr GetAutonomousCommand();
 
 private:
-  t34::Elevator m_elevator;
   
-  AutoDriveCommand m_auto_leave;
+  
+  
   
   void ConfigureBindings();
 };
