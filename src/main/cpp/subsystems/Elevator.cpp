@@ -21,7 +21,7 @@ namespace t34
   , m_left_motor(11)
   , m_right_motor(12)
   , m_elevator_motors_pid(0.5, 0.0, 0.0)
-  , m_encoder(2)
+  , m_encoder(0)
   {
     m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
 
@@ -64,7 +64,7 @@ namespace t34
 
         // m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
 
-        auto pos = m_elevator_motors_pid.Calculate(m_right_motor.GetSelectedSensorPosition());
+        auto pos = m_elevator_motors_pid.Calculate(GetPosition().value());
 
         //Run the elevator in respect to the given height
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, pos);
@@ -123,6 +123,10 @@ namespace t34
 	    acc += next - last;
     }
 
+    frc::SmartDashboard::PutNumber("Elevator Acc", acc);
+    frc::SmartDashboard::PutNumber("Elevator Last", last);
+    frc::SmartDashboard::PutNumber("Elevator Next", next);
+
     return acc;
   }
 
@@ -133,12 +137,12 @@ namespace t34
 
   void Elevator::Periodic()
   {
-    frc::SmartDashboard::PutNumber("Elevator Encoder Units with accum", GetPositionAsEncVal());
-    frc::SmartDashboard::PutNumber("Elevator Encoder Units", m_encoder.Get());
-
     double next_reading = m_encoder.Get();
 
-    m_encoder_accumulation = UpdatePosition(m_encoder_accumulation, m_last_reading, next_reading );
+    frc::SmartDashboard::PutNumber("Elevator Encoder Units with accum", m_encoder_accumulation);
+    frc::SmartDashboard::PutNumber("Elevator Encoder Units", next_reading);
+
+    m_encoder_accumulation = UpdatePosition(m_encoder_accumulation, m_last_reading, next_reading);
     m_last_reading = next_reading;
 
   }

@@ -29,7 +29,7 @@ public:
   t34::ControllerDriveCommand m_default_command;
   t34::AlgaeIntake m_algae_intake;
   t34::CoralIntake m_coral_intake;
-  //t34::Climber m_climber;
+  t34::Climber m_climber;
   t34::Elevator m_elevator;
   
   AutoDriveCommand m_auto_leave;
