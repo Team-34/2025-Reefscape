@@ -18,7 +18,7 @@ namespace t34
 
     frc2::CommandPtr Climber::Climb() 
     {
-        units::turn_t setpoint = m_flipped_out ? 0.0_tr : units::turn_t(33.0 / t34::Talon::F500_RESOLUTION);
+        units::turn_t setpoint = m_flipped_out ? 0.0_tr : 33.0_tr;
 
         return this->RunOnce(
         [this, setpoint]
