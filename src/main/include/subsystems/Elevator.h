@@ -39,13 +39,13 @@ namespace t34
 
     frc2::CommandPtr MoveElevatorByPowerCommand(double val);    
     
-    inline double GetPositionAsEncVal() { return m_encoder_accumulation * 360.0; }
+    inline double GetPositionAsEncVal() { return m_encoder_accumulation; }
 
     void Periodic() override;
 
-  private:
+    double UpdatePosition(double acc, double last, double next);
 
-    void UpdatePosition();
+  private:
 
     int m_level;
 
