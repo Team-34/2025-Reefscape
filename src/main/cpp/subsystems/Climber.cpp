@@ -30,10 +30,14 @@ namespace t34
 
     frc2::CommandPtr Climber::RunArmBySpeed(double speed)
     {
-        return this->RunOnce(
+        return this->RunEnd(
         [this, speed]
         {
             m_motor.Set(speed);
+        },
+        [this]
+        {
+            m_motor.Set(0.0);
         });
     }
 
