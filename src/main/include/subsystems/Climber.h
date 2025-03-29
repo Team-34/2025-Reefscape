@@ -8,6 +8,7 @@
 #include <ctre/phoenix6/TalonFX.hpp>
 #include <ctre/phoenix6/controls/PositionVoltage.hpp>
 #include <frc/Servo.h>
+#include <frc/smartdashboard/SmartDashboard.h>
 
 using namespace ctre::phoenix6::hardware;
 
@@ -21,6 +22,8 @@ namespace t34
         frc2::CommandPtr Climb();
         frc2::CommandPtr RunArmBySpeed(double speed);
         frc2::CommandPtr RunLock(double position);
+
+        void Periodic() override;
         
         void FlipLock();
 
