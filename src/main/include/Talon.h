@@ -9,7 +9,7 @@ namespace t34
   namespace Talon
   {
     constexpr auto SRX_RESOLUTION{ 4096.0 / 1_tr };
-
+    constexpr auto F500_RESOLUTION{ 2048.0 / 1_tr }; //Both Krakens and TalonFX are run by Falcon500 motor controllers
     constexpr auto _775PRO_SHAFT_CIRCUMFERENCE{ (M_PI * 0.197_in) / 1_tr };
 
     /**

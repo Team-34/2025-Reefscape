@@ -21,8 +21,8 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() 
 {
-  ctrl->RightTrigger(0.75).WhileTrue(m_climber.RunArm(0.1));
-  ctrl->LeftTrigger(0.75).WhileTrue(m_climber.RunArm(-0.1));
+  ctrl->RightTrigger(0.75).WhileTrue(m_climber.RunArmBySpeed(0.1));
+  ctrl->LeftTrigger(0.75).WhileTrue(m_climber.RunArmBySpeed(-0.1));
   ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristByPowerCommand(-0.5));
   ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
   ctrl->POVLeft().OnTrue(m_coral_intake.MoveWristToCommand(0));

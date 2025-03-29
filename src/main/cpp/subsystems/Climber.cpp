@@ -6,53 +6,43 @@ namespace t34
     : m_motor(37)
     , m_flipped_out(false)
     , m_lock_flipped_up(true)
-    , m_pid_controller(0.4, 0.0, 0.0)
     , m_lock(0)
     {
-        m_pid_controller.SetTolerance(0.15);
+        ctre::phoenix6::configs::Slot0Configs slot0Configs;
+        slot0Configs.kP = 0.1;
+        slot0Configs.kI = 0;
+        slot0Configs.kD = 0.001;
+
+        m_motor.GetConfigurator().Apply(slot0Configs);
     }
 
     frc2::CommandPtr Climber::Climb() 
     {
-        double setpoint = m_flipped_out ? 0.0 : 33.0;
+        units::turn_t setpoint = m_flipped_out ? 0.0_tr : units::turn_t(33.0 / t34::Talon::F500_RESOLUTION);
 
-        m_pid_controller.SetSetpoint(setpoint);
-
-        return this->RunEnd(
-        [this]
+        return this->RunOnce(
+        [this, setpoint]
         {
-            m_motor.Set(m_pid_controller.Calculate(m_motor.GetPosition().GetValueAsDouble()));
-
-        }, [this]
-        {
-            m_motor.Set(0.0);
-            FlipLock();
-        }).Until(
-            [this]
-        {
-            return m_pid_controller.AtSetpoint();
+            auto request = ctre::phoenix6::controls::PositionVoltage{0_tr};
+            m_motor.SetControl(request.WithPosition(setpoint));
         });
     }
 
-    frc2::CommandPtr Climber::RunArm(double power)
+    frc2::CommandPtr Climber::RunArmBySpeed(double speed)
     {
-        return this->RunEnd(
-        [this, power]
+        return this->RunOnce(
+        [this, speed]
         {
-            m_motor.Set(power);
-        },
-        [this]
-        {
-            m_motor.Set(0.0);
+            m_motor.Set(speed);
         });
     }
 
-    frc2::CommandPtr Climber::RunLock(double power)
+    frc2::CommandPtr Climber::RunLock(double position)
     {
-        return this->Run(
-        [this, power]
+        return this->RunOnce(
+        [this, position]
         {
-            m_lock.Set(power);
+            m_lock.Set(position);
         });
     }
 
