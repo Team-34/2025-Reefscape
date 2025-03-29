@@ -33,13 +33,11 @@ namespace t34
 
     units::inch_t GetPosition();
 
-    inline bool EndCondition() { return m_elevator_motors_pid.AtSetpoint(); };
+    inline bool EndCondition() { return m_pid.AtSetpoint(); };
 
     //frc2::CommandPtr MoveToRestCommand();
 
-    frc2::CommandPtr MoveElevatorByPowerCommand(double val);
-
-    inline units::inch_t GetInitHeight() { return m_init_height; }    
+    frc2::CommandPtr MoveElevatorByPowerCommand(double val);    
     
     inline double GetPositionAsEncVal() { return m_encoder_accumulation * 360.0; }
 
@@ -62,7 +60,7 @@ namespace t34
 
     frc::AnalogEncoder m_encoder;
 
-    frc::PIDController m_elevator_motors_pid;
+    frc::PIDController m_pid;
   };
 
 } // namespace t34

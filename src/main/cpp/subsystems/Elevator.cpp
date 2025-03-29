@@ -20,10 +20,10 @@ namespace t34
     //The wrists' angles are from 0 to 180 degrees (0 is straight down, 180 is straight up, and 90 is parallel to the floor)
   , m_left_motor(11)
   , m_right_motor(12)
-  , m_elevator_motors_pid(0.5, 0.0, 0.0)
+  , m_pid(0.5, 0.0, 0.0)
   , m_encoder(2)
   {
-    m_elevator_motors_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
+    m_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
 
     TalonSRXConfiguration motor_config;
 
@@ -39,7 +39,7 @@ namespace t34
 
   void Elevator::ElevateTo(units::inch_t height)
   {
-    m_elevator_motors_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
+    m_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
   }
 
   void Elevator::Stop()
@@ -50,8 +50,8 @@ namespace t34
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
-    //m_elevator_motors_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
-    m_elevator_motors_pid.SetSetpoint(height.value());
+    //m_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
+    m_pid.SetSetpoint(height.value());
 
     return this->RunEnd(
       [this, height]
@@ -64,7 +64,7 @@ namespace t34
 
         // m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -speed);
 
-        auto pos = m_elevator_motors_pid.Calculate(m_right_motor.GetSelectedSensorPosition());
+        auto pos = m_pid.Calculate(m_right_motor.GetSelectedSensorPosition());
 
         //Run the elevator in respect to the given height
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, pos);
@@ -77,7 +77,7 @@ namespace t34
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
         m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       })
-      .Until([this] { return m_elevator_motors_pid.AtSetpoint(); });
+      .Until([this] { return m_pid.AtSetpoint(); });
   }
 
   

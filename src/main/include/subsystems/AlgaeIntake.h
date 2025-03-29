@@ -12,7 +12,7 @@
 #include <cmath>
 #include <units/length.h>
 #include <units/angle.h>
-
+#include <rev/SparkMax.h>
 #include "Talon.h"
 
 using namespace ctre::phoenix6::hardware;
@@ -21,37 +21,27 @@ using namespace ctre::phoenix::motorcontrol::can;
 
 namespace t34
 {
-    class AlgaeIntake : public frc2::SubsystemBase, public Intake 
+    class AlgaeIntake : public frc2::SubsystemBase
     {
     public:
         AlgaeIntake();
-
-        virtual frc2::CommandPtr RunInCommand() override;
-        virtual frc2::CommandPtr RunOutCommand() override;
 
         void Periodic() override;
 
         // frc2::CommandPtr MoveAlgaeWristToCommand(double enc_units);
         // frc2::CommandPtr MoveAlgaeWristToCommand(units::degree_t angle);
-        frc2::CommandPtr MoveAlgaeWristByPowerCommand(double val);
-        frc2::CommandPtr MoveAlgaeWristByIncrementCommand(double increase);
+        frc2::CommandPtr MoveWristByPowerCommand(double val);
+        frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
 
-        void MoveAlgaeWristTo(double enc_units);
-        void MoveAlgaeWristTo(units::degree_t angle);
-
-        void StopWrist();
-
-        bool EndCondition() { return m_algae_wrist_pid.AtSetpoint(); }
+        void MoveWristTo(double enc_units);
+        void MoveWristTo(units::degree_t angle);
         
     private:
         ctre::phoenix6::hardware::TalonFX m_motor;
 
         const units::degree_t m_init_algae_angle;
 
-        TalonSRX m_right_algae_wrist_motor;
-        TalonSRX m_left_algae_wrist_motor;
-
-        frc::PIDController m_algae_wrist_pid;
-        
+        SparkMax m_right_wrist_motor;
+        SparkMax m_left_wrist_motor;
     };
 };

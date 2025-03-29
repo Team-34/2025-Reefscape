@@ -22,46 +22,43 @@ using namespace ctre::phoenix::motorcontrol::can;
 
 namespace t34
 {
-    class CoralIntake : public frc2::SubsystemBase, Intake 
+    class CoralIntake : public frc2::SubsystemBase
     {
     public:
         CoralIntake();
 
         void Periodic() override;
 
-        virtual frc2::CommandPtr RunInCommand() override;
-        virtual frc2::CommandPtr RunOutCommand() override;
+        frc2::CommandPtr RunInCommand();
+        frc2::CommandPtr RunOutCommand();
 
-        frc2::CommandPtr MoveCoralWristToCommand(units::degree_t angle);
-        frc2::CommandPtr MoveCoralWristToCommand(double encoder_units);
+        frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
+        frc2::CommandPtr MoveWristToCommand(double encoder_units);
 
-        void MoveCoralWristTo(units::degree_t angle);
-        void MoveCoralWristTo(double encoder_units);
+        void MoveWristTo(units::degree_t angle);
+        void MoveWristTo(double encoder_units);
 
         void StopWrist();
 
         bool EndCondition(); 
 
-        frc2::CommandPtr MoveCoralWristByPowerCommand(double val);
+        frc2::CommandPtr MoveWristByPowerCommand(double val);
 
-        frc2::CommandPtr MoveToCoralLevelCommand(int level);
+        frc2::CommandPtr MoveToLevelCommand(int level);
 
-        frc2::CommandPtr IncrementCoralUp();
-        frc2::CommandPtr IncrementCoralDown();
+        frc2::CommandPtr IncrementUp();
+        frc2::CommandPtr IncrementDown();
         
     private:
         bool m_run_up;
 
         double m_encoder_setpoint;
 
-        SparkMax m_motor;
-
         int m_coral_level;
 
         const units::degree_t m_init_coral_angle;
 
         SparkMax m_wrist_motor;
-
-        frc::PIDController m_wrist_pid;
-    };
+        SparkMax m_motor;
+   };
 }
