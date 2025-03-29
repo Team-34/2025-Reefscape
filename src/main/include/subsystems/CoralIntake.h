@@ -46,15 +46,16 @@ namespace t34
         frc2::CommandPtr IncrementDown();
         
     private:
-        bool m_run_up;
-
-        double m_encoder_setpoint;
+        SparkMax m_motor;
 
         int m_coral_level;
 
         const units::degree_t m_init_coral_angle;
 
         SparkMax m_wrist_motor;
-        SparkMax m_motor;
+
+        bool m_run_up;
+
+        double m_encoder_setpoint;
    };
 }
