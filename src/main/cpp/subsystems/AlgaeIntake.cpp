@@ -10,7 +10,15 @@ namespace t34
     , m_init_algae_angle(155_deg) //65 degrees away from horizontal
     , m_right_wrist_motor(1)
     , m_left_wrist_motor(2)
-  {} 
+  {
+    m_left_wrist_motor.Config_kP(0, 0.1);
+    m_left_wrist_motor.Config_kI(0, 0.0);
+    m_left_wrist_motor.Config_kD(0, 0.01);
+
+    m_right_wrist_motor.Config_kP(0, 0.1);
+    m_right_wrist_motor.Config_kI(0, 0.0);
+    m_right_wrist_motor.Config_kD(0, 0.01);
+  } 
 
   void AlgaeIntake::MoveWristTo(double enc_units)
   {
@@ -20,8 +28,8 @@ namespace t34
 
   void AlgaeIntake::MoveWristTo(units::degree_t angle)
   {
-    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, angle.value());
-    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, angle.value());
+    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
+    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
   }
 
   frc2::CommandPtr AlgaeIntake::MoveWristToCommand(units::degree_t angle)
@@ -30,8 +38,8 @@ namespace t34
     (
       [this, angle] 
       { 
-        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, angle.value());
-        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, angle.value());
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
       },
       [this]
       {
