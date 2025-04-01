@@ -1,4 +1,5 @@
 #pragma once
+
 #include <rev/SparkMax.h>
 #include <frc2/command/SubsystemBase.h>
 #include <frc/controller/PIDController.h>
@@ -9,7 +10,7 @@
 #include <frc/smartdashboard/SmartDashboard.h>
 #include <frc2/command/button/Trigger.h>
 #include <frc2/command/WaitCommand.h>
-
+#include <frc2/command/Commands.h>
 #include "Constants.h"
 #include "Talon.h"
 
@@ -24,7 +25,6 @@ namespace t34
     
         frc2::CommandPtr Climb();
         frc2::CommandPtr RunArmBySpeed(double speed);
-        frc2::CommandPtr RunLock(double position);
         frc2::CommandPtr LockCommand();
         frc2::CommandPtr UnlockCommand();
 

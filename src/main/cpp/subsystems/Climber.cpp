@@ -48,23 +48,6 @@ namespace t34
         });
     }
 
-    frc2::CommandPtr Climber::RunLock(double position)
-    {
-        return this->RunOnce(
-        [this, position]
-        {
-            m_lock.Set(position);
-        });
-    }
-
-    // void Climber::SetLock()
-    // {
-    // //If we have moved into roughly our zero position and we do not intend to extend our climber, lock
-    //     m_lock.Set(
-    //     (m_motor.GetPosition().GetValue() < 2_tr && m_flipped_out == false) 
-    //      ? 0.25 : 0.65);
-    // }
-
     frc2::CommandPtr Climber::LockCommand()
     {
         return this->RunOnce(
@@ -77,12 +60,7 @@ namespace t34
 
     frc2::CommandPtr Climber::UnlockCommand()
     {
-        return this->RunOnce(
-            [this]
-            {
-                Unlock();
-            } //frc2::WaitCommand(1_s).ToPtr()
-        );
+        return this->RunOnce( [this] { Unlock(); } ).AndThen(frc2::cmd::Wait(1_s));
     }
 
     void Climber::Periodic()
