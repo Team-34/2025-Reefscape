@@ -10,26 +10,18 @@ namespace t34
     , m_init_algae_angle(155_deg) //65 degrees away from horizontal
     , m_right_wrist_motor(1)
     , m_left_wrist_motor(2)
-    , m_slot0Configs()
-  {
-    m_slot0Configs.kP = 2.4; 
-    m_slot0Configs.kI = 0;
-    m_slot0Configs.kD = 0.1;
-
-    m_left_wrist_motor.GetConfigurator().Apply(m_slot0Configs);
-    m_right_wrist_motor.GetConfigurator().Apply(m_slot0Configs);
-  } 
+  {} 
 
   void AlgaeIntake::MoveWristTo(double enc_units)
   {
-    m_left_wrist_motor.SetPosition(units::turn_t(enc_units));
-    m_right_wrist_motor.SetPosition(units::turn_t(enc_units));
+    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, enc_units);
+    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, enc_units);
   }
 
   void AlgaeIntake::MoveWristTo(units::degree_t angle)
   {
-    m_left_wrist_motor.SetPosition(units::turn_t(angle));
-    m_right_wrist_motor.SetPosition(units::turn_t(angle));
+    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, angle.value());
+    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, angle.value());
   }
 
   frc2::CommandPtr AlgaeIntake::MoveWristToCommand(units::degree_t angle)
@@ -38,13 +30,13 @@ namespace t34
     (
       [this, angle] 
       { 
-        m_left_wrist_motor.SetPosition(units::turn_t(angle));
-        m_right_wrist_motor.SetPosition(units::turn_t(angle));
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, angle.value());
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, angle.value());
       },
       [this]
       {
-        m_left_wrist_motor.StopMotor();
-        m_right_wrist_motor.StopMotor();
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
       }
     );
   }
@@ -55,13 +47,13 @@ namespace t34
     (
       [this, val] 
       { 
-        m_left_wrist_motor.Set(val);
-        m_right_wrist_motor.Set(val);
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
       },
       [this]
       {
-        m_left_wrist_motor.StopMotor();
-        m_right_wrist_motor.StopMotor();
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
       }
     );
   }

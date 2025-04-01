@@ -35,13 +35,11 @@ namespace t34
         void MoveWristTo(units::degree_t angle);
         
     private:
-        ctre::phoenix6::hardware::TalonFX m_motor;
+        TalonFX m_motor;
 
         const units::degree_t m_init_algae_angle;
 
-        ctre::phoenix6::hardware::TalonFX m_right_wrist_motor;
-        ctre::phoenix6::hardware::TalonFX m_left_wrist_motor;
-
-        ctre::phoenix6::configs::Slot0Configs m_slot0Configs;
+        TalonSRX m_right_wrist_motor;
+        TalonSRX m_left_wrist_motor;
     };
 };
