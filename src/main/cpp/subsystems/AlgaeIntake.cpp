@@ -8,43 +8,61 @@ namespace t34
   AlgaeIntake::AlgaeIntake()
     : m_motor(5)
     , m_init_algae_angle(155_deg) //65 degrees away from horizontal
-    , m_right_wrist_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
-    , m_left_wrist_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
-  {} 
+    , m_right_wrist_motor(1)
+    , m_left_wrist_motor(2)
+    , m_slot0Configs()
+  {
+    m_slot0Configs.kP = 2.4; 
+    m_slot0Configs.kI = 0;
+    m_slot0Configs.kD = 0.1;
+
+    m_left_wrist_motor.GetConfigurator().Apply(m_slot0Configs);
+    m_right_wrist_motor.GetConfigurator().Apply(m_slot0Configs);
+  } 
 
   void AlgaeIntake::MoveWristTo(double enc_units)
   {
-    m_left_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
-    m_right_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
+    m_left_wrist_motor.SetPosition(units::turn_t(enc_units));
+    m_right_wrist_motor.SetPosition(units::turn_t(enc_units));
   }
 
   void AlgaeIntake::MoveWristTo(units::degree_t angle)
   {
-    m_left_wrist_motor.GetClosedLoopController().SetReference(angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
-    m_right_wrist_motor.GetClosedLoopController().SetReference(angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
+    m_left_wrist_motor.SetPosition(units::turn_t(angle));
+    m_right_wrist_motor.SetPosition(units::turn_t(angle));
   }
 
   frc2::CommandPtr AlgaeIntake::MoveWristToCommand(units::degree_t angle)
   {
-    return this->RunOnce
+    return this->RunEnd
     (
       [this, angle] 
-        { 
-        m_left_wrist_motor.GetClosedLoopController().SetReference( angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
-        m_right_wrist_motor.GetClosedLoopController().SetReference( angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
-        }
+      { 
+        m_left_wrist_motor.SetPosition(units::turn_t(angle));
+        m_right_wrist_motor.SetPosition(units::turn_t(angle));
+      },
+      [this]
+      {
+        m_left_wrist_motor.StopMotor();
+        m_right_wrist_motor.StopMotor();
+      }
     );
   }
 
  frc2::CommandPtr AlgaeIntake::MoveWristByPowerCommand(double val)
   {
-    return this->RunOnce
+    return this->RunEnd
     (
       [this, val] 
-        { 
-        m_left_wrist_motor.GetClosedLoopController().SetReference( val, rev::spark::SparkLowLevel::ControlType::kVelocity);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
-        m_right_wrist_motor.GetClosedLoopController().SetReference( -val, rev::spark::SparkLowLevel::ControlType::kVelocity);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
-        }
+      { 
+        m_left_wrist_motor.Set(val);
+        m_right_wrist_motor.Set(val);
+      },
+      [this]
+      {
+        m_left_wrist_motor.StopMotor();
+        m_right_wrist_motor.StopMotor();
+      }
     );
   }
   void AlgaeIntake::Periodic() {}

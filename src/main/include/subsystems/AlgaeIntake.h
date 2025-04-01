@@ -39,7 +39,9 @@ namespace t34
 
         const units::degree_t m_init_algae_angle;
 
-        SparkMax m_right_wrist_motor;
-        SparkMax m_left_wrist_motor;
+        ctre::phoenix6::hardware::TalonFX m_right_wrist_motor;
+        ctre::phoenix6::hardware::TalonFX m_left_wrist_motor;
+
+        ctre::phoenix6::configs::Slot0Configs m_slot0Configs;
     };
 };
