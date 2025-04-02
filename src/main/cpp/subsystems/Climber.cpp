@@ -24,15 +24,13 @@ namespace t34
         return this->RunOnce(
         [this]
         {
-            Unlock();
-           
             auto setpoint = m_flipped_out ? 0.0_tr : 115.4_tr;
             auto request = ctre::phoenix6::controls::PositionVoltage{0_tr};
 
             m_motor.SetControl(request.WithPosition(setpoint));
 
             m_flipped_out = !m_flipped_out;
-        });
+        }).BeforeStarting(UnlockCommand());
     }
 
     frc2::CommandPtr Climber::RunArmBySpeed(double speed)
