@@ -19,7 +19,8 @@ namespace t34
         frc2::CommandPtr Climb();
         frc2::CommandPtr RunArm(double power);
         frc2::CommandPtr RunLock(double power);
-        
+        frc2::CommandPtr FlipLockCommand();
+
         void FlipLock();
 
         inline double GetLockPosition() { return m_lock.GetPosition(); }
@@ -29,7 +30,7 @@ namespace t34
         TalonFX m_motor;
     
         bool m_flipped_out;
-        bool m_lock_flipped_up;
+        bool m_locked;
     
         frc::PIDController m_pid_controller;
         frc::Servo m_lock;

@@ -5,7 +5,7 @@ namespace t34
     Climber::Climber()
     : m_motor(37)
     , m_flipped_out(false)
-    , m_lock_flipped_up(true)
+    , m_locked(true)
     , m_pid_controller(0.4, 0.0, 0.0)
     , m_lock(0)
     {
@@ -58,7 +58,19 @@ namespace t34
 
     void Climber::FlipLock()
     {
-        m_lock.Set((m_lock_flipped_up) ? 0.65 : 0.25);
-        m_lock_flipped_up = !m_lock_flipped_up;
+        m_locked = !m_locked;
+        m_lock.Set((m_locked) ? 0.65 : 0.25);
+        
+    }
+
+    frc2::CommandPtr Climber::FlipLockCommand()
+    {
+        return this->RunOnce
+        (
+            [this]
+            {
+                FlipLock();
+            }
+        );
     }
 }

@@ -23,12 +23,28 @@ void RobotContainer::ConfigureBindings()
 {
   ctrl->RightTrigger(0.75).WhileTrue(m_climber.RunArm(0.1));
   ctrl->LeftTrigger(0.75).WhileTrue(m_climber.RunArm(-0.1));
-  ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristByPowerCommand(-0.5));
-  ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
-  ctrl->POVLeft().OnTrue(m_coral_intake.MoveWristToCommand(0));
+
+  ctrl->Start().WhileTrue(m_climber.FlipLockCommand());
+
+  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.5));
+  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.5));
+
+  ctrl->POVRight().WhileTrue(m_coral_intake.MoveWristByPowerCommand(0.25));
+  ctrl->POVLeft().WhileTrue(m_coral_intake.MoveWristByPowerCommand(-0.25));
+
+  //ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
+  //ctrl->POVLeft().OnTrue(m_coral_intake.MoveWristToCommand(0));
+
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
+
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
+
+  ctrl->A().WhileTrue(m_algae_intake.RunInCommand(0.5));
+  ctrl->B().WhileTrue(m_algae_intake.RunOutCommand(0.5));
+  
+  ctrl->X().WhileTrue(m_coral_intake.RunInCommand(0.5));
+  ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand(0.5));
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() {

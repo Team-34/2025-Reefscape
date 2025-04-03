@@ -98,18 +98,18 @@ namespace t34
     );
   }
 
-  frc2::CommandPtr CoralIntake::RunInCommand()
+  frc2::CommandPtr CoralIntake::RunInCommand(double speed)
   {
     return this->RunEnd(
-      [this] { this->m_motor.Set(-0.25); },
+      [this, speed] { this->m_motor.Set(speed);},
       [this] { this->m_motor.StopMotor(); }
     );
   }
   
-  frc2::CommandPtr CoralIntake::RunOutCommand()
+  frc2::CommandPtr CoralIntake::RunOutCommand(double speed)
   {
     return this->RunEnd(
-      [this] { this->m_motor.Set(0.5); },
+      [this, speed] { this->m_motor.Set(-speed);},
       [this] { this->m_motor.StopMotor(); }
     );
   }

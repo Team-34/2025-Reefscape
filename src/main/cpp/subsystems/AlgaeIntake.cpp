@@ -8,44 +8,120 @@ namespace t34
   AlgaeIntake::AlgaeIntake()
     : m_motor(5)
     , m_init_algae_angle(155_deg) //65 degrees away from horizontal
-    , m_right_wrist_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
-    , m_left_wrist_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
+    , m_right_wrist_motor(1)
+    , m_left_wrist_motor(2)
+    , m_pid(0.5, 0.5, 0.5)
+    , m_algae_intake(5)
   {} 
 
-  void AlgaeIntake::MoveWristTo(double enc_units)
+  void AlgaeIntake::MoveWristTo(double setpoint)
   {
-    m_left_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
-    m_right_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
+    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), setpoint));
+    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), setpoint));
+
+    //m_left_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
+    //m_right_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
   }
 
   void AlgaeIntake::MoveWristTo(units::degree_t angle)
   {
-    m_left_wrist_motor.GetClosedLoopController().SetReference(angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
-    m_right_wrist_motor.GetClosedLoopController().SetReference(angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
+    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), angle.value()));
+    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), angle.value()));
+
+    //m_left_wrist_motor.GetClosedLoopController().SetReference(angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
+    //m_right_wrist_motor.GetClosedLoopController().SetReference(angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
   }
 
   frc2::CommandPtr AlgaeIntake::MoveWristToCommand(units::degree_t angle)
   {
-    return this->RunOnce
+    return this->Run
     (
       [this, angle] 
         { 
-        m_left_wrist_motor.GetClosedLoopController().SetReference( angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
-        m_right_wrist_motor.GetClosedLoopController().SetReference( angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), angle.value()));
         }
     );
+    //.Until(m_left_wrist_motor.GetSelectedSensorPosition() == angle.value()); // <-- UNTESTED
   }
 
  frc2::CommandPtr AlgaeIntake::MoveWristByPowerCommand(double val)
   {
-    return this->RunOnce
+    return this->RunEnd
     (
       [this, val] 
         { 
-        m_left_wrist_motor.GetClosedLoopController().SetReference( val, rev::spark::SparkLowLevel::ControlType::kVelocity);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
-        m_right_wrist_motor.GetClosedLoopController().SetReference( -val, rev::spark::SparkLowLevel::ControlType::kVelocity);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
-        }
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+        },
+      [this]
+        {
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        } 
+        
+        //m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        //m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        
     );
   }
-  void AlgaeIntake::Periodic() {}
+
+  frc2::CommandPtr AlgaeIntake::MoveWristByIncrementCommand(double increase) 
+  {
+    return this->RunEnd
+    (
+      [this, increase]
+      {
+        double current_setpoint_left = m_left_wrist_motor.GetSelectedSensorPosition();
+        double current_setpoint_right = m_right_wrist_motor.GetSelectedSensorPosition();
+
+        double new_setpoint = current_setpoint_right += increase; // setting the setpoint as the right motor's setpoint plus an input increase, may need to be reversed
+
+        m_pid.SetSetpoint(new_setpoint); 
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), new_setpoint));
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), new_setpoint));
+
+      },
+      [this]
+      {
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+
+      }
+    );
+  }
+
+  frc2::CommandPtr AlgaeIntake::RunInCommand(double speed)
+  {
+    return this->RunEnd
+    (
+      [this, speed]
+      {
+        m_algae_intake.Set(speed);
+      },
+      [this]
+      {
+        m_algae_intake.Set(0.0);
+      }
+    );
+  }
+
+frc2::CommandPtr AlgaeIntake::RunOutCommand(double speed) 
+{
+  return this->RunEnd
+  (
+    [this, speed]
+      {
+        m_algae_intake.Set(-speed);
+      },
+    [this]
+      {
+        m_algae_intake.Set(0.0);
+      }
+  );
+}
+
+  void AlgaeIntake::Periodic() {
+    frc::SmartDashboard::PutNumber("Right Wrist Motor Encoder", m_right_wrist_motor.GetSelectedSensorPosition());
+  }
 }

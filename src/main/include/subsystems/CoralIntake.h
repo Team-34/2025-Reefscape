@@ -29,8 +29,8 @@ namespace t34
 
         void Periodic() override;
 
-        frc2::CommandPtr RunInCommand();
-        frc2::CommandPtr RunOutCommand();
+        frc2::CommandPtr RunInCommand(double speed);
+        frc2::CommandPtr RunOutCommand(double speed);
         frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
         frc2::CommandPtr MoveWristToCommand(double encoder_units);
 
