@@ -103,7 +103,7 @@ namespace t34 {
                                     units::velocity::meters_per_second_t((translation.Y().value() / DRIVE_MAX_SPEED) * m_speed_scalar), 
                                     units::velocity::meters_per_second_t((translation.X().value() / DRIVE_MAX_SPEED )* m_speed_scalar), 
                                     units::radians_per_second_t(((rotation / STEER_MAX_SPEED) * m_speed_scalar)), 
-                                    frc::Rotation2d(-m_gyro->GetYaw().GetValue()) // SHOULD THIS BE INVERTED????
+                                    frc::Rotation2d(GetYaw()) // SHOULD THIS BE INVERTED????
                                 );
         } 
         else {
@@ -220,7 +220,7 @@ namespace t34 {
      * Reset the odometer for all swerve modules.
      */
     void SwerveDrive::ResetOdometry(frc::Pose2d pose) {
-        m_swerve_odometry.ResetPosition(frc::Rotation2d(m_gyro->GetYaw().GetValue()), GetModulePositions(), pose);
+        m_swerve_odometry.ResetPosition(frc::Rotation2d(GetYaw()), GetModulePositions(), pose);
     }  
 
     /**

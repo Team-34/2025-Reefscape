@@ -32,18 +32,27 @@ namespace t34
 
     m_left_motor.ConfigAllSettings(motor_config);
     m_right_motor.ConfigAllSettings(motor_config);
+
+    m_pid.SetSetpoint(m_encoder.Get());
     
     Register();
+
   }
 
   void Elevator::ElevateTo(units::inch_t height)
   {
     m_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation));
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation));
+
   }
 
   void Elevator::ElevateTo(double height)
   {
     m_pid.SetSetpoint(height);
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation, height));
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation, height));
+
   }
 
   void Elevator::Stop()
@@ -80,6 +89,28 @@ namespace t34
     //     m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
     //   })
     //   .Until([this] { return m_pid.AtSetpoint(); });
+  }
+
+  frc2::CommandPtr Elevator::ElevateToEncValue(double enc_value) {
+    return this->RunEnd(
+      [this, enc_value]
+      {
+        if (m_encoder_accumulation > enc_value)
+        {
+          m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.25);
+          m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.25);
+        } else if (m_encoder_accumulation < enc_value)
+        {
+          m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.25);
+          m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.25);
+        }
+      },
+      [this]
+      {
+          m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+          m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+      }
+    );
   }
 
   frc2::CommandPtr Elevator::ElevateToCommand(double height)
@@ -146,12 +177,15 @@ namespace t34
 
     frc::SmartDashboard::PutNumber("Elevator Encoder Units with accum", m_encoder_accumulation);
     frc::SmartDashboard::PutNumber("Elevator Encoder Units", next_reading);
+    frc::SmartDashboard::PutNumber("Elevator Setpoint", m_pid.GetSetpoint());
 
     m_encoder_accumulation = UpdatePosition(m_encoder_accumulation, m_last_reading, next_reading);
     m_last_reading = next_reading;
 
-    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation));
-    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation));
+    //m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation));
+    //m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation));
+
+    //double Nsetpoint = m_pid.GetSetpoint();
 
   }
 }

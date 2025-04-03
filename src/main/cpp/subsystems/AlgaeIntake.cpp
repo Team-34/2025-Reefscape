@@ -6,11 +6,11 @@
 namespace t34
 {    
   AlgaeIntake::AlgaeIntake()
-    : m_setpoint(0.0)
+    : m_setpoint(m_left_wrist_motor.GetSelectedSensorPosition())
     , m_init_algae_angle(155_deg) //65 degrees away from horizontal
     , m_right_wrist_motor(1)
     , m_left_wrist_motor(2)
-    , m_pid(0.5, 0.5, 0.5)
+    , m_pid(0.5, 0.0, 0.05)
     , m_intake_motor(5)
   {} 
 
@@ -51,18 +51,14 @@ namespace t34
     (
       [this, val] 
         { 
-        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
-        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
         },
       [this]
         {
         m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
         m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
         } 
-        
-        //m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        //m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        
     );
   }
 
@@ -121,9 +117,10 @@ frc2::CommandPtr AlgaeIntake::RunOutCommand(double speed)
 }
 
   void AlgaeIntake::Periodic() {
-    frc::SmartDashboard::PutNumber("Right Wrist Motor Encoder", m_right_wrist_motor.GetSelectedSensorPosition());
-    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), m_setpoint));
-    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), m_setpoint));
+    frc::SmartDashboard::PutNumber("Right Algae Wrist Motor Encoder", m_left_wrist_motor.GetSelectedSensorPosition());
+
+    //m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), m_setpoint));
+    //m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), m_setpoint));
 
   }
 }

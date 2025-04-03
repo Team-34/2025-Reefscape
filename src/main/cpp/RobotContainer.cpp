@@ -22,8 +22,8 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() 
 {
-  ctrl->RightTrigger(0.75).WhileTrue(m_climber.RunArm(0.1));
-  ctrl->LeftTrigger(0.75).WhileTrue(m_climber.RunArm(-0.1));
+  ctrl->RightTrigger(0.75).WhileTrue(m_climber.RunArm(0.2));
+  ctrl->LeftTrigger(0.75).WhileTrue(m_climber.RunArm(-0.2));
 
   ctrl->Start().WhileTrue(m_climber.FlipLockCommand());
 
@@ -33,8 +33,14 @@ void RobotContainer::ConfigureBindings()
   ctrl->POVRight().WhileTrue(m_coral_intake.MoveWristByPowerCommand(0.25));
   ctrl->POVLeft().WhileTrue(m_coral_intake.MoveWristByPowerCommand(-0.25));
 
+  ctrl->POVRight().OnTrue(m_elevator.ElevateToCommand(4.0));
+
   //ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
   //ctrl->POVLeft().OnTrue(m_coral_intake.MoveWristToCommand(0));
+
+  //ctrl->POVUp().WhileTrue(m_elevator.ElevateToCommand(30.0));
+
+  //ctrl->POVRight().WhileTrue(m_elevator.ElevateToEncValue(3.0));
 
   ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));

@@ -13,6 +13,7 @@ namespace t34
     , m_encoder_setpoint(0.0)
   {
     Register();
+    
   } 
 
   frc2::CommandPtr CoralIntake::MoveWristByPowerCommand(double val)
@@ -119,13 +120,13 @@ namespace t34
   {
     frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
 
-    if (m_encoder_setpoint > m_wrist_motor.GetEncoder().GetPosition() && m_top_limit.Get())
-    {
-      m_wrist_motor.StopMotor();
-    }
-    else
-    {
-      m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
-    }
+    // if (m_encoder_setpoint > m_wrist_motor.GetEncoder().GetPosition() && m_top_limit.Get())
+    // {
+    //   m_wrist_motor.StopMotor();
+    // }
+    // else
+    // {
+    //   m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
+    // }
   }
 }

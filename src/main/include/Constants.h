@@ -17,7 +17,7 @@ const int CONTROLLER_PORT = 0;
 const int BOTH_WRIST_GEAR_RATIO = 70; // 1:70
 const int ELEVATOR_WINCH_GEAR_RATIO = 50; // 1:50
 
-constexpr bool INVERT_GYRO{ true }; // Always ensure Gyro is CCW+ CW-
+constexpr bool INVERT_GYRO{ false }; // Always ensure Gyro is CCW+ CW-
 
 constexpr double PI2{ M_PI * 2.0 };
 constexpr double _180_DIV_PI{ 180.0 / M_PI };

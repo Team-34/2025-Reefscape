@@ -26,7 +26,8 @@ namespace t34
         }, [this]
         {
             m_motor.Set(0.0);
-            FlipLock();
+            
+            //FlipLock();
         }).Until(
             [this]
         {
@@ -40,6 +41,7 @@ namespace t34
         [this, power]
         {
             m_motor.Set(power);
+        
         },
         [this]
         {
@@ -61,6 +63,18 @@ namespace t34
         m_locked = !m_locked;
         m_lock.Set((m_locked) ? 0.65 : 0.25);
         
+    }
+
+    void Climber::SetLock()
+    {
+
+        m_lock.Set((m_motor.GetPosition().GetValueAsDouble() < 2.0) ? 0.25 : 0.65);
+        
+        if (m_motor.GetPosition().GetValueAsDouble() < 2.0)
+        {
+            m_motor.Set(0.0);
+            m_locked = true;
+        }
     }
 
     frc2::CommandPtr Climber::FlipLockCommand()

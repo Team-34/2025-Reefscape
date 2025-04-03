@@ -10,7 +10,8 @@ Robot::Robot() {}
 void Robot::RobotPeriodic() 
 {
   frc2::CommandScheduler::GetInstance().Run();
-  
+  frc::SmartDashboard::PutNumber("Gyro Yaw", m_gyro->GetYaw().GetValueAsDouble());
+
 }
 
 void Robot::DisabledInit() {}

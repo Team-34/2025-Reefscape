@@ -21,7 +21,10 @@ namespace t34
         frc2::CommandPtr RunLock(double power);
         frc2::CommandPtr FlipLockCommand();
 
+        frc2::Command
+
         void FlipLock();
+        void SetLock();
 
         inline double GetLockPosition() { return m_lock.GetPosition(); }
         inline double GetArmPosition() { return m_motor.GetPosition().GetValueAsDouble(); }
