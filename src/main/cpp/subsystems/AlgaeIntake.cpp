@@ -8,31 +8,44 @@ namespace t34
   AlgaeIntake::AlgaeIntake()
     : m_motor(5)
     , m_init_algae_angle(155_deg) //65 degrees away from horizontal
-    , m_right_wrist_motor(1, rev::spark::SparkLowLevel::MotorType::kBrushless)
-    , m_left_wrist_motor(2, rev::spark::SparkLowLevel::MotorType::kBrushless)
-  {} 
+    , m_right_wrist_motor(1)
+    , m_left_wrist_motor(2)
+  {
+    m_left_wrist_motor.Config_kP(0, 0.1);
+    m_left_wrist_motor.Config_kI(0, 0.0);
+    m_left_wrist_motor.Config_kD(0, 0.01);
+
+    m_right_wrist_motor.Config_kP(0, 0.1);
+    m_right_wrist_motor.Config_kI(0, 0.0);
+    m_right_wrist_motor.Config_kD(0, 0.01);
+  } 
 
   void AlgaeIntake::MoveWristTo(double enc_units)
   {
-    m_left_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
-    m_right_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
+    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, enc_units);
+    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, enc_units);
   }
 
   void AlgaeIntake::MoveWristTo(units::degree_t angle)
   {
-    m_left_wrist_motor.GetClosedLoopController().SetReference(angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
-    m_right_wrist_motor.GetClosedLoopController().SetReference(angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
+    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
+    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
   }
 
   frc2::CommandPtr AlgaeIntake::MoveWristToCommand(units::degree_t angle)
   {
-    return this->RunOnce
+    return this->RunEnd
     (
       [this, angle] 
-        { 
-        m_left_wrist_motor.GetClosedLoopController().SetReference( angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
-        m_right_wrist_motor.GetClosedLoopController().SetReference( angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
-        }
+      { 
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
+      },
+      [this]
+      {
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+      }
     );
   }
 
@@ -41,15 +54,15 @@ namespace t34
     return this->RunEnd
     (
       [this, val] 
-        { 
-        m_left_wrist_motor.Set(val);
-        m_right_wrist_motor.Set(val);
-        },
-      [this] 
-        { 
-        m_left_wrist_motor.Set(0.0);
-        m_right_wrist_motor.Set(0.0);
-        }
+      { 
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+      },
+      [this]
+      {
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0);
+      }
     );
   }
   void AlgaeIntake::Periodic() {}
