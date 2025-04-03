@@ -15,6 +15,7 @@
 #include <cmath>
 #include <units/length.h>
 #include <units/angle.h>
+#include <frc/DigitalInput.h>
 
 using namespace rev::spark;
 using namespace ctre::phoenix6::hardware;
@@ -46,6 +47,9 @@ namespace t34
         frc2::CommandPtr IncrementDown();
         
     private:
+
+        frc::DigitalInput m_top_limit;
+
         SparkMax m_motor;
 
         int m_coral_level;

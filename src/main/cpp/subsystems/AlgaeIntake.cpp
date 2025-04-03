@@ -6,12 +6,12 @@
 namespace t34
 {    
   AlgaeIntake::AlgaeIntake()
-    : m_motor(5)
+    : m_setpoint(0.0)
     , m_init_algae_angle(155_deg) //65 degrees away from horizontal
     , m_right_wrist_motor(1)
     , m_left_wrist_motor(2)
     , m_pid(0.5, 0.5, 0.5)
-    , m_algae_intake(5)
+    , m_intake_motor(5)
   {} 
 
   void AlgaeIntake::MoveWristTo(double setpoint)
@@ -72,14 +72,13 @@ namespace t34
     (
       [this, increase]
       {
-        double current_setpoint_left = m_left_wrist_motor.GetSelectedSensorPosition();
-        double current_setpoint_right = m_right_wrist_motor.GetSelectedSensorPosition();
+        double current_position = m_left_wrist_motor.GetSelectedSensorPosition();
 
-        double new_setpoint = current_setpoint_right += increase; // setting the setpoint as the right motor's setpoint plus an input increase, may need to be reversed
+        double new_setpoint = current_position + increase; // setting the setpoint as the right motor's positiion plus an input increase, may need to be reversed
 
         m_pid.SetSetpoint(new_setpoint); 
-        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), new_setpoint));
-        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), new_setpoint));
+        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(current_position, new_setpoint));
+        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(current_position, new_setpoint));
 
       },
       [this]
@@ -97,11 +96,11 @@ namespace t34
     (
       [this, speed]
       {
-        m_algae_intake.Set(speed);
+        m_intake_motor.Set(speed);
       },
       [this]
       {
-        m_algae_intake.Set(0.0);
+        m_intake_motor.Set(0.0);
       }
     );
   }
@@ -112,16 +111,19 @@ frc2::CommandPtr AlgaeIntake::RunOutCommand(double speed)
   (
     [this, speed]
       {
-        m_algae_intake.Set(-speed);
+        m_intake_motor.Set(-speed);
       },
     [this]
       {
-        m_algae_intake.Set(0.0);
+        m_intake_motor.Set(0.0);
       }
   );
 }
 
   void AlgaeIntake::Periodic() {
     frc::SmartDashboard::PutNumber("Right Wrist Motor Encoder", m_right_wrist_motor.GetSelectedSensorPosition());
+    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), m_setpoint));
+    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), m_setpoint));
+
   }
 }

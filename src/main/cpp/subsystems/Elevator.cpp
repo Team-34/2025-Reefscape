@@ -41,6 +41,11 @@ namespace t34
     m_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
   }
 
+  void Elevator::ElevateTo(double height)
+  {
+    m_pid.SetSetpoint(height);
+  }
+
   void Elevator::Stop()
   {
     m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
@@ -49,25 +54,42 @@ namespace t34
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
-    m_pid.SetSetpoint(height.value());
-
-    return this->RunEnd(
+    return this->RunOnce(
       [this, height]
       {
-        auto pos = m_pid.Calculate(GetPosition().value());
+        ElevateTo(height);
+      }
+    );
 
-        //Run the elevator in respect to the given height
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, pos);
+    // m_pid.SetSetpoint(height.value());
 
-        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, -pos);
-      },
-      [this]
+    // return this->RunEnd(
+    //   [this, height]
+    //   {
+    //     auto pos = m_pid.Calculate(GetPosition().value());
+
+    //     //Run the elevator in respect to the given height
+    //     m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, pos);
+
+    //     m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, -pos);
+    //   },
+    //   [this]
+    //   {
+    //     // stop motor
+    //     m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+    //     m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+    //   })
+    //   .Until([this] { return m_pid.AtSetpoint(); });
+  }
+
+  frc2::CommandPtr Elevator::ElevateToCommand(double height)
+  {
+    return this->RunOnce(
+      [this, height]
       {
-        // stop motor
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-      })
-      .Until([this] { return m_pid.AtSetpoint(); });
+        ElevateTo(height);
+      }
+    );
   }
 
   frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)
@@ -86,6 +108,8 @@ namespace t34
       }
     );
   }
+
+  
 
   double Elevator::UpdatePosition(double acc, double last, double next)
   {
@@ -125,6 +149,9 @@ namespace t34
 
     m_encoder_accumulation = UpdatePosition(m_encoder_accumulation, m_last_reading, next_reading);
     m_last_reading = next_reading;
+
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation));
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation));
 
   }
 }

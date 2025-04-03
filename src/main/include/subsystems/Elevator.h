@@ -22,9 +22,12 @@ namespace t34
 
     Elevator();
 
-    frc2::CommandPtr ElevateToCommand(units::inch_t height);
     void ElevateTo(units::inch_t height);
+    void ElevateTo(double height);
     void Stop();
+
+    frc2::CommandPtr ElevateToCommand(units::inch_t height);
+    frc2::CommandPtr ElevateToCommand(double height);
 
     units::inch_t GetPosition();
 

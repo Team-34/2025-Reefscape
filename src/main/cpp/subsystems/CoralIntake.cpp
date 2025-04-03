@@ -4,7 +4,8 @@
 namespace t34
 {    
   CoralIntake::CoralIntake()
-    : m_motor(4, rev::spark::SparkLowLevel::MotorType::kBrushless)
+    : m_top_limit(2)
+    , m_motor(4, rev::spark::SparkLowLevel::MotorType::kBrushless)
     , m_coral_level(0)
     , m_init_coral_angle(0_deg) 
     , m_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
@@ -118,6 +119,13 @@ namespace t34
   {
     frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
 
-    m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
+    if (m_encoder_setpoint > m_wrist_motor.GetEncoder().GetPosition() && m_top_limit.Get())
+    {
+      m_wrist_motor.StopMotor();
+    }
+    else
+    {
+      m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
+    }
   }
 }

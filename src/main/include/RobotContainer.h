@@ -12,6 +12,7 @@
 #include "subsystems/CoralIntake.h"
 #include "subsystems/Climber.h"
 #include "subsystems/Elevator.h"
+#include "subsystems/Coordinator.h"
 #include "Gyro.h"
 #include <frc/AnalogEncoder.h>
 
@@ -26,6 +27,8 @@ public:
   t34::CoralIntake m_coral_intake;
   t34::Climber m_climber;
   t34::Elevator m_elevator;
+
+  t34::Coordinator m_coordinator;
   
   AutoDriveCommand m_auto_leave;
 
