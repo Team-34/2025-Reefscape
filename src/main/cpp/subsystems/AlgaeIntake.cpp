@@ -38,12 +38,17 @@ namespace t34
 
  frc2::CommandPtr AlgaeIntake::MoveWristByPowerCommand(double val)
   {
-    return this->RunOnce
+    return this->RunEnd
     (
       [this, val] 
         { 
-        m_left_wrist_motor.GetClosedLoopController().SetReference( val, rev::spark::SparkLowLevel::ControlType::kVelocity);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
-        m_right_wrist_motor.GetClosedLoopController().SetReference( -val, rev::spark::SparkLowLevel::ControlType::kVelocity);//BOTH_WRIST_GEAR_RATIO * ((angle - m_init_coral_angle) / 1_tr));
+        m_left_wrist_motor.Set(val);
+        m_right_wrist_motor.Set(val);
+        },
+      [this] 
+        { 
+        m_left_wrist_motor.Set(0.0);
+        m_right_wrist_motor.Set(0.0);
         }
     );
   }
