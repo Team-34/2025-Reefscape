@@ -40,10 +40,10 @@ void RobotContainer::ConfigureBindings()
 
   //ctrl->POVRight().WhileTrue(m_elevator.ElevateToEncValue(3.0));
 
-  // ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
-  // ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
-  ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
-  ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
+  ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
+  ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
+  //ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
+  //ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
 
   // ctrl->POVUp().WhileTrue(m_coordinator.MoveUpLevelCommand());
   // ctrl->POVDown().WhileTrue(m_coordinator.MoveDownLevelCommand());

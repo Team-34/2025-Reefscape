@@ -9,21 +9,28 @@ t34::Coordinator::Coordinator(t34::Elevator* elevator)
 , m_current_level(0)
 {}
 
-frc2::CommandPtr t34::Coordinator::MoveToLevelCommand(int level)
+void t34::Coordinator::MoveToLevel(int level)
 {
+        
     m_current_level = std::clamp(level, 0, 3);
 
     switch (m_current_level)
     {
-        case 0:
-            return m_elevator->ElevateToCommand(8.9);
-        case 1:
-            return m_elevator->ElevateToCommand(9.56);
-        case 2:
-            return m_elevator->ElevateToCommand(1.49);
-        case 3:
-            return m_elevator->ElevateToCommand(0.0);
+    case 0:
+        m_elevator->ElevateTo(0.2);
+        break;
+    case 1:
+        m_elevator->ElevateTo(1.49);
+        break;
+    case 2:
+        m_elevator->ElevateTo(4.56);
+        break;
+    case 3:
+        m_elevator->ElevateTo(8.9);
+        break;
     }
+    
+    
 
 }
 

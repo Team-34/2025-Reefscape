@@ -14,10 +14,12 @@ namespace t34
 public:
     Coordinator(t34::Elevator* elevator);
 
-    frc2::CommandPtr MoveToLevelCommand(int level);
+    void MoveToLevel(int level);
 
-    inline frc2::CommandPtr MoveUpLevelCommand() { return MoveToLevelCommand(m_current_level + 1); }
-    inline frc2::CommandPtr MoveDownLevelCommand() { return MoveToLevelCommand(m_current_level - 1); }
+    
+
+    inline frc2::CommandPtr MoveUpLevelCommand() { return this->RunOnce([this]{MoveToLevel(m_current_level + 1);}); }
+    inline frc2::CommandPtr MoveDownLevelCommand() { return this->RunOnce([this]{MoveToLevel(m_current_level - 1);}); }
 
     void Periodic() override;
 

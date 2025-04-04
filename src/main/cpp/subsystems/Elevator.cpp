@@ -49,6 +49,8 @@ namespace t34
 
   void Elevator::ElevateTo(double height)
   {
+    height = std::clamp(height, 0.0, 9.0);
+
     m_pid.SetSetpoint(height);
     m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation, height));
     m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation, height));
