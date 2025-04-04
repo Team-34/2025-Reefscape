@@ -9,24 +9,27 @@ namespace t34
     : m_setpoint(m_left_wrist_motor.GetSelectedSensorPosition())
     , m_init_algae_angle(155_deg) //65 degrees away from horizontal
     , m_right_wrist_motor(1)
-    , m_left_wrist_motor(2)
-    , m_pid(0.5, 0.0, 0.05)
+    , m_left_wrist_motor(2) //This motor has encoder, the right does not
+    //, m_pid(0.2, 0.0, 0.05)
     , m_intake_motor(5)
-  {} 
+  {
+    m_left_wrist_motor.Config_kP(0, 0.2);
+    m_left_wrist_motor.Config_kI(0, 0.0);
+    m_left_wrist_motor.Config_kD(0, 0.05);
+  } 
 
   void AlgaeIntake::MoveWristTo(double setpoint)
   {
-    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), setpoint));
-    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), setpoint));
-
-    //m_left_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
-    //m_right_wrist_motor.GetClosedLoopController().SetReference(enc_units, rev::spark::SparkLowLevel::ControlType::kPosition);
+    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, setpoint);
+    m_right_wrist_motor.Follow(m_left_wrist_motor);
+    // m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), setpoint));
+    // m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), setpoint));
   }
 
   void AlgaeIntake::MoveWristTo(units::degree_t angle)
   {
-    m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), angle.value()));
-    m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), angle.value()));
+    //m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), angle.value()));
+    //m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), angle.value()));
 
     //m_left_wrist_motor.GetClosedLoopController().SetReference(angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
     //m_right_wrist_motor.GetClosedLoopController().SetReference(angle.value(), rev::spark::SparkLowLevel::ControlType::kPosition);
@@ -38,8 +41,8 @@ namespace t34
     (
       [this, angle] 
         { 
-        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
-        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), angle.value()));
+        // m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, t34::Talon::AngleTo775ProUnit(angle));
+        // m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), angle.value()));
         }
     );
     //.Until(m_left_wrist_motor.GetSelectedSensorPosition() == angle.value()); // <-- UNTESTED
@@ -72,9 +75,9 @@ namespace t34
 
         double new_setpoint = current_position + increase; // setting the setpoint as the right motor's positiion plus an input increase, may need to be reversed
 
-        m_pid.SetSetpoint(new_setpoint); 
-        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(current_position, new_setpoint));
-        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(current_position, new_setpoint));
+        //m_pid.SetSetpoint(new_setpoint); 
+        // m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(current_position, new_setpoint));
+        // m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(current_position, new_setpoint));
 
       },
       [this]

@@ -43,7 +43,7 @@ namespace t34
 
         const units::degree_t m_init_algae_angle;
 
-        frc::PIDController m_pid;
+        //frc::PIDController m_pid;
         
         TalonFX m_intake_motor;
         TalonSRX m_right_wrist_motor;

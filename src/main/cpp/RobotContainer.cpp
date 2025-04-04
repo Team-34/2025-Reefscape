@@ -14,7 +14,7 @@ RobotContainer::RobotContainer()
   , m_coral_intake()
   , m_climber()
   , m_elevator()
-  , m_coordinator(&m_elevator)
+  , m_coordinator(&m_elevator, &m_coral_intake)
   , m_auto_leave(swerve_drive, 0_in, -3_ft, 0_deg)
 {
   ConfigureBindings();
@@ -40,10 +40,10 @@ void RobotContainer::ConfigureBindings()
 
   //ctrl->POVRight().WhileTrue(m_elevator.ElevateToEncValue(3.0));
 
-  ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
-  ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
-  // ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
-  // ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
+  // ctrl->POVUp().WhileTrue(m_coordinator.RunElevator(0.6));
+  // ctrl->POVDown().WhileTrue(m_coordinator.RunElevator(-0.6));
+  ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
+  ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
 
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
 

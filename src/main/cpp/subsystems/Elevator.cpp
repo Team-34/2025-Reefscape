@@ -18,7 +18,7 @@ namespace t34
   , m_init_height(31.75_in) //height from the floor to the crossbar - the algae intake wheel is 4 in from the base
   , m_left_motor(11)
   , m_right_motor(12)
-  , m_pid(2.0, 0.0, 0.1)
+  , m_pid(1.0, 0.0, 0.15)
   , m_encoder(0)
   {
     m_pid.SetTolerance(0.2);
@@ -28,6 +28,8 @@ namespace t34
     motor_config.continuousCurrentLimit = 30;
     motor_config.peakCurrentDuration = 1500;
     motor_config.peakCurrentLimit = 40;
+    motor_config.closedloopRamp = 0.25;
+    motor_config.openloopRamp = 0.25;
 
     m_left_motor.ConfigAllSettings(motor_config);
     m_right_motor.ConfigAllSettings(motor_config);
@@ -94,8 +96,8 @@ namespace t34
     (
       [this, val]
       {
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
-        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
       },
       [this]
       {
@@ -145,8 +147,8 @@ namespace t34
 
     auto pid_output = m_pid.Calculate(m_encoder_accumulation);
 
-    // m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
-    // m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
 
     frc::SmartDashboard::PutNumber("Elevator PID Output", pid_output);
 

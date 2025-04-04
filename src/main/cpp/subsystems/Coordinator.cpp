@@ -4,8 +4,9 @@
 
 #include "subsystems/Coordinator.h"
 
-t34::Coordinator::Coordinator(t34::Elevator* elevator)
+t34::Coordinator::Coordinator(t34::Elevator* elevator, t34::CoralIntake* coral_intake)
 : m_elevator(elevator)
+, m_coral_intake(coral_intake)
 , m_current_level(0)
 {
     
@@ -35,6 +36,11 @@ void t34::Coordinator::MoveToLevel(int level)
         break;
     }
 
+}
+
+frc2::CommandPtr t34::Coordinator::RunElevator(double speed)
+{
+    return m_coral_intake->MoveToZero().AndThen(m_elevator->MoveElevatorByPowerCommand(speed));
 }
 
 // This method will be called once per scheduler run
