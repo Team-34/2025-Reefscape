@@ -15,7 +15,7 @@ namespace t34
   : m_level(0)
   , m_last_reading(0.0)
   , m_encoder_accumulation(0.0)
-  , m_init_height(32.75_in) //height from the floor to the crossbar
+  , m_init_height(31.75_in) //height from the floor to the crossbar - the algae intake wheel is 4 in from the base
   , m_left_motor(11)
   , m_right_motor(12)
   , m_pid(2.0, 0.0, 0.1)
@@ -109,12 +109,12 @@ namespace t34
 
   double Elevator::UpdatePosition(double acc, double last, double next)
   {
-    if (0.75 < last && next < 0.25)
+    if (0.55 < last && next < 0.45)
     {
 	    acc += 1.0 + (next - last);
     }
 
-    else if (0.75 < next && last < 0.25)
+    else if (0.55 < next && last < 0.45)
     {
 	    acc -= 1.0 - (next - last);
     }
