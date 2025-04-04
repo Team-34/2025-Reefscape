@@ -30,20 +30,20 @@ void RobotContainer::ConfigureBindings()
   ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.5));
   ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.5));
 
-  ctrl->POVRight().WhileTrue(m_coral_intake.MoveWristByPowerCommand(0.25));
-  ctrl->POVLeft().WhileTrue(m_coral_intake.MoveWristByPowerCommand(-0.25));
+  // ctrl->POVRight().WhileTrue(m_coral_intake.MoveWristByPowerCommand(0.25));
+  // ctrl->POVLeft().WhileTrue(m_coral_intake.MoveWristByPowerCommand(-0.25));
 
-  // ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
-  // ctrl->POVLeft().OnTrue(m_coral_intake.MoveWristToCommand(0.0));
+  ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
+  ctrl->POVLeft().OnTrue(m_coral_intake.MoveToZero());
 
   //ctrl->POVUp().WhileTrue(m_elevator.ElevateToCommand(30.0));
 
   //ctrl->POVRight().WhileTrue(m_elevator.ElevateToEncValue(3.0));
 
-  // ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
-  // ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
-  ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
-  ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
+  ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
+  ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
+  // ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
+  // ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
 
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
 

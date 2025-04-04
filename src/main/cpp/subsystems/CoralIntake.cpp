@@ -10,19 +10,22 @@ namespace t34
     , m_init_coral_angle(0_deg) 
     , m_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
     , m_run_up(false)
+    , m_returning(false)
     , m_encoder_setpoint(0.0)
   {
-    Register();
+    //Register();
 
-    m_config
-      .Inverted(false)
-      .SetIdleMode(SparkMaxConfig::IdleMode::kBrake);
-    m_config.encoder
-      .PositionConversionFactor(1)//1000
-      .VelocityConversionFactor(1);//1000
+    //m_config
+    //   .Inverted(false)
+    //   .SetIdleMode(SparkMaxConfig::IdleMode::kBrake);
+    // m_config.encoder
+    //   .PositionConversionFactor(1)//1000
+    //   .VelocityConversionFactor(1);//1000
     m_config.closedLoop
       .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
-      .Pid(0.3, 0.0, 0.0);
+      .Pid(0.02, 0.0, 0.05);
+
+    m_config.ClosedLoopRampRate(0.75);
 
     m_wrist_motor.Configure(m_config, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
   } 
@@ -127,10 +130,40 @@ namespace t34
     );
   }
 
+  frc2::CommandPtr CoralIntake::MoveToZero()
+  {
+    return this->RunEnd(
+      [this]
+      {
+        m_wrist_motor.Set(-0.2);
+        m_returning = true;
+      }
+      , [this]
+      {
+        m_wrist_motor.StopMotor();
+        m_wrist_motor.GetEncoder().SetPosition(0.0);
+
+        m_encoder_setpoint = 0.0;
+
+        m_returning = false;
+      }
+    ).Until(
+      [this]
+      {
+        return !m_top_limit.Get();
+    });
+  }
+
   void CoralIntake::Periodic()
   {
     frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
     frc::SmartDashboard::PutNumber("Coral Wrist Setpoint: ", m_encoder_setpoint);
+    frc::SmartDashboard::PutBoolean("Coral Limit engaged?", !m_top_limit.Get());
+
+    if (!m_returning)
+    {
+      m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
+    }
 
     // if (m_top_limit.Get() && m_encoder_setpoint < m_wrist_motor.GetEncoder().GetPosition())
     // {

@@ -45,6 +45,8 @@ namespace t34
         frc2::CommandPtr MoveToLevelCommand(int level);
         frc2::CommandPtr IncrementUp();
         frc2::CommandPtr IncrementDown();
+
+        frc2::CommandPtr MoveToZero();
         
     private:
 
@@ -59,6 +61,7 @@ namespace t34
         SparkMax m_wrist_motor;
 
         bool m_run_up;
+        bool m_returning;
 
         double m_encoder_setpoint;
 

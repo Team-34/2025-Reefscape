@@ -145,8 +145,8 @@ namespace t34
 
     auto pid_output = m_pid.Calculate(m_encoder_accumulation);
 
-    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
-    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
+    // m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
+    // m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
 
     frc::SmartDashboard::PutNumber("Elevator PID Output", pid_output);
 
