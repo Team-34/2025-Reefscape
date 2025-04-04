@@ -28,7 +28,7 @@ namespace t34
 
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
     frc2::CommandPtr ElevateToCommand(double height);
-    frc2::CommandPtr ElevateToEncValue(double enc_value);
+    // frc2::CommandPtr ElevateToEncValue(double enc_value);
 
     units::inch_t GetPosition();
 

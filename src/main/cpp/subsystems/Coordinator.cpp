@@ -11,12 +11,20 @@ t34::Coordinator::Coordinator(t34::Elevator* elevator)
 
 frc2::CommandPtr t34::Coordinator::MoveToLevelCommand(int level)
 {
-    this->RunOnce(
-        [this, level]
-        {
-            m_current_level = std::clamp(level, 0, 4);
-        }
-    ).AndThen(m_elevator->ElevateToCommand(level));
+    m_current_level = std::clamp(level, 0, 3);
+
+    switch (m_current_level)
+    {
+        case 0:
+            return m_elevator->ElevateToCommand(8.9);
+        case 1:
+            return m_elevator->ElevateToCommand(9.56);
+        case 2:
+            return m_elevator->ElevateToCommand(1.49);
+        case 3:
+            return m_elevator->ElevateToCommand(0.0);
+    }
+
 }
 
 // This method will be called once per scheduler run

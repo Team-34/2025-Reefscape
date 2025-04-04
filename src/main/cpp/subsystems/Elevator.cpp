@@ -22,7 +22,7 @@ namespace t34
   , m_pid(0.5, 0.0, 0.0)
   , m_encoder(0)
   {
-    m_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
+    m_pid.SetTolerance(0.2);
 
     TalonSRXConfiguration motor_config;
 
@@ -63,10 +63,15 @@ namespace t34
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
-    return this->RunOnce(
+    return this->RunEnd(
       [this, height]
       {
         ElevateTo(height);
+      }
+      , [this]
+      {
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       }
     );
 
@@ -91,34 +96,39 @@ namespace t34
     //   .Until([this] { return m_pid.AtSetpoint(); });
   }
 
-  frc2::CommandPtr Elevator::ElevateToEncValue(double enc_value) {
-    return this->RunEnd(
-      [this, enc_value]
-      {
-        if (m_encoder_accumulation > enc_value)
-        {
-          m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.25);
-          m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.25);
-        } else if (m_encoder_accumulation < enc_value)
-        {
-          m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.25);
-          m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.25);
-        }
-      },
-      [this]
-      {
-          m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-          m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-      }
-    );
-  }
+  // frc2::CommandPtr Elevator::ElevateToEncValue(double enc_value) {
+  //   return this->RunEnd(
+  //     [this, enc_value]
+  //     {
+  //       if (m_encoder_accumulation > enc_value)
+  //       {
+  //         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.25);
+  //         m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.25);
+  //       } else if (m_encoder_accumulation < enc_value)
+  //       {
+  //         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -0.25);
+  //         m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.25);
+  //       }
+  //     },
+  //     [this]
+  //     {
+  //         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //         m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+  //     }
+  //   );
+  // }
 
   frc2::CommandPtr Elevator::ElevateToCommand(double height)
   {
-    return this->RunOnce(
+    return this->RunEnd(
       [this, height]
       {
         ElevateTo(height);
+      }
+      , [this]
+      {
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       }
     );
   }
@@ -159,10 +169,6 @@ namespace t34
 	    acc += next - last;
     }
 
-    frc::SmartDashboard::PutNumber("Elevator Acc", acc);
-    frc::SmartDashboard::PutNumber("Elevator Last", last);
-    frc::SmartDashboard::PutNumber("Elevator Next", next);
-
     return acc;
   }
 
@@ -181,9 +187,6 @@ namespace t34
 
     m_encoder_accumulation = UpdatePosition(m_encoder_accumulation, m_last_reading, next_reading);
     m_last_reading = next_reading;
-
-    //m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation));
-    //m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_encoder_accumulation));
 
     //double Nsetpoint = m_pid.GetSetpoint();
 
