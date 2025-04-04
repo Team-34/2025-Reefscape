@@ -13,7 +13,18 @@ namespace t34
     , m_encoder_setpoint(0.0)
   {
     Register();
-    
+
+    m_config
+      .Inverted(false)
+      .SetIdleMode(SparkMaxConfig::IdleMode::kBrake);
+    m_config.encoder
+      .PositionConversionFactor(1)//1000
+      .VelocityConversionFactor(1);//1000
+    m_config.closedLoop
+      .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+      .Pid(0.3, 0.0, 0.0);
+
+    m_wrist_motor.Configure(m_config, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
   } 
 
   frc2::CommandPtr CoralIntake::MoveWristByPowerCommand(double val)
@@ -116,11 +127,12 @@ namespace t34
     );
   }
 
- void CoralIntake::Periodic()
+  void CoralIntake::Periodic()
   {
     frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
+    frc::SmartDashboard::PutNumber("Coral Wrist Setpoint: ", m_encoder_setpoint);
 
-    // if (m_encoder_setpoint > m_wrist_motor.GetEncoder().GetPosition() && m_top_limit.Get())
+    // if (m_top_limit.Get() && m_encoder_setpoint < m_wrist_motor.GetEncoder().GetPosition())
     // {
     //   m_wrist_motor.StopMotor();
     // }

@@ -61,5 +61,9 @@ namespace t34
         bool m_run_up;
 
         double m_encoder_setpoint;
+
+        SparkMaxConfig m_config{};
+
+        
    };
 }
