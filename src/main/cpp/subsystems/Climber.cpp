@@ -6,22 +6,24 @@ namespace t34
     : m_motor(37)
     , m_deployed(false)
     , m_locked(true)
+    , m_slot0Configs()
+    //, m_ramp_limiter(0.25 / 1_s)
     , m_lock(0)
     {
-        ctre::phoenix6::configs::Slot0Configs slot0Configs;
-        slot0Configs.kP = 0.3;
-        slot0Configs.kI = 0;
-        slot0Configs.kD = 0.0005;
+        m_slot0Configs.kP = 0.3;
+        m_slot0Configs.kI = 0;
+        m_slot0Configs.kD = 0.0005;
 
-        m_motor.GetConfigurator().Apply(slot0Configs);
+        ctre::phoenix6::configs::ClosedLoopRampsConfigs ramp_config;
+
+        ramp_config.WithVoltageClosedLoopRampPeriod(0.5_s);
+
+        m_motor.GetConfigurator().Apply(m_slot0Configs);
+        m_motor.GetConfigurator().Apply(ramp_config);
     }
 
     frc2::CommandPtr Climber::Climb() 
     {
-        //auto setpoint = m_deployed ? 0_tr : 100_tr;
-        //auto request = ctre::phoenix6::controls::PositionVoltage{0_tr};
-
-        //m_motor.SetControl(m_request.WithPosition(setpoint));
 
         return this->RunOnce(
             [this]
@@ -36,12 +38,16 @@ namespace t34
                 m_locked ? Unlock() : Lock();
 
                 m_locked = !m_locked;
+
+                m_slot0Configs.kP = m_deployed ? 0.15 : 0.3;
+                m_motor.GetConfigurator().Apply(m_slot0Configs);
             }
         )
         .AndThen(frc2::cmd::Wait(1_s))
         .AndThen(
             [this]
             {
+
                 m_deployed ? Retract() : Deploy();
 
                 m_deployed = !m_deployed;
@@ -77,7 +83,7 @@ namespace t34
 
     void Climber::Deploy()
     {
-        m_motor.SetControl(m_request.WithPosition(110_tr));
+        m_motor.SetControl(m_request.WithPosition(115_tr));
     }
 
     void Climber::Retract()

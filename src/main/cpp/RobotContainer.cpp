@@ -44,12 +44,20 @@ void RobotContainer::ConfigureBindings()
 
   //ctrl->POVRight().WhileTrue(m_elevator.ElevateToEncValue(3.0));
 
-  // ctrl->POVUp().WhileTrue(m_coordinator.RunElevator(0.6));
-  // ctrl->POVDown().WhileTrue(m_coordinator.RunElevator(-0.6));
-  //ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
-  //ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
-  ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.8));
+
+  // bool run_elevator_on_presets = false;
+  // if (run_elevator_on_presets)
+  // {
+  //   ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
+  //   ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
+  // } else {
+  //   ctrl->POVUp().WhileTrue(m_coordinator.RunElevator(0.8));
+  //   ctrl->POVDown().WhileTrue(m_coordinator.RunElevator(-0.8));
+  // }
+
   ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.8));
+  ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.8));
+
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
 
   ctrl->A().WhileTrue(m_algae_intake.RunInCommand(-0.5));

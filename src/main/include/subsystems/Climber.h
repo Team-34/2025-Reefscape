@@ -11,6 +11,8 @@
 #include <frc2/command/button/Trigger.h>
 #include <frc2/command/WaitCommand.h>
 #include <frc2/command/Commands.h>
+//#include <frc/filter/SlewRateLimiter.h>
+
 #include "Constants.h"
 #include "Talon.h"
 
@@ -48,6 +50,10 @@ namespace t34
     
         bool m_deployed;
         bool m_locked;
+
+        ctre::phoenix6::configs::Slot0Configs m_slot0Configs;
+
+        //frc::SlewRateLimiter<double> m_ramp_limiter;
 
         ctre::phoenix6::controls::PositionVoltage m_request = ctre::phoenix6::controls::PositionVoltage{0_tr};
 

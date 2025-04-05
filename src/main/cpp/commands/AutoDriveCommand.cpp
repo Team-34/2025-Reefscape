@@ -46,9 +46,11 @@ void AutoDriveCommand::Initialize()
 void AutoDriveCommand::Execute() 
 {
   m_travelled = EncUnitsToInches(m_swerve->GetModulePositions()[0].distance.value() + m_init_dist);
+
   m_current_x = m_travelled * cos(m_wheel_theta);
   m_current_y = -m_travelled * sin(m_wheel_theta);
   m_current_theta = m_swerve->GetYaw().Degrees();
+  
   m_y_drive = m_drive_pid.Calculate(m_travelled.value());
   m_x_drive = m_y_drive * tan(m_wheel_theta);
   m_rot_speed = m_rot_pid.Calculate(m_current_theta.value());

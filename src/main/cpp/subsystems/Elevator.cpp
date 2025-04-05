@@ -123,22 +123,26 @@ namespace t34
 
   double Elevator::UpdatePosition(double acc, double last, double next)
   {
-    if (0.55 < last && next < 0.45)
-    {
-	    acc += 1.0 + (next - last);
-    }
+    // ((360 + 180 + next - last) % 360) - 180
+    auto delta = fmod(1.0 + 0.5 + next - last, 1.0) - 0.5;
+    return acc + delta;
 
-    else if (0.55 < next && last < 0.45)
-    {
-	    acc -= 1.0 - (next - last);
-    }
+    // if (0.55 < last && next < 0.45)
+    // {
+	  //   acc += 1.0 + (next - last);
+    // }
 
-    else
-    {
-	    acc += next - last;
-    }
+    // else if (0.55 < next && last < 0.45)
+    // {
+	  //   acc -= 1.0 - (next - last);
+    // }
 
-    return acc;
+    // else
+    // {
+	  //   acc += next - last;
+    // }
+
+    // return acc;
   }
 
   units::inch_t Elevator::GetPosition()
