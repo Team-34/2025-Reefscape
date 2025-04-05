@@ -19,6 +19,7 @@ namespace t34 {
         void Stop();
 
         frc2::CommandPtr ZeroYawCommand();
+        frc2::CommandPtr ToggleFarisModeCommand();
 
 
         frc::ChassisSpeeds GetRobotRelativeSpeeds();

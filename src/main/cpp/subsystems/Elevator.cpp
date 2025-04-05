@@ -40,6 +40,16 @@ namespace t34
 
   }
 
+  frc2::CommandPtr Elevator::HalfSpeed() {
+    return this->RunOnce(
+      [this]
+      {
+        m_half_speed = !m_half_speed;
+      }
+      
+    );
+  }
+
   void Elevator::ElevateTo(units::inch_t height)
   {
     m_pid.SetSetpoint((height.value() - m_init_height.value()) * 0.24);
@@ -96,8 +106,10 @@ namespace t34
     (
       [this, val]
       {
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
-        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
+        auto power = m_half_speed ? (val / 2) : val;
+        frc::SmartDashboard::PutNumber("Elevator Power: ", power);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, power );
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -power );
       },
       [this]
       {
@@ -141,14 +153,15 @@ namespace t34
     frc::SmartDashboard::PutNumber("Elevator Encoder Units with accum", m_encoder_accumulation);
     frc::SmartDashboard::PutNumber("Elevator Encoder Units", next_reading);
     frc::SmartDashboard::PutNumber("Elevator Setpoint", m_pid.GetSetpoint());
+    frc::SmartDashboard::PutBoolean("Half Speed? ", m_half_speed);
 
     m_encoder_accumulation = UpdatePosition(m_encoder_accumulation, m_last_reading, next_reading);
     m_last_reading = next_reading;
 
     auto pid_output = m_pid.Calculate(m_encoder_accumulation);
 
-    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
-    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
+    //m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
+    //m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
 
     frc::SmartDashboard::PutNumber("Elevator PID Output", pid_output);
 

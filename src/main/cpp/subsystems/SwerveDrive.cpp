@@ -163,6 +163,14 @@ namespace t34 {
         });
     }
 
+    frc2::CommandPtr SwerveDrive::ToggleFarisModeCommand()
+    {
+        return this->RunOnce([this]
+        {
+            ToggleFarisMode();
+        });
+    }
+
     /**
      * Currently not implemented. Will be required for use
      * with PathPlanner.
