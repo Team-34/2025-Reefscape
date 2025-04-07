@@ -61,7 +61,7 @@ void RobotContainer::ConfigureBindings()
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
 
   ctrl->A().WhileTrue(m_algae_intake.RunInCommand(-0.5));
-  ctrl->B().WhileTrue(m_algae_intake.RunOutCommand(0.5));
+  ctrl->B().WhileTrue(m_algae_intake.RunOutCommand(-0.5));
   
   ctrl->X().WhileTrue(m_coral_intake.RunInCommand(-0.5));//ctrl->X().OnTrue(m_coral_intake.MoveWristToCommand(13.0));
   ctrl->Y().WhileTrue(m_coral_intake.RunInCommand(0.5));//ctrl->Y().OnTrue(m_coral_intake.MoveWristToCommand(0.0));
