@@ -123,7 +123,15 @@ namespace t34
 
   double Elevator::UpdatePosition(double acc, double last, double next)
   {
-    // ((360 + 180 + next - last) % 360) - 180
+    // Source: https://stackoverflow.com/a/50860805
+    //
+    //   int rotation_angle(int new_reading, int old_reading) {
+    //     /* angle readings are in [0..360] range */
+    //     /* compute the difference modulo 360 and shift it in range [-180..179] */
+    //     return (360 + 180 + new_reading - old_reading) % 360 - 180;
+    //   }
+    //
+
     auto delta = fmod(1.0 + 0.5 + next - last, 1.0) - 0.5;
     return acc + delta;
 
