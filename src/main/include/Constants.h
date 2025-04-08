@@ -28,6 +28,5 @@ const units::inch_t ELEVATOR_LOWEST_POINT_FROM_BASE{ 7.0 };
 
 //const std::string LIMELIGHT_TABLE_NAME{ "" };
 
-
 #define DEG_TO_RAD(x) (x * PI_DIV_180)
 #define RAD_TO_DEG(x) (x * _180_DIV_PI)

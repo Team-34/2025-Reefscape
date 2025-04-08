@@ -16,19 +16,14 @@ namespace t34
     m_left_wrist_motor.Config_kI(0, 0.0);
     m_left_wrist_motor.Config_kD(0, 0.05);
 
-    // m_right_wrist_motor.Follow(m_left_wrist_motor);
-    // m_right_wrist_motor.SetInverted(ctre::phoenix::motorcontrol::InvertType::OpposeMaster);
     m_pid.SetSetpoint(m_left_wrist_motor.GetSelectedSensorPosition());
   } 
 
   void AlgaeIntake::MoveWristTo(double setpoint)
   {
-    setpoint = std::clamp(setpoint, -8500.0, 0.0); //Encoder units move negatively as algae wrist moves up
+    setpoint = std::clamp(setpoint, -8500.0, 0.0);
 
     m_pid.SetSetpoint(setpoint);
-
-    // m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition(), setpoint));
-    // m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), setpoint));
   }
 
   void AlgaeIntake::MoveWristTo(units::degree_t angle)
@@ -86,12 +81,7 @@ namespace t34
       {
         double current_position = m_left_wrist_motor.GetSelectedSensorPosition();
 
-        double new_setpoint = current_position + increase; // setting the setpoint as the right motor's positiion plus an input increase, may need to be reversed
-
-        //m_pid.SetSetpoint(new_setpoint); 
-        // m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(current_position, new_setpoint));
-        // m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, m_pid.Calculate(current_position, new_setpoint));
-
+        double new_setpoint = current_position + increase;
       },
       [this]
       {
@@ -123,7 +113,7 @@ frc2::CommandPtr AlgaeIntake::RunOutCommand(double speed)
   (
     [this, speed]
       {
-        m_intake_motor.Set(-speed);
+        m_intake_motor.Set(speed);
       },
     [this]
       {
@@ -136,13 +126,6 @@ frc2::CommandPtr AlgaeIntake::RunOutCommand(double speed)
     frc::SmartDashboard::PutNumber("Left Algae Wrist Motor Encoder", m_left_wrist_motor.GetSelectedSensorPosition());
     frc::SmartDashboard::PutNumber("Algae Wrist Setpoint", m_pid.GetSetpoint());
 
-    //m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_setpoint);
-    //m_right_wrist_motor.Follow(m_left_wrist_motor);
-
     double output = m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition());
-
-    //m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -output);
-    //m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, output);
-  
   }
 }

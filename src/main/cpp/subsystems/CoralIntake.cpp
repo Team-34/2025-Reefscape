@@ -13,14 +13,6 @@ namespace t34
     , m_returning(false)
     , m_encoder_setpoint(0.0)
   {
-    //Register();
-
-    //m_config
-    //   .Inverted(false)
-    //   .SetIdleMode(SparkMaxConfig::IdleMode::kBrake);
-    // m_config.encoder
-    //   .PositionConversionFactor(1)//1000
-    //   .VelocityConversionFactor(1);//1000
     m_config.closedLoop
       .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
       .Pid(0.02, 0.0, 0.05);
@@ -117,7 +109,7 @@ namespace t34
   frc2::CommandPtr CoralIntake::RunInCommand(double speed)
   {
     return this->RunEnd(
-      [this, speed] { this->m_motor.Set(speed);},
+      [this, speed] { this->m_motor.Set(-speed);},
       [this] { this->m_motor.StopMotor(); }
     );
   }
@@ -125,7 +117,7 @@ namespace t34
   frc2::CommandPtr CoralIntake::RunOutCommand(double speed)
   {
     return this->RunEnd(
-      [this, speed] { this->m_motor.Set(-speed);},
+      [this, speed] { this->m_motor.Set(speed);},
       [this] { this->m_motor.StopMotor(); }
     );
   }
@@ -164,14 +156,5 @@ namespace t34
     {
       m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
     }
-
-    // if (m_top_limit.Get() && m_encoder_setpoint < m_wrist_motor.GetEncoder().GetPosition())
-    // {
-    //   m_wrist_motor.StopMotor();
-    // }
-    // else
-    // {
-    //   m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
-    // }
   }
 }

@@ -11,8 +11,6 @@
 #include <frc2/command/button/Trigger.h>
 #include <frc2/command/WaitCommand.h>
 #include <frc2/command/Commands.h>
-//#include <frc/filter/SlewRateLimiter.h>
-
 #include "Constants.h"
 #include "Talon.h"
 
@@ -32,8 +30,6 @@ namespace t34
         frc2::CommandPtr FlipLockCommand();
 
         void Periodic() override;
-        
-       // void SetLock();
 
         inline double GetLockPosition() { return m_lock.GetPosition(); }
         inline units::turn_t GetArmPosition() { return m_motor.GetPosition().GetValue(); }
@@ -52,8 +48,6 @@ namespace t34
         bool m_locked;
 
         ctre::phoenix6::configs::Slot0Configs m_slot0Configs;
-
-        //frc::SlewRateLimiter<double> m_ramp_limiter;
 
         ctre::phoenix6::controls::PositionVoltage m_request = ctre::phoenix6::controls::PositionVoltage{0_tr};
 

@@ -7,7 +7,6 @@ namespace t34
     , m_deployed(false)
     , m_locked(true)
     , m_slot0Configs()
-    //, m_ramp_limiter(0.25 / 1_s)
     , m_lock(0)
     {
         m_slot0Configs.kP = 0.3;
