@@ -14,13 +14,14 @@ namespace t34
   Elevator::Elevator()
   : m_level(0)
   , m_last_reading(0.0)
-  , m_encoder_accumulation(0.0)
-  , m_init_height(31.75_in) //height from the floor to the crossbar - the algae intake wheel is 4 in from the base
+  , m_encoder(0)
+  , m_encoder_accumulation(m_encoder.Get())
+  , m_init_height(31.75_in) //height from the floor to the crossbar - the algae intake wheel is 4in from the base
   , m_left_motor(11)
   , m_right_motor(12)
   , m_pid(1.0, 0.0, 0.15)
-  , m_encoder(0)
   {
+
     m_pid.SetTolerance(0.2);
 
     TalonSRXConfiguration motor_config;

@@ -46,6 +46,8 @@ namespace t34
 
   private:
 
+    frc::AnalogEncoder m_encoder;
+
     int m_level;
 
     double m_last_reading;
@@ -59,6 +61,5 @@ namespace t34
     TalonSRX m_right_motor;
 
     frc::PIDController m_pid;
-    frc::AnalogEncoder m_encoder;
   };
 }
