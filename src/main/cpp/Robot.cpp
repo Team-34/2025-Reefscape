@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #include "Robot.h"
 #include "subsystems/LimelightUtil.h"
 
@@ -10,7 +6,8 @@ Robot::Robot() {}
 void Robot::RobotPeriodic() 
 {
   frc2::CommandScheduler::GetInstance().Run();
-  
+  frc::SmartDashboard::PutNumber("Gyro Yaw", m_gyro->GetYaw().GetValueAsDouble());
+
 }
 
 void Robot::DisabledInit() {}
@@ -21,12 +18,7 @@ void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() 
 {
-  m_autonomous_command = rc.GetAutonomousCommand();
-
-  if (m_autonomous_command) {
-    m_autonomous_command->Schedule();
-  }
-
+  rc.m_auto_leave.Schedule();
 }
 
 void Robot::AutonomousPeriodic() {}
@@ -35,11 +27,7 @@ void Robot::AutonomousExit() {}
 
 void Robot::TeleopInit() 
 {
-  if (m_autonomous_command)
-  {
-    m_autonomous_command->Cancel();
-    m_autonomous_command.reset();
-  }
+  rc.m_auto_leave.Cancel();
 
   frc2::CommandScheduler::GetInstance().SetDefaultCommand(rc.swerve_drive.get(), std::move(rc.m_default_command));
 }
