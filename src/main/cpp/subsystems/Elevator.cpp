@@ -15,8 +15,9 @@ namespace t34
   : m_level(0)
   , m_last_reading(0.0)
   , m_encoder(0)
-  , m_encoder_accumulation(m_encoder.Get())
+  , m_encoder_accumulation()
   , m_init_height(31.75_in) //height from the floor to the crossbar - the algae intake wheel is 4in from the base
+  , m_init_units(m_encoder.Get())
   , m_left_motor(11)
   , m_right_motor(12)
   , m_pid(1.0, 0.0, 0.15)
@@ -144,7 +145,7 @@ namespace t34
 
   void Elevator::Periodic()
   {
-    double next_reading = m_encoder.Get();
+    double next_reading = m_encoder.Get() - m_init_units;
 
     frc::SmartDashboard::PutNumber("Elevator Encoder Units with accum", m_encoder_accumulation);
     frc::SmartDashboard::PutNumber("Elevator Encoder Units", next_reading);
@@ -156,8 +157,8 @@ namespace t34
 
     auto pid_output = m_pid.Calculate(m_encoder_accumulation);
 
-    //m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
-    //m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
 
     frc::SmartDashboard::PutNumber("Elevator PID Output", pid_output);
   }

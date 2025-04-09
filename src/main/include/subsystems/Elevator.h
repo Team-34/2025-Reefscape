@@ -56,6 +56,7 @@ namespace t34
     double m_encoder_accumulation; 
 
     const units::inch_t m_init_height;
+    const double m_init_units;
 
     TalonSRX m_left_motor;
     TalonSRX m_right_motor;

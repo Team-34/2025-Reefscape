@@ -17,7 +17,7 @@ void t34::Coordinator::MoveToLevel(int level)
     switch (m_current_level)
     {
     case 0:
-        m_elevator->ElevateTo(1.0);
+        m_elevator->ElevateTo(0.0);
         break;
     case 1:
         m_elevator->ElevateTo(2.02);

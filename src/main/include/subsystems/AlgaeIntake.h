@@ -49,5 +49,7 @@ namespace t34
         TalonFX m_intake_motor;
         TalonSRX m_right_wrist_motor;
         TalonSRX m_left_wrist_motor;
+
+        double m_encoder_units;
     };
 };
