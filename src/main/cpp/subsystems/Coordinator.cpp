@@ -20,13 +20,14 @@ void t34::Coordinator::MoveToLevel(int level)
         m_elevator->ElevateTo(0.0);
         break;
     case 1:
-        m_elevator->ElevateTo(2.02);
+        m_elevator->ElevateTo(1.586);
         break;
     case 2:
         m_elevator->ElevateTo(5.3);
         break;
     case 3:
-        m_elevator->ElevateTo(9.9);
+        m_elevator->ElevateTo(9.99);
+        m_coral_intake->MoveWristTo(9.357);
         break;
     }
 

@@ -60,7 +60,7 @@ namespace t34
 
   void Elevator::ElevateTo(double height)
   {
-    height = std::clamp(height, 0.0, 9.0);
+    height = std::clamp(height, 0.0, 10.0);
 
     m_pid.SetSetpoint(height);
 

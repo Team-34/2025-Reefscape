@@ -130,5 +130,7 @@ frc2::CommandPtr AlgaeIntake::RunOutCommand(double speed)
     frc::SmartDashboard::PutNumber("Algae Wrist Setpoint", m_pid.GetSetpoint());
 
     double output = m_pid.Calculate(m_left_wrist_motor.GetSelectedSensorPosition());
+
+    //m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, output);
   }
 }
