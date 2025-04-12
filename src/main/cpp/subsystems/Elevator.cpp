@@ -12,15 +12,15 @@
 namespace t34
 {
   Elevator::Elevator()
-  : m_level(0)
+  : m_encoder(0)
+  , m_level(0)
   , m_last_reading(0.0)
-  , m_encoder(0)
-  , m_encoder_accumulation()
-  , m_init_height(31.75_in) //height from the floor to the crossbar - the algae intake wheel is 4in from the base
+  , m_encoder_accumulation(0.0)
+  , m_init_height(31.75_in) //height from the floor to the crossbar - the algae intake wheel is 4 in from the base
   , m_init_units(m_encoder.Get())
   , m_left_motor(11)
   , m_right_motor(12)
-  , m_pid(1.25, 0.0, 0.2)
+  , m_pid(1.0, 0.0, 0.15)
   {
 
     m_pid.SetTolerance(0.2);
@@ -40,24 +40,11 @@ namespace t34
     m_right_motor.ConfigClosedloopRamp(0.15);
 
     m_pid.SetSetpoint(m_encoder.Get());
-    
-
-  }
-
-  frc2::CommandPtr Elevator::ToggleHalfSpeedCommand() {
-    return this->RunOnce(
-      [this]
-      {
-        m_half_speed = !m_half_speed;
-      }
-      
-    );
   }
 
   void Elevator::ElevateTo(units::inch_t height)
   {
     m_pid.SetSetpoint((height.value() - m_init_height.value()) * 0.24);
-
   }
 
   void Elevator::ElevateTo(double height)
@@ -65,7 +52,6 @@ namespace t34
     height = std::clamp(height, 0.0, 10.0);
 
     m_pid.SetSetpoint(height);
-
   }
 
   void Elevator::Stop()
@@ -114,6 +100,8 @@ namespace t34
         frc::SmartDashboard::PutNumber("Elevator Power: ", power);
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, power );
         m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -power );
+
+        m_pid.SetSetpoint(m_encoder_accumulation);
       },
       [this]
       {
@@ -158,7 +146,7 @@ namespace t34
     m_last_reading = next_reading;
 
     auto pid_output = m_pid.Calculate(m_encoder_accumulation);
-
+    
     m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
     m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
 
