@@ -83,12 +83,12 @@ namespace t34 {
         }
     }
 
-    void SwerveDrive::FarisModeOn()
+    void SwerveDrive::EnableFarisMode()
     {
         m_speed_scalar = std::clamp<double>(FARIS_SPEED_MODE_SCALAR, 0.1, 1.0);
     }
 
-    void SwerveDrive::FarisModeOff()
+    void SwerveDrive::DisableFarisMode()
     {
         m_speed_scalar = 1.0;
     }
@@ -181,19 +181,19 @@ namespace t34 {
         });
     }
 
-    frc2::CommandPtr SwerveDrive::FarisModeOnCommand()
+    frc2::CommandPtr SwerveDrive::EnableFarisModeCommand()
     {
         return this->RunOnce([this]
         {
-            FarisModeOn();
+            EnableFarisMode();
         });
     }
 
-    frc2::CommandPtr SwerveDrive::FarisModeOffCommand()
+    frc2::CommandPtr SwerveDrive::DisableFarisModeCommand()
     {
         return this->RunOnce([this]
         {
-            FarisModeOff();
+            DisableFarisMode();
         });
     }
 

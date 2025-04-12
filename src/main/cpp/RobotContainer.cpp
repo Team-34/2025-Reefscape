@@ -19,8 +19,8 @@ RobotContainer::RobotContainer()
 void RobotContainer::ConfigureBindings() 
 {
   ctrl->LeftStick()
-    .OnTrue(swerve_drive->FarisModeOnCommand())
-    .OnFalse(swerve_drive->FarisModeOffCommand());
+    .OnTrue(swerve_drive->EnableFarisModeCommand())
+    .OnFalse(swerve_drive->DisableFarisModeCommand());
 
   ctrl->RightTrigger(0.75).OnTrue(m_climber.Climb());
 
