@@ -15,6 +15,7 @@
 #include <cmath>
 #include <units/length.h>
 #include <units/angle.h>
+#include <frc/DigitalInput.h>
 
 using namespace rev::spark;
 using namespace ctre::phoenix6::hardware;
@@ -29,8 +30,10 @@ namespace t34
 
         void Periodic() override;
 
-        frc2::CommandPtr RunInCommand();
-        frc2::CommandPtr RunOutCommand();
+        inline bool AtTopLimit() const { return !m_top_limit.Get(); }
+
+        frc2::CommandPtr RunInCommand(double speed);
+        frc2::CommandPtr RunOutCommand(double speed);
         frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
         frc2::CommandPtr MoveWristToCommand(double encoder_units);
 
@@ -44,8 +47,13 @@ namespace t34
         frc2::CommandPtr MoveToLevelCommand(int level);
         frc2::CommandPtr IncrementUp();
         frc2::CommandPtr IncrementDown();
+
+        frc2::CommandPtr MoveToZero();
         
     private:
+
+        frc::DigitalInput m_top_limit;
+
         SparkMax m_motor;
 
         int m_coral_level;
@@ -55,7 +63,12 @@ namespace t34
         SparkMax m_wrist_motor;
 
         bool m_run_up;
+        bool m_returning;
 
         double m_encoder_setpoint;
+
+        SparkMaxConfig m_config{};
+
+        
    };
 }

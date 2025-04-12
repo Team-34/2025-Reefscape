@@ -21,12 +21,12 @@ AutoDriveCommand::AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, uni
 , m_base_rotation(rotation)
 , m_wheel_theta(atan(m_y_translation / m_x_translation))
 , m_current_theta(m_swerve->GetYaw().Degrees())
-, m_x_drive(0.0)
-, m_y_drive(0.0)
 , m_drive_pid(1.0, 0.0, 0.045)
 , m_rot_pid(0.5, 0.0, 0.1)
-, m_init_dist(swerve->GetModulePositions()[0].distance.value())
+, m_x_drive(0.0)
+, m_y_drive(0.0)
 , m_rot_speed(0.0)
+, m_init_dist(swerve->GetModulePositions()[0].distance.value())
 , m_invert_drives( (m_x_translation.value() >= 0.0) ? 1.0 : -1.0 )
 , m_at_drive_setpoint(false)
 {
@@ -46,9 +46,11 @@ void AutoDriveCommand::Initialize()
 void AutoDriveCommand::Execute() 
 {
   m_travelled = EncUnitsToInches(m_swerve->GetModulePositions()[0].distance.value() + m_init_dist);
+
   m_current_x = m_travelled * cos(m_wheel_theta);
   m_current_y = -m_travelled * sin(m_wheel_theta);
   m_current_theta = m_swerve->GetYaw().Degrees();
+  
   m_y_drive = m_drive_pid.Calculate(m_travelled.value());
   m_x_drive = m_y_drive * tan(m_wheel_theta);
   m_rot_speed = m_rot_pid.Calculate(m_current_theta.value());

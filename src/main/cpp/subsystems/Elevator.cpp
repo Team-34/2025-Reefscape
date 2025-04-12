@@ -14,31 +14,58 @@ namespace t34
   Elevator::Elevator()
   : m_level(0)
   , m_last_reading(0.0)
-  , m_encoder_accumulation(0.0)
-  , m_init_height(16_in)
-    //The wrists' angles are from 0 to 180 degrees (0 is straight down, 180 is straight up, and 90 is parallel to the floor)
+  , m_encoder(0)
+  , m_encoder_accumulation()
+  , m_init_height(31.75_in) //height from the floor to the crossbar - the algae intake wheel is 4in from the base
+  , m_init_units(m_encoder.Get())
   , m_left_motor(11)
   , m_right_motor(12)
-  , m_pid(0.5, 0.0, 0.0)
-  , m_encoder(0)
+  , m_pid(1.25, 0.0, 0.2)
   {
-    m_pid.SetTolerance(Neo::LengthTo550Unit(0.5_in));
+
+    m_pid.SetTolerance(0.2);
 
     TalonSRXConfiguration motor_config;
 
     motor_config.continuousCurrentLimit = 30;
     motor_config.peakCurrentDuration = 1500;
     motor_config.peakCurrentLimit = 40;
+    motor_config.closedloopRamp = 0.25;
+    motor_config.openloopRamp = 0.25;
 
     m_left_motor.ConfigAllSettings(motor_config);
     m_right_motor.ConfigAllSettings(motor_config);
+
+    m_left_motor.ConfigClosedloopRamp(0.15);
+    m_right_motor.ConfigClosedloopRamp(0.15);
+
+    m_pid.SetSetpoint(m_encoder.Get());
     
-    Register();
+
+  }
+
+  frc2::CommandPtr Elevator::ToggleHalfSpeedCommand() {
+    return this->RunOnce(
+      [this]
+      {
+        m_half_speed = !m_half_speed;
+      }
+      
+    );
   }
 
   void Elevator::ElevateTo(units::inch_t height)
   {
-    m_pid.SetSetpoint(ELEVATOR_WINCH_GEAR_RATIO * Talon::LengthTo775ProUnit(height - m_init_height));
+    m_pid.SetSetpoint((height.value() - m_init_height.value()) * 0.24);
+
+  }
+
+  void Elevator::ElevateTo(double height)
+  {
+    height = std::clamp(height, 0.0, 10.0);
+
+    m_pid.SetSetpoint(height);
+
   }
 
   void Elevator::Stop()
@@ -49,25 +76,32 @@ namespace t34
 
   frc2::CommandPtr Elevator::ElevateToCommand(units::inch_t height)
   {
-    m_pid.SetSetpoint(height.value());
-
     return this->RunEnd(
       [this, height]
       {
-        auto pos = m_pid.Calculate(GetPosition().value());
-
-        //Run the elevator in respect to the given height
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, pos);
-
-        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, -pos);
-      },
-      [this]
+        ElevateTo(height);
+      }
+      , [this]
       {
-        // stop motor
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
         m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-      })
-      .Until([this] { return m_pid.AtSetpoint(); });
+      }
+    );
+  }
+
+  frc2::CommandPtr Elevator::ElevateToCommand(double height)
+  {
+    return this->RunEnd(
+      [this, height]
+      {
+        ElevateTo(height);
+      }
+      , [this]
+      {
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+      }
+    );
   }
 
   frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)
@@ -76,8 +110,10 @@ namespace t34
     (
       [this, val]
       {
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
-        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
+        auto power = m_half_speed ? (val / 2) : val;
+        frc::SmartDashboard::PutNumber("Elevator Power: ", power);
+        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, power );
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -power );
       },
       [this]
       {
@@ -87,28 +123,21 @@ namespace t34
     );
   }
 
+  
+
   double Elevator::UpdatePosition(double acc, double last, double next)
   {
-    if (0.75 < last && next < 0.25)
-    {
-	    acc += 1.0 + (next - last);
-    }
+    // Source: https://stackoverflow.com/a/50860805
+    //
+    //   int rotation_angle(int new_reading, int old_reading) {
+    //     /* angle readings are in [0..360] range */
+    //     /* compute the difference modulo 360 and shift it in range [-180..179] */
+    //     return (360 + 180 + new_reading - old_reading) % 360 - 180;
+    //   }
+    //
 
-    else if (0.75 < next && last < 0.25)
-    {
-	    acc -= 1.0 - (next - last);
-    }
-
-    else
-    {
-	    acc += next - last;
-    }
-
-    frc::SmartDashboard::PutNumber("Elevator Acc", acc);
-    frc::SmartDashboard::PutNumber("Elevator Last", last);
-    frc::SmartDashboard::PutNumber("Elevator Next", next);
-
-    return acc;
+    auto delta = fmod(1.0 + 0.5 + next - last, 1.0) - 0.5;
+    return acc + delta;
   }
 
   units::inch_t Elevator::GetPosition()
@@ -118,13 +147,21 @@ namespace t34
 
   void Elevator::Periodic()
   {
-    double next_reading = m_encoder.Get();
+    double next_reading = m_encoder.Get() - m_init_units;
 
     frc::SmartDashboard::PutNumber("Elevator Encoder Units with accum", m_encoder_accumulation);
     frc::SmartDashboard::PutNumber("Elevator Encoder Units", next_reading);
+    frc::SmartDashboard::PutNumber("Elevator Setpoint", m_pid.GetSetpoint());
+    frc::SmartDashboard::PutBoolean("Half Speed? ", m_half_speed);
 
     m_encoder_accumulation = UpdatePosition(m_encoder_accumulation, m_last_reading, next_reading);
     m_last_reading = next_reading;
 
+    auto pid_output = m_pid.Calculate(m_encoder_accumulation);
+
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
+
+    frc::SmartDashboard::PutNumber("Elevator PID Output", pid_output);
   }
 }

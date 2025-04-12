@@ -1,7 +1,3 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 #include "RobotContainer.h"
 #include "subsystems/AlgaeIntake.h"
 #include "subsystems/CoralIntake.h"
@@ -14,6 +10,7 @@ RobotContainer::RobotContainer()
   , m_coral_intake()
   , m_climber()
   , m_elevator()
+  , m_coordinator(&m_elevator, &m_coral_intake)
   , m_auto_leave(swerve_drive, 0_in, -3_ft, 0_deg)
 {
   ConfigureBindings();
@@ -21,20 +18,41 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() 
 {
-  ctrl->RightTrigger(0.75).WhileTrue(m_climber.RunArm(0.1));
-  ctrl->LeftTrigger(0.75).WhileTrue(m_climber.RunArm(-0.1));
-  ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristByPowerCommand(-0.5));
+  ctrl->RightTrigger(0.75).OnTrue(m_climber.Climb());
+
+  ctrl->LeftTrigger(0.75)
+    .OnTrue(m_elevator.ToggleHalfSpeedCommand().AlongWith(swerve_drive->ToggleFarisModeCommand()));
+
+  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.3));
+  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.3));
+
+  // ctrl->RightBumper().OnTrue(m_algae_intake.MoveWristToCommand(75)); //-7350 is horizontal
+  // ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristToCommand(0));
+
   ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
-  ctrl->POVLeft().OnTrue(m_coral_intake.MoveWristToCommand(0));
-  ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.5));
-  ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.5));
+  ctrl->POVLeft().OnTrue(m_coral_intake.MoveToZero());
+
+  // ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.3));
+  // ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.3));
+
+  ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
+  ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
+  
+
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
+
+  ctrl->A().WhileTrue(m_algae_intake.RunInCommand(0.5));
+  ctrl->B().WhileTrue(m_algae_intake.RunOutCommand(0.5));
+  
+  ctrl->X().WhileTrue(m_coral_intake.RunInCommand(0.5));
+  ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand(0.5)); 
 }
 
-frc2::CommandPtr RobotContainer::GetAutonomousCommand() {
+frc2::CommandPtr RobotContainer::GetAutonomousCommand() 
+{
   return frc2::cmd::RunEnd([this]
   {
-    swerve_drive->Drive(frc::Translation2d(0_m, 0.3_m), 0.0);
+    swerve_drive->Drive(frc::Translation2d(0_m, -1.0_m), 0.0);
   },
   [this]
   {

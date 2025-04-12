@@ -29,17 +29,28 @@ namespace t34
         void Periodic() override;
 
         frc2::CommandPtr MoveWristByPowerCommand(double val);
-        frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
 
-        void MoveWristTo(double enc_units);
+        frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
+        frc2::CommandPtr MoveWristToCommand(int setpoint);
+
+        
+        frc2::CommandPtr RunInCommand(double speed);
+        frc2::CommandPtr RunOutCommand(double speed);
+
+        void MoveWristTo(int setpoint);
         void MoveWristTo(units::degree_t angle);
         
     private:
-        ctre::phoenix6::hardware::TalonFX m_motor;
 
         const units::degree_t m_init_algae_angle;
 
-        SparkMax m_right_wrist_motor;
-        SparkMax m_left_wrist_motor;
+        
+        TalonFX m_intake_motor;
+
+        TalonSRX m_right_wrist_motor;
+        TalonSRX m_left_wrist_motor;
+
+        int m_encoder_units;
+        int m_setpoint;
     };
 };

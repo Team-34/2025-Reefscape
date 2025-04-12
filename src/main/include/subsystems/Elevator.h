@@ -22,15 +22,19 @@ namespace t34
 
     Elevator();
 
-    frc2::CommandPtr ElevateToCommand(units::inch_t height);
     void ElevateTo(units::inch_t height);
+    void ElevateTo(double height);
     void Stop();
+
+    bool m_half_speed = false;
+
+    frc2::CommandPtr ToggleHalfSpeedCommand();
+    frc2::CommandPtr ElevateToCommand(units::inch_t height);
+    frc2::CommandPtr ElevateToCommand(double height);
 
     units::inch_t GetPosition();
 
     inline bool EndCondition() { return m_pid.AtSetpoint(); };
-
-    //frc2::CommandPtr MoveToRestCommand();
 
     frc2::CommandPtr MoveElevatorByPowerCommand(double val);    
     
@@ -42,6 +46,8 @@ namespace t34
 
   private:
 
+    frc::AnalogEncoder m_encoder;
+
     int m_level;
 
     double m_last_reading;
@@ -50,11 +56,11 @@ namespace t34
     double m_encoder_accumulation; 
 
     const units::inch_t m_init_height;
+    const double m_init_units;
 
     TalonSRX m_left_motor;
     TalonSRX m_right_motor;
 
     frc::PIDController m_pid;
-    frc::AnalogEncoder m_encoder;
   };
 }

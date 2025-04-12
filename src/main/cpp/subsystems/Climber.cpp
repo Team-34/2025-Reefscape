@@ -4,42 +4,45 @@ namespace t34
 {
     Climber::Climber()
     : m_motor(37)
-    , m_flipped_out(false)
-    , m_lock_flipped_up(true)
-    , m_pid_controller(0.4, 0.0, 0.0)
+    , m_deployed(false)
+    , m_locked(true)
+    , m_slot_0_configs()
     , m_lock(0)
     {
-        m_pid_controller.SetTolerance(0.15);
+        m_slot_0_configs.kP = 0.3;
+        m_slot_0_configs.kI = 0;
+        m_slot_0_configs.kD = 0.0005;
+
+        ctre::phoenix6::configs::ClosedLoopRampsConfigs ramp_config;
+
+        ramp_config.WithVoltageClosedLoopRampPeriod(0.5_s);
+
+        m_motor.GetConfigurator().Apply(m_slot_0_configs);
+        m_motor.GetConfigurator().Apply(ramp_config);
     }
 
     frc2::CommandPtr Climber::Climb() 
     {
-        double setpoint = m_flipped_out ? 0.0 : 33.0;
 
-        m_pid_controller.SetSetpoint(setpoint);
-
-        return this->RunEnd(
-        [this]
-        {
-            m_motor.Set(m_pid_controller.Calculate(m_motor.GetPosition().GetValueAsDouble()));
-
-        }, [this]
-        {
-            m_motor.Set(0.0);
-            FlipLock();
-        }).Until(
+        return this->RunOnce(
             [this]
-        {
-            return m_pid_controller.AtSetpoint();
-        });
+            {
+                m_motor.StopMotor();
+            }
+        )
+        .AndThen(frc2::cmd::Wait(1_s))
+        .AndThen(ToggleLockCommand())
+        .AndThen(ToggleKPCommand())
+        .AndThen(frc2::cmd::Wait(1_s))
+        .AndThen(ToggleDeploymentCommand());
     }
 
-    frc2::CommandPtr Climber::RunArm(double power)
+    frc2::CommandPtr Climber::RunArmBySpeed(double speed)
     {
         return this->RunEnd(
-        [this, power]
+        [this, speed]
         {
-            m_motor.Set(power);
+            m_motor.Set(speed);
         },
         [this]
         {
@@ -47,18 +50,68 @@ namespace t34
         });
     }
 
-    frc2::CommandPtr Climber::RunLock(double power)
+    frc2::CommandPtr Climber::ToggleLockCommand()
     {
-        return this->Run(
-        [this, power]
-        {
-            m_lock.Set(power);
-        });
+
+        return this->RunOnce(
+            [this]
+            {
+                m_locked = !m_locked;
+
+                if (m_locked)
+                {
+                    Lock();
+                } 
+                else
+                {
+                    Unlock();
+                }
+            }
+        );
     }
 
-    void Climber::FlipLock()
+    void Climber::Deploy()
     {
-        m_lock.Set((m_lock_flipped_up) ? 0.65 : 0.25);
-        m_lock_flipped_up = !m_lock_flipped_up;
+        m_motor.SetControl(m_request.WithPosition(115_tr));
+    }
+
+    void Climber::Retract()
+    {
+        m_motor.SetControl(m_request.WithPosition(0_tr));
+    }
+
+    frc2::CommandPtr Climber::ToggleDeploymentCommand()
+    {
+        return this->RunOnce(
+            [this]
+            {
+                if (m_deployed)
+                {
+                    Retract();
+                }
+                else
+                {
+                    Deploy();
+                }
+                m_deployed = !m_deployed;
+            }
+        );
+    }
+
+    frc2::CommandPtr Climber::ToggleKPCommand()
+    {
+        return this->RunOnce(
+            [this]
+            {
+                m_slot_0_configs.kP = m_deployed ? 0.15 : 0.3;
+                m_motor.GetConfigurator().Apply(m_slot_0_configs);
+            }
+        );
+    }
+
+    void Climber::Periodic()
+    {
+        frc::SmartDashboard::PutNumber("Climber Encoder Val: ", m_motor.GetPosition().GetValueAsDouble());
+        frc::SmartDashboard::PutBoolean("Climber Locked?", m_locked);
     }
 }

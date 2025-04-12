@@ -4,14 +4,22 @@
 namespace t34
 {    
   CoralIntake::CoralIntake()
-    : m_motor(4, rev::spark::SparkLowLevel::MotorType::kBrushless)
+    : m_top_limit(2)
+    , m_motor(4, rev::spark::SparkLowLevel::MotorType::kBrushless)
     , m_coral_level(0)
     , m_init_coral_angle(0_deg) 
     , m_wrist_motor(3, SparkLowLevel::MotorType::kBrushless)
     , m_run_up(false)
+    , m_returning(false)
     , m_encoder_setpoint(0.0)
   {
-    Register();
+    m_config.closedLoop
+      .SetFeedbackSensor(ClosedLoopConfig::FeedbackSensor::kPrimaryEncoder)
+      .Pid(0.02, 0.0, 0.05);
+
+    m_config.ClosedLoopRampRate(0.75);
+
+    m_wrist_motor.Configure(m_config, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
   } 
 
   frc2::CommandPtr CoralIntake::MoveWristByPowerCommand(double val)
@@ -98,26 +106,55 @@ namespace t34
     );
   }
 
-  frc2::CommandPtr CoralIntake::RunInCommand()
+  frc2::CommandPtr CoralIntake::RunInCommand(double speed)
   {
     return this->RunEnd(
-      [this] { this->m_motor.Set(-0.25); },
+      [this, speed] { this->m_motor.Set(-speed);},
       [this] { this->m_motor.StopMotor(); }
     );
   }
   
-  frc2::CommandPtr CoralIntake::RunOutCommand()
+  frc2::CommandPtr CoralIntake::RunOutCommand(double speed)
   {
     return this->RunEnd(
-      [this] { this->m_motor.Set(0.5); },
+      [this, speed] { this->m_motor.Set(speed);},
       [this] { this->m_motor.StopMotor(); }
     );
   }
 
- void CoralIntake::Periodic()
+  frc2::CommandPtr CoralIntake::MoveToZero()
+  {
+    return this->RunEnd(
+      [this]
+      {
+        m_wrist_motor.Set(-0.2);
+        m_returning = true;
+      }
+      , [this]
+      {
+        m_wrist_motor.StopMotor();
+        m_wrist_motor.GetEncoder().SetPosition(0.0);
+
+        m_encoder_setpoint = 0.0;
+
+        m_returning = false;
+      }
+    ).Until(
+      [this]
+      {
+        return this->AtTopLimit();
+    });
+  }
+
+  void CoralIntake::Periodic()
   {
     frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
+    frc::SmartDashboard::PutNumber("Coral Wrist Setpoint: ", m_encoder_setpoint);
+    frc::SmartDashboard::PutBoolean("Coral Limit engaged?", AtTopLimit());
 
-    m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
+    if (!m_returning)
+    {
+      m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);
+    }
   }
 }
