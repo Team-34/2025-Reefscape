@@ -53,11 +53,19 @@ namespace t34
     frc2::CommandPtr Climber::ToggleLockCommand()
     {
 
-        return frc2::cmd::RunOnce(
+        return this->RunOnce(
             [this]
             {
-                m_locked ? Lock() : Unlock();
                 m_locked = !m_locked;
+
+                if (m_locked)
+                {
+                    Lock();
+                } 
+                else
+                {
+                    Unlock();
+                }
             }
         );
     }
@@ -74,11 +82,17 @@ namespace t34
 
     frc2::CommandPtr Climber::ToggleDeploymentCommand()
     {
-        this->RunOnce(
+        return this->RunOnce(
             [this]
             {
-                m_deployed ? Retract() : Deploy();
-
+                if (m_deployed)
+                {
+                    Retract();
+                }
+                else
+                {
+                    Deploy();
+                }
                 m_deployed = !m_deployed;
             }
         );
@@ -86,8 +100,13 @@ namespace t34
 
     frc2::CommandPtr Climber::ToggleKPCommand()
     {
-        m_slot_0_configs.kP = m_deployed ? 0.15 : 0.3;
-        m_motor.GetConfigurator().Apply(m_slot_0_configs);
+        return this->RunOnce(
+            [this]
+            {
+                m_slot_0_configs.kP = m_deployed ? 0.15 : 0.3;
+                m_motor.GetConfigurator().Apply(m_slot_0_configs);
+            }
+        );
     }
 
     void Climber::Periodic()

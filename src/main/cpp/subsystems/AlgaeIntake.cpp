@@ -7,9 +7,9 @@ namespace t34
 {    
   AlgaeIntake::AlgaeIntake()
     : m_init_algae_angle(155_deg) //65 degrees away from horizontal
+    , m_intake_motor(5)
     , m_right_wrist_motor(1)
     , m_left_wrist_motor(2) //This motor has an encoder, the right does not
-    , m_intake_motor(5)
     , m_encoder_units(m_left_wrist_motor.GetSelectedSensorPosition())
     , m_setpoint(m_left_wrist_motor.GetSelectedSensorPosition())
   {
@@ -48,10 +48,10 @@ namespace t34
     //m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_pid.Calculate(m_right_wrist_motor.GetSelectedSensorPosition(), angle.value()));
   }
 
-  frc2::CommandPtr AlgaeIntake::MoveWristToCommand(units::degree_t angle)
-  {
+  // frc2::CommandPtr AlgaeIntake::MoveWristToCommand(units::degree_t angle)
+  // {
     
-  }
+  // }
 
   frc2::CommandPtr AlgaeIntake::MoveWristToCommand(int setpoint)
   {
