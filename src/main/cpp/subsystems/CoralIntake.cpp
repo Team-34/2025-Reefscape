@@ -142,7 +142,7 @@ namespace t34
     ).Until(
       [this]
       {
-        return !m_top_limit.Get();
+        return this->AtTopLimit();
     });
   }
 
@@ -150,7 +150,7 @@ namespace t34
   {
     frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
     frc::SmartDashboard::PutNumber("Coral Wrist Setpoint: ", m_encoder_setpoint);
-    frc::SmartDashboard::PutBoolean("Coral Limit engaged?", !m_top_limit.Get());
+    frc::SmartDashboard::PutBoolean("Coral Limit engaged?", AtTopLimit());
 
     if (!m_returning)
     {

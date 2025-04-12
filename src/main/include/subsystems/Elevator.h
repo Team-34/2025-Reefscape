@@ -28,7 +28,7 @@ namespace t34
 
     bool m_half_speed = false;
 
-    frc2::CommandPtr HalfSpeed();
+    frc2::CommandPtr ToggleHalfSpeedCommand();
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
     frc2::CommandPtr ElevateToCommand(double height);
 

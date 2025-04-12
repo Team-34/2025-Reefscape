@@ -41,11 +41,10 @@ namespace t34
 
     m_pid.SetSetpoint(m_encoder.Get());
     
-    Register();
 
   }
 
-  frc2::CommandPtr Elevator::HalfSpeed() {
+  frc2::CommandPtr Elevator::ToggleHalfSpeedCommand() {
     return this->RunOnce(
       [this]
       {
@@ -85,7 +84,7 @@ namespace t34
       , [this]
       {
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       }
     );
   }
@@ -160,8 +159,8 @@ namespace t34
 
     auto pid_output = m_pid.Calculate(m_encoder_accumulation);
 
-    // m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
-    // m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
 
     frc::SmartDashboard::PutNumber("Elevator PID Output", pid_output);
   }

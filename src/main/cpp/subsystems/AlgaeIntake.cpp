@@ -9,7 +9,6 @@ namespace t34
     : m_init_algae_angle(155_deg) //65 degrees away from horizontal
     , m_right_wrist_motor(1)
     , m_left_wrist_motor(2) //This motor has an encoder, the right does not
-    , m_pid(0.2, 0.0, 0.05)
     , m_intake_motor(5)
     , m_encoder_units(m_left_wrist_motor.GetSelectedSensorPosition())
     , m_setpoint(m_left_wrist_motor.GetSelectedSensorPosition())
@@ -18,12 +17,12 @@ namespace t34
     m_left_wrist_motor.Config_kI(0, 0.0);
     m_left_wrist_motor.Config_kD(0, 0.05);
 
-    m_left_wrist_motor.SetInverted(true);
+    //m_left_wrist_motor.SetInverted(true);
     m_left_wrist_motor.ConfigClosedloopRamp(0.3);
-    m_left_wrist_motor.SetSensorPhase(false); //LOOK INTO
+    m_left_wrist_motor.SetSensorPhase(true); //LOOK INTO
 
     m_right_wrist_motor.Follow(m_left_wrist_motor);
-    //m_right_wrist_motor.SetInverted(true);
+    m_right_wrist_motor.SetInverted(true);
 
     frc::SmartDashboard::PutNumber("Raw Algae Wrist Setpoint", 0.0);
     
@@ -69,32 +68,11 @@ namespace t34
       [this, val] 
         { 
         m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
-        //m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -val);
         },
       [this]
         {
-        //m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
         m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
         } 
-    );
-  }
-
-  frc2::CommandPtr AlgaeIntake::MoveWristByIncrementCommand(double increase) 
-  {
-    return this->RunEnd
-    (
-      [this, increase]
-      {
-        double current_position = m_left_wrist_motor.GetSelectedSensorPosition();
-
-        double new_setpoint = current_position + increase;
-      },
-      [this]
-      {
-        m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        m_right_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-
-      }
     );
   }
 

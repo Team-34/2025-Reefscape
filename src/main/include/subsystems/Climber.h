@@ -27,7 +27,7 @@ namespace t34
 
         frc2::CommandPtr RunArmBySpeed(double speed);
 
-        frc2::CommandPtr FlipLockCommand();
+        frc2::CommandPtr ToggleLockCommand();
 
         void Periodic() override;
 
@@ -47,7 +47,10 @@ namespace t34
         bool m_deployed;
         bool m_locked;
 
-        ctre::phoenix6::configs::Slot0Configs m_slot0Configs;
+        frc2::CommandPtr ToggleDeploymentCommand();
+        frc2::CommandPtr ToggleKPCommand();
+
+        ctre::phoenix6::configs::Slot0Configs m_slot_0_configs;
 
         ctre::phoenix6::controls::PositionVoltage m_request = ctre::phoenix6::controls::PositionVoltage{0_tr};
 

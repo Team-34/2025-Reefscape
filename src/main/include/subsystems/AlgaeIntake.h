@@ -33,7 +33,7 @@ namespace t34
         frc2::CommandPtr MoveWristToCommand(units::degree_t angle);
         frc2::CommandPtr MoveWristToCommand(int setpoint);
 
-        frc2::CommandPtr MoveWristByIncrementCommand(double increase);
+        
         frc2::CommandPtr RunInCommand(double speed);
         frc2::CommandPtr RunOutCommand(double speed);
 
@@ -44,9 +44,9 @@ namespace t34
 
         const units::degree_t m_init_algae_angle;
 
-        frc::PIDController m_pid;
         
         TalonFX m_intake_motor;
+
         TalonSRX m_right_wrist_motor;
         TalonSRX m_left_wrist_motor;
 
