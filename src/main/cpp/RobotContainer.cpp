@@ -32,12 +32,17 @@ void RobotContainer::ConfigureBindings()
   ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
   ctrl->POVLeft().OnTrue(m_coral_intake.MoveToZero());
 
-  // ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.3));
-  // ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.3));
+  (ctrl->POVDown() && ctrl->LeftStick())
+    .WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.3));
 
-  ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
-  ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
-  
+  (ctrl->POVUp() && ctrl->LeftStick())
+    .WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.3));
+
+  (ctrl->POVDown() && !ctrl->LeftStick())
+    .WhileTrue(m_coordinator.MoveDownLevelCommand());
+
+  (ctrl->POVUp() && !ctrl->LeftStick())
+    .WhileTrue(m_coordinator.MoveUpLevelCommand());  
 
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
 
