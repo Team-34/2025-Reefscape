@@ -83,6 +83,16 @@ namespace t34 {
         }
     }
 
+    void SwerveDrive::FarisModeOn()
+    {
+        m_speed_scalar = std::clamp<double>(FARIS_SPEED_MODE_SCALAR, 0.1, 1.0);
+    }
+
+    void SwerveDrive::FarisModeOff()
+    {
+        m_speed_scalar = 1.0;
+    }
+
     /**
      * Computes the speed (velocity) and the angle for each 
      * swerve module for either for field relative or robot centric
@@ -168,6 +178,22 @@ namespace t34 {
         return this->RunOnce([this]
         {
             ToggleFarisMode();
+        });
+    }
+
+    frc2::CommandPtr SwerveDrive::FarisModeOnCommand()
+    {
+        return this->RunOnce([this]
+        {
+            FarisModeOn();
+        });
+    }
+
+    frc2::CommandPtr SwerveDrive::FarisModeOffCommand()
+    {
+        return this->RunOnce([this]
+        {
+            FarisModeOff();
         });
     }
 

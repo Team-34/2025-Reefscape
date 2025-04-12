@@ -14,6 +14,8 @@ namespace t34 {
         ~SwerveDrive() {};
 
         void ToggleFarisMode();
+        void FarisModeOn();
+        void FarisModeOff();
         void Drive(frc::Translation2d translation, double rotation, bool field_relative = true, bool is_open_loop = false);
         void DriveAuto(frc::ChassisSpeeds speeds);
         void Stop();
@@ -21,6 +23,8 @@ namespace t34 {
         frc2::CommandPtr ZeroYawCommand();
         frc2::CommandPtr ToggleFarisModeCommand();
 
+        frc2::CommandPtr FarisModeOnCommand();
+        frc2::CommandPtr FarisModeOffCommand();
 
         frc::ChassisSpeeds GetRobotRelativeSpeeds();
         frc::Pose2d GetPose();

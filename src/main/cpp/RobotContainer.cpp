@@ -18,10 +18,11 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() 
 {
-  ctrl->RightTrigger(0.75).OnTrue(m_climber.Climb());
+  ctrl->LeftStick()
+    .OnTrue(swerve_drive->FarisModeOnCommand())
+    .OnFalse(swerve_drive->FarisModeOffCommand());
 
-  ctrl->LeftTrigger(0.75)
-    .OnTrue(m_elevator.ToggleHalfSpeedCommand().AlongWith(swerve_drive->ToggleFarisModeCommand()));
+  ctrl->RightTrigger(0.75).OnTrue(m_climber.Climb());
 
   ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.3));
   ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.3));
