@@ -24,11 +24,11 @@ void RobotContainer::ConfigureBindings()
 
   ctrl->RightTrigger(0.75).OnTrue(m_climber.Climb());
 
-  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.3));
-  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.3));
+  //ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.3));
+  //ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.3));
 
-  ctrl->RightBumper().OnTrue(m_algae_intake.MoveWristToCommand(75)); //-7350 is horizontal
-  ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristToCommand(0));
+  ctrl->RightBumper().OnTrue(m_algae_intake.MoveWristToCommand(6700.0)); //5154 is horizontal
+  ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristToCommand(-400.0));
 
   ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
   ctrl->POVLeft().OnTrue(m_coral_intake.MoveToZero());
