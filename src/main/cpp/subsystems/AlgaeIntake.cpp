@@ -96,13 +96,13 @@ frc2::CommandPtr AlgaeIntake::RunOutCommand(double speed)
   return this->RunEnd
   (
     [this, speed]
-      {
-        m_intake_motor.Set(speed);
-      },
+    {
+      m_intake_motor.Set(speed);
+    },
     [this]
-      {
-        m_intake_motor.Set(0.0);
-      }
+    {
+      m_intake_motor.Set(0.0);
+    }
   );
 }
 
