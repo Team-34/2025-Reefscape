@@ -40,10 +40,10 @@ void RobotContainer::ConfigureBindings()
     .WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.3));
 
   (ctrl->POVDown() && !ctrl->LeftStick())
-    .WhileTrue(m_coordinator.MoveDownLevelCommand());
+    .OnTrue(m_coordinator.MoveDownLevelCommand());
 
   (ctrl->POVUp() && !ctrl->LeftStick())
-    .WhileTrue(m_coordinator.MoveUpLevelCommand());  
+    .OnTrue(m_coordinator.MoveUpLevelCommand());  
 
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
 
