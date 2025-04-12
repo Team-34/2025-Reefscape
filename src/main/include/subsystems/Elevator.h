@@ -28,7 +28,7 @@ namespace t34
 
     bool m_half_speed = false;
 
-    frc2::CommandPtr HalfSpeed();
+    frc2::CommandPtr ToggleHalfSpeedCommand();
     frc2::CommandPtr ElevateToCommand(units::inch_t height);
     frc2::CommandPtr ElevateToCommand(double height);
 
@@ -46,6 +46,8 @@ namespace t34
 
   private:
 
+    frc::AnalogEncoder m_encoder;
+
     int m_level;
 
     double m_last_reading;
@@ -60,6 +62,5 @@ namespace t34
     TalonSRX m_right_motor;
 
     frc::PIDController m_pid;
-    frc::AnalogEncoder m_encoder;
   };
 }

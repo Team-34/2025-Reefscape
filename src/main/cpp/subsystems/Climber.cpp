@@ -6,18 +6,18 @@ namespace t34
     : m_motor(37)
     , m_deployed(false)
     , m_locked(true)
-    , m_slot0Configs()
+    , m_slot_0_configs()
     , m_lock(0)
     {
-        m_slot0Configs.kP = 0.3;
-        m_slot0Configs.kI = 0;
-        m_slot0Configs.kD = 0.0005;
+        m_slot_0_configs.kP = 0.3;
+        m_slot_0_configs.kI = 0;
+        m_slot_0_configs.kD = 0.0005;
 
         ctre::phoenix6::configs::ClosedLoopRampsConfigs ramp_config;
 
         ramp_config.WithVoltageClosedLoopRampPeriod(0.5_s);
 
-        m_motor.GetConfigurator().Apply(m_slot0Configs);
+        m_motor.GetConfigurator().Apply(m_slot_0_configs);
         m_motor.GetConfigurator().Apply(ramp_config);
     }
 
@@ -31,27 +31,10 @@ namespace t34
             }
         )
         .AndThen(frc2::cmd::Wait(1_s))
-        .AndThen(
-            [this]
-            {
-                m_locked ? Unlock() : Lock();
-
-                m_locked = !m_locked;
-
-                m_slot0Configs.kP = m_deployed ? 0.15 : 0.3;
-                m_motor.GetConfigurator().Apply(m_slot0Configs);
-            }
-        )
+        .AndThen(ToggleLockCommand())
+        .AndThen(ToggleKPCommand())
         .AndThen(frc2::cmd::Wait(1_s))
-        .AndThen(
-            [this]
-            {
-
-                m_deployed ? Retract() : Deploy();
-
-                m_deployed = !m_deployed;
-            }
-        );
+        .AndThen(ToggleDeploymentCommand());
     }
 
     frc2::CommandPtr Climber::RunArmBySpeed(double speed)
@@ -67,15 +50,22 @@ namespace t34
         });
     }
 
-    frc2::CommandPtr Climber::FlipLockCommand()
+    frc2::CommandPtr Climber::ToggleLockCommand()
     {
 
-        return frc2::cmd::RunOnce(
+        return this->RunOnce(
             [this]
             {
                 m_locked = !m_locked;
 
-                m_locked ? Lock() : Unlock();
+                if (m_locked)
+                {
+                    Lock();
+                } 
+                else
+                {
+                    Unlock();
+                }
             }
         );
     }
@@ -88,6 +78,35 @@ namespace t34
     void Climber::Retract()
     {
         m_motor.SetControl(m_request.WithPosition(0_tr));
+    }
+
+    frc2::CommandPtr Climber::ToggleDeploymentCommand()
+    {
+        return this->RunOnce(
+            [this]
+            {
+                if (m_deployed)
+                {
+                    Retract();
+                }
+                else
+                {
+                    Deploy();
+                }
+                m_deployed = !m_deployed;
+            }
+        );
+    }
+
+    frc2::CommandPtr Climber::ToggleKPCommand()
+    {
+        return this->RunOnce(
+            [this]
+            {
+                m_slot_0_configs.kP = m_deployed ? 0.15 : 0.3;
+                m_motor.GetConfigurator().Apply(m_slot_0_configs);
+            }
+        );
     }
 
     void Climber::Periodic()

@@ -30,6 +30,8 @@ namespace t34
 
         void Periodic() override;
 
+        inline bool AtTopLimit() const { return !m_top_limit.Get(); }
+
         frc2::CommandPtr RunInCommand(double speed);
         frc2::CommandPtr RunOutCommand(double speed);
         frc2::CommandPtr MoveWristToCommand(units::degree_t angle);

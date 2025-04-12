@@ -18,27 +18,32 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() 
 {
+  ctrl->LeftStick()
+    .OnTrue(swerve_drive->EnableFarisModeCommand())
+    .OnFalse(swerve_drive->DisableFarisModeCommand());
+
   ctrl->RightTrigger(0.75).OnTrue(m_climber.Climb());
 
-  ctrl->LeftTrigger(0.75)
-    .OnTrue(m_elevator.HalfSpeed()
-    .AlongWith(swerve_drive->ToggleFarisModeCommand()));
+  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.3));
+  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.3));
 
-  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.5));
+  // ctrl->RightBumper().OnTrue(m_algae_intake.MoveWristToCommand(75)); //-7350 is horizontal
+  // ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristToCommand(0));
 
-  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.5));
+  ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
+  ctrl->POVLeft().OnTrue(m_coral_intake.MoveToZero());
 
-  (ctrl->POVRight() && !ctrl->LeftStick())
-    .OnTrue(m_coral_intake.MoveWristToCommand(12.0));
+  (ctrl->POVDown() && ctrl->LeftStick())
+    .WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.3));
 
-  (ctrl->POVLeft() && !ctrl->LeftStick())
-    .OnTrue(m_coral_intake.MoveToZero());
+  (ctrl->POVUp() && ctrl->LeftStick())
+    .WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.3));
 
   (ctrl->POVDown() && !ctrl->LeftStick())
-    .WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.8));
+    .OnTrue(m_coordinator.MoveDownLevelCommand());
 
   (ctrl->POVUp() && !ctrl->LeftStick())
-    .WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.8));
+    .OnTrue(m_coordinator.MoveUpLevelCommand());  
 
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
 
@@ -46,7 +51,7 @@ void RobotContainer::ConfigureBindings()
   ctrl->B().WhileTrue(m_algae_intake.RunOutCommand(0.5));
   
   ctrl->X().WhileTrue(m_coral_intake.RunInCommand(0.5));
-  ctrl->Y().WhileTrue(m_coral_intake.RunInCommand(0.5));  
+  ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand(0.5)); 
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() 
