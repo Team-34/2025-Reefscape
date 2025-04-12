@@ -20,7 +20,7 @@ namespace t34
   , m_init_units(m_encoder.Get())
   , m_left_motor(11)
   , m_right_motor(12)
-  , m_pid(1.0, 0.0, 0.15)
+  , m_pid(1.25, 0.0, 0.2)
   {
 
     m_pid.SetTolerance(0.2);
@@ -35,6 +35,9 @@ namespace t34
 
     m_left_motor.ConfigAllSettings(motor_config);
     m_right_motor.ConfigAllSettings(motor_config);
+
+    m_left_motor.ConfigClosedloopRamp(0.15);
+    m_right_motor.ConfigClosedloopRamp(0.15);
 
     m_pid.SetSetpoint(m_encoder.Get());
     
@@ -157,8 +160,8 @@ namespace t34
 
     auto pid_output = m_pid.Calculate(m_encoder_accumulation);
 
-    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
-    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
+    // m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
+    // m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
 
     frc::SmartDashboard::PutNumber("Elevator PID Output", pid_output);
   }

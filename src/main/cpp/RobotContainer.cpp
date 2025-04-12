@@ -20,19 +20,22 @@ void RobotContainer::ConfigureBindings()
 {
   ctrl->RightTrigger(0.75).OnTrue(m_climber.Climb());
 
-  ctrl->LeftTrigger(0.75).OnTrue(m_elevator.HalfSpeed()
-  .AlongWith(swerve_drive->ToggleFarisModeCommand()));
+  ctrl->LeftTrigger(0.75)
+    .OnTrue(m_elevator.HalfSpeed().AlongWith(swerve_drive->ToggleFarisModeCommand()));
 
-  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.3));
-  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.3));
+  // ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.3));
+  // ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.3));
+
+  ctrl->RightBumper().OnTrue(m_algae_intake.MoveWristToCommand(75)); //-7350 is horizontal
+  ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristToCommand(0));
 
   ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
   ctrl->POVLeft().OnTrue(m_coral_intake.MoveToZero());
 
-  // ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.3));
-  // ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.3));
-  ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
-  ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
+  ctrl->POVDown().WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.3));
+  ctrl->POVUp().WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.3));
+  // ctrl->POVUp().OnTrue(m_coordinator.MoveUpLevelCommand());
+  // ctrl->POVDown().OnTrue(m_coordinator.MoveDownLevelCommand());
   
 
   ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
@@ -41,7 +44,7 @@ void RobotContainer::ConfigureBindings()
   ctrl->B().WhileTrue(m_algae_intake.RunOutCommand(0.5));
   
   ctrl->X().WhileTrue(m_coral_intake.RunInCommand(0.5));
-  ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand(0.5));  
+  ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand(0.5)); 
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() 
