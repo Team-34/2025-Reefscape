@@ -21,6 +21,7 @@ namespace t34
   , m_pid(1.0, 0.0, 0.15)
   , m_encoder(0)
   {
+
     m_pid.SetTolerance(0.2);
 
     TalonSRXConfiguration motor_config;
@@ -34,34 +35,22 @@ namespace t34
     m_left_motor.ConfigAllSettings(motor_config);
     m_right_motor.ConfigAllSettings(motor_config);
 
+    m_left_motor.ConfigClosedloopRamp(0.15);
+    m_right_motor.ConfigClosedloopRamp(0.15);
+
     m_pid.SetSetpoint(m_encoder.Get());
-    
-    Register();
-
-  }
-
-  frc2::CommandPtr Elevator::HalfSpeed() {
-    return this->RunOnce(
-      [this]
-      {
-        m_half_speed = !m_half_speed;
-      }
-      
-    );
   }
 
   void Elevator::ElevateTo(units::inch_t height)
   {
     m_pid.SetSetpoint((height.value() - m_init_height.value()) * 0.24);
-
   }
 
   void Elevator::ElevateTo(double height)
   {
-    height = std::clamp(height, 0.0, 9.0);
+    height = std::clamp(height, 0.0, 10.0);
 
     m_pid.SetSetpoint(height);
-
   }
 
   void Elevator::Stop()
@@ -80,7 +69,7 @@ namespace t34
       , [this]
       {
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
+        m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       }
     );
   }
@@ -110,6 +99,8 @@ namespace t34
         frc::SmartDashboard::PutNumber("Elevator Power: ", power);
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, power );
         m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -power );
+
+        m_pid.SetSetpoint(m_encoder_accumulation);
       },
       [this]
       {
@@ -143,7 +134,7 @@ namespace t34
 
   void Elevator::Periodic()
   {
-    double next_reading = m_encoder.Get();
+    double next_reading = m_encoder.Get() - m_init_units;
 
     frc::SmartDashboard::PutNumber("Elevator Encoder Units with accum", m_encoder_accumulation);
     frc::SmartDashboard::PutNumber("Elevator Encoder Units", next_reading);
@@ -154,6 +145,9 @@ namespace t34
     m_last_reading = next_reading;
 
     auto pid_output = m_pid.Calculate(m_encoder_accumulation);
+    
+    m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, pid_output);
+    m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
 
     frc::SmartDashboard::PutNumber("Elevator PID Output", pid_output);
   }
