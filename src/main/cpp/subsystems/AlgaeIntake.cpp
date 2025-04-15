@@ -10,12 +10,11 @@ namespace t34
     , m_intake_motor(5)
     , m_right_wrist_motor(1)
     , m_left_wrist_motor(2) //This motor has an encoder, the right does not
-    , m_encoder_units(m_left_wrist_motor.GetSelectedSensorPosition())
     , m_setpoint(m_left_wrist_motor.GetSelectedSensorPosition())
   {
-    m_left_wrist_motor.Config_kP(0, 0.15);
+    m_left_wrist_motor.Config_kP(0, 0.08);
     m_left_wrist_motor.Config_kI(0, 0.0);
-    m_left_wrist_motor.Config_kD(0, 0.05);
+    m_left_wrist_motor.Config_kD(0, 0.022);
 
     //m_left_wrist_motor.SetInverted(true);
     m_left_wrist_motor.ConfigClosedloopRamp(0.3);
@@ -97,17 +96,16 @@ frc2::CommandPtr AlgaeIntake::RunOutCommand(double speed)
   (
     [this, speed]
     {
-      m_intake_motor.Set(speed);
+        m_intake_motor.Set(speed);
     },
     [this]
     {
-      m_intake_motor.Set(0.0);
+        m_intake_motor.Set(0.0);
     }
   );
 }
 
   void AlgaeIntake::Periodic() {
-    //m_encoder_units = m_left_wrist_motor.GetSelectedSensorPosition();
 
     frc::SmartDashboard::PutNumber("Left Algae Wrist Motor Encoder", m_left_wrist_motor.GetSelectedSensorPosition());
     frc::SmartDashboard::PutNumber("Actual Algae Wrist Setpoint", m_left_wrist_motor.GetClosedLoopTarget());

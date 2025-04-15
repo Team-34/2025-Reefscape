@@ -50,7 +50,6 @@ namespace t34
         TalonSRX m_right_wrist_motor;
         TalonSRX m_left_wrist_motor;
 
-        int m_encoder_units;
         int m_setpoint;
     };
 };
