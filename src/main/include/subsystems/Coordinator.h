@@ -3,6 +3,8 @@
 #include <frc2/command/SubsystemBase.h>
 #include <subsystems/Elevator.h>
 #include <subsystems/CoralIntake.h>
+#include <frc2/command/WaitCommand.h>
+#include <frc2/command/Commands.h>
 
 namespace t34
 {
@@ -14,10 +16,15 @@ public:
 
     void MoveToLevel(int level);
 
+    frc2::CommandPtr MoveToLevelCommand(int level);
     frc2::CommandPtr RunElevator(double speed);
     
-    inline frc2::CommandPtr MoveUpLevelCommand() {return this->RunOnce([this]{ MoveToLevel(m_current_level + 1);}); }
-    inline frc2::CommandPtr MoveDownLevelCommand() {return this->RunOnce([this]{ MoveToLevel(m_current_level - 1);}); }
+    //inline frc2::CommandPtr MoveUpLevelCommand() {return this->RunOnce([this]{ MoveToLevel(m_current_level + 1);}); }
+    //inline frc2::CommandPtr MoveDownLevelCommand() {return this->RunOnce([this]{ MoveToLevel(m_current_level - 1);}); }
+
+    inline frc2::CommandPtr MoveUpLevelCommand() {return MoveToLevelCommand(m_current_level + 1); }
+    inline frc2::CommandPtr MoveDownLevelCommand() {return MoveToLevelCommand(m_current_level - 1); }
+
 
     void Periodic() override;
 

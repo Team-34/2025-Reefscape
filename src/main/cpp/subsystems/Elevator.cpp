@@ -21,6 +21,7 @@ namespace t34
   , m_left_motor(11)
   , m_right_motor(12)
   , m_pid(1.0, 0.0, 0.15)
+  , m_elevator_top_sensor(1)
   {
 
     m_pid.SetTolerance(0.2);
@@ -151,5 +152,10 @@ namespace t34
     m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
 
     frc::SmartDashboard::PutNumber("Elevator PID Output", pid_output);
+    frc::SmartDashboard::PutBoolean("Elev. Top Limit Switch", !m_elevator_top_sensor.Get());
+    if (!m_elevator_top_sensor.Get())
+    {
+      m_encoder_accumulation = 10.0;
+    }
   }
 }
