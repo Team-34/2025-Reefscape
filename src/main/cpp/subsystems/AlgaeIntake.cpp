@@ -65,13 +65,13 @@ namespace t34
     return this->RunEnd
     (
       [this, val] 
-        { 
+      { 
         m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, val);
-        },
+      },
       [this]
-        {
+      {
         m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
-        } 
+      } 
     );
   }
 
@@ -95,13 +95,13 @@ frc2::CommandPtr AlgaeIntake::RunOutCommand(double speed)
   return this->RunEnd
   (
     [this, speed]
-      {
+    {
         m_intake_motor.Set(speed);
-      },
+    },
     [this]
-      {
+    {
         m_intake_motor.Set(0.0);
-      }
+    }
   );
 }
 
