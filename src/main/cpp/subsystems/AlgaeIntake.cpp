@@ -13,13 +13,13 @@ namespace t34
     , m_encoder_units(m_left_wrist_motor.GetSelectedSensorPosition())
     , m_setpoint(m_left_wrist_motor.GetSelectedSensorPosition())
   {
-    m_left_wrist_motor.Config_kP(0, 0.15);
+    m_left_wrist_motor.Config_kP(0, 0.05);
     m_left_wrist_motor.Config_kI(0, 0.0);
-    m_left_wrist_motor.Config_kD(0, 0.05);
+    m_left_wrist_motor.Config_kD(0, 0.02);
 
     //m_left_wrist_motor.SetInverted(true);
     m_left_wrist_motor.ConfigClosedloopRamp(0.3);
-    m_left_wrist_motor.SetSensorPhase(true); //LOOK INTO
+    m_left_wrist_motor.SetSensorPhase(true);
 
     m_right_wrist_motor.Follow(m_left_wrist_motor);
     m_right_wrist_motor.SetInverted(true);

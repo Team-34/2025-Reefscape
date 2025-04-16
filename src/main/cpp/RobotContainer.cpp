@@ -10,7 +10,7 @@ RobotContainer::RobotContainer()
   , m_coral_intake()
   , m_climber()
   , m_elevator()
-  , m_coordinator(&m_elevator, &m_coral_intake)
+  , m_coordinator(&m_elevator, &m_coral_intake, swerve_drive)
   , m_auto_leave(swerve_drive, 0_in, 3_ft, 0_deg)
 {
   ConfigureBindings();
@@ -24,8 +24,8 @@ void RobotContainer::ConfigureBindings()
 
   ctrl->RightTrigger(0.75).OnTrue(m_climber.Climb());
 
-  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(0.3));
-  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristByPowerCommand(-0.3));
+  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristToCommand(6089));
+  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristToCommand(-1572));
 
   // ctrl->RightBumper().OnTrue(m_algae_intake.MoveWristToCommand(75)); //-7350 is horizontal
   // ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristToCommand(0));
