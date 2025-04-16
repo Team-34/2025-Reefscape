@@ -21,6 +21,7 @@ namespace t34
   , m_left_motor(11)
   , m_right_motor(12)
   , m_pid(1.0, 0.0, 0.15)
+  , m_elevator_top_limit_sensor(1)
   {
 
     m_pid.SetTolerance(0.2);
@@ -141,6 +142,7 @@ namespace t34
     frc::SmartDashboard::PutNumber("Elevator Encoder Units", next_reading);
     frc::SmartDashboard::PutNumber("Elevator Setpoint", m_pid.GetSetpoint());
     frc::SmartDashboard::PutBoolean("Half Speed? ", m_half_speed);
+    frc::SmartDashboard::PutBoolean("At Top Limit?", !m_elevator_top_limit_sensor.Get());
 
     m_encoder_accumulation = UpdatePosition(m_encoder_accumulation, m_last_reading, next_reading);
     m_last_reading = next_reading;
@@ -151,5 +153,7 @@ namespace t34
     m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, -pid_output);
 
     frc::SmartDashboard::PutNumber("Elevator PID Output", pid_output);
+
+
   }
 }

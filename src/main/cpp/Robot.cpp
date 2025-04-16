@@ -18,7 +18,7 @@ void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() 
 {
-  rc.m_auto_leave.Schedule();
+  // rc.m_coordinator.ScoreL3Auto();
 }
 
 void Robot::AutonomousPeriodic() {}
@@ -27,7 +27,6 @@ void Robot::AutonomousExit() {}
 
 void Robot::TeleopInit() 
 {
-  rc.m_auto_leave.Cancel();
 
   frc2::CommandScheduler::GetInstance().SetDefaultCommand(rc.swerve_drive.get(), std::move(rc.m_default_command));
 }

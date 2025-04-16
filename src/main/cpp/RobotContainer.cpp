@@ -11,7 +11,7 @@ RobotContainer::RobotContainer()
   , m_climber()
   , m_elevator()
   , m_coordinator(&m_elevator, &m_coral_intake)
-  , m_auto_leave(swerve_drive, 0_in, -3_ft, 0_deg)
+  , m_auto_leave(swerve_drive, 0_in, 3_ft, 0_deg)
 {
   ConfigureBindings();
 }

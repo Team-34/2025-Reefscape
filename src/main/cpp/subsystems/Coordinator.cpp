@@ -4,6 +4,8 @@ t34::Coordinator::Coordinator(t34::Elevator* elevator, t34::CoralIntake* coral_i
 : m_elevator(elevator)
 , m_coral_intake(coral_intake)
 , m_current_level(0)
+, m_basic_auto(swerve_drive, 0_in, 3_ft, 0_deg)
+
 {
     
 }
@@ -32,6 +34,17 @@ void t34::Coordinator::MoveToLevel(int level)
     }
 
 }
+
+// frc2::CommandPtr t34::Coordinator::ScoreL3Auto()
+// {
+//     return std::move(m_basic_auto).ToPtr() //Leave and move up to the reef
+//         .AndThen(this->RunOnce( [this] { MoveToLevel(2); } )) //Bring elevator up to score an L3
+//         .AndThen(m_coral_intake->MoveWristToCommand(12.0)) //Move coral wrist into position
+//         .AndThen(m_coral_intake->RunOutCommand(0.5) //Spit out coral
+//             .WithDeadline(frc2::cmd::Wait(1_s))) //Keep running for 1 second
+//         .AndThen(m_coral_intake->MoveToZero()) //Return coral intake back to the top
+//         .AndThen(this->RunOnce( [this] { MoveToLevel(0); } )); //Return elevator back to starting position
+// }
 
 frc2::CommandPtr t34::Coordinator::RunElevator(double speed)
 {

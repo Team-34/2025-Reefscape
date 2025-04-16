@@ -29,7 +29,6 @@ public:
   t34::Elevator m_elevator;
 
   t34::Coordinator m_coordinator;
-  
   AutoDriveCommand m_auto_leave;
 
   frc2::CommandPtr GetAutonomousCommand();
