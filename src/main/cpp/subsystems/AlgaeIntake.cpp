@@ -35,7 +35,7 @@ namespace t34
     //m_setpoint = std::clamp(setpoint, 0.0, 8000.0); // Greater than ~8800 causes this wrist to hit the coral wrist
     frc::SmartDashboard::PutNumber("Raw Algae Wrist Setpoint", setpoint);
 
-    m_setpoint = std::clamp(setpoint, -8000, 8000);
+    m_setpoint = std::clamp(setpoint, -2120, 9000); // -2120 is the lower limit physically
 
     m_left_wrist_motor.Set(ctre::phoenix::motorcontrol::ControlMode::Position, m_setpoint);
 

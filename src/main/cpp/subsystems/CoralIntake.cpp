@@ -20,6 +20,8 @@ namespace t34
     m_config.ClosedLoopRampRate(0.75);
 
     m_wrist_motor.Configure(m_config, SparkMax::ResetMode::kResetSafeParameters, SparkMax::PersistMode::kPersistParameters);
+    frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
+    frc::SmartDashboard::PutNumber("Coral Wrist Setpoint: ", m_encoder_setpoint);
   } 
 
   frc2::CommandPtr CoralIntake::MoveWristByPowerCommand(double val)
@@ -67,29 +69,13 @@ namespace t34
     m_wrist_motor.Set((m_run_up) ? 0.3 : -0.3);
   }
 
-  void CoralIntake::StopWrist()
-  {
-    m_wrist_motor.StopMotor();
-  }
-
-  bool CoralIntake::EndCondition()
-  {
-    if (m_run_up)
-    {
-      return m_wrist_motor.GetEncoder().GetPosition() >= (m_encoder_setpoint - 0.1);
-    }
-    else
-    {
-      return m_wrist_motor.GetEncoder().GetPosition() <= (m_encoder_setpoint + 0.1);
-    }
-  }
-
  frc2::CommandPtr CoralIntake::MoveWristToCommand(double encoder_units)
   {
     return this->RunOnce(
       [this, encoder_units]
       {
         m_encoder_setpoint = encoder_units;
+        frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", encoder_units);
       }
     );
   }
@@ -109,7 +95,7 @@ namespace t34
   frc2::CommandPtr CoralIntake::RunInCommand(double speed)
   {
     return this->RunEnd(
-      [this, speed] { this->m_motor.Set(-speed);},
+      [this, speed] { this->m_motor.Set(speed);},
       [this] { this->m_motor.StopMotor(); }
     );
   }
@@ -117,7 +103,7 @@ namespace t34
   frc2::CommandPtr CoralIntake::RunOutCommand(double speed)
   {
     return this->RunEnd(
-      [this, speed] { this->m_motor.Set(speed);},
+      [this, speed] { this->m_motor.Set(-speed);},
       [this] { this->m_motor.StopMotor(); }
     );
   }
@@ -148,10 +134,9 @@ namespace t34
 
   void CoralIntake::Periodic()
   {
-    frc::SmartDashboard::PutNumber("Coral Wrist Encoder: ", m_wrist_motor.GetEncoder().GetPosition());
-    frc::SmartDashboard::PutNumber("Coral Wrist Setpoint: ", m_encoder_setpoint);
+    
     frc::SmartDashboard::PutBoolean("Coral Limit engaged?", AtTopLimit());
-
+    frc::SmartDashboard::PutNumber("Coral Intake Speed", m_motor.GetOutputCurrent());
     if (!m_returning)
     {
       m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);

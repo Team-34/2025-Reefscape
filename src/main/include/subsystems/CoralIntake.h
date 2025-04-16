@@ -39,10 +39,13 @@ namespace t34
 
         void MoveWristTo(units::degree_t angle);
         void MoveWristTo(double encoder_units);
-        void StopWrist();
 
-        bool EndCondition(); 
+        inline bool WristAtRest() { return m_wrist_motor.Get() > -0.015 && m_wrist_motor.Get() < 0.015; }
+        inline void StopWrist() { m_wrist_motor.StopMotor(); }
+        inline void StopIntake() { return m_motor.StopMotor(); }
 
+        frc2::CommandPtr StopIntakeCommand() { return this->RunOnce([this]{ StopIntake(); }); }
+        frc2::CommandPtr StopWristCommand() { return this->RunOnce([this]{ StopWrist(); }); }
         frc2::CommandPtr MoveWristByPowerCommand(double val);
         frc2::CommandPtr MoveToLevelCommand(int level);
         frc2::CommandPtr IncrementUp();

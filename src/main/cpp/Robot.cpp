@@ -18,7 +18,8 @@ void Robot::DisabledExit() {}
 
 void Robot::AutonomousInit() 
 {
-  rc.m_coordinator.ScoreL3Auto().Unwrap()->Schedule();
+  frc2::CommandScheduler::GetInstance().Schedule(rc.m_coordinator.ScoreL3Auto());
+  // rc.m_coordinator.ScoreL3Auto().Unwrap()->Schedule();
 }
 
 void Robot::AutonomousPeriodic() {}
@@ -27,8 +28,8 @@ void Robot::AutonomousExit() {}
 
 void Robot::TeleopInit() 
 {
-  rc.m_coordinator.ScoreL3Auto().Unwrap()->Cancel();
-
+  // rc.m_coordinator.ScoreL3Auto().Unwrap()->Cancel();
+  frc2::CommandScheduler::GetInstance().CancelAll();
   frc2::CommandScheduler::GetInstance().SetDefaultCommand(rc.swerve_drive.get(), std::move(rc.m_default_command));
 }
 
