@@ -14,7 +14,7 @@
 #include <units/angle.h>
 #include <rev/SparkMax.h>
 #include "Talon.h"
-
+#include <frc/DigitalInput.h>
 using namespace ctre::phoenix6::hardware;
 using namespace rev::spark;
 using namespace ctre::phoenix::motorcontrol::can;
@@ -52,5 +52,7 @@ namespace t34
 
         int m_encoder_units;
         int m_setpoint;
+
+        frc::DigitalInput m_sensor;
     };
 };

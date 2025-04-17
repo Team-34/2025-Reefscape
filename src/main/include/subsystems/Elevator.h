@@ -55,7 +55,7 @@ namespace t34
     //The USDigital MA3 encoder gets a looped 0-1 value, so it's required to get the total units
     double m_encoder_accumulation; 
 
-    frc::DigitalInput m_elevator_top_limit_sensor;
+    frc::DigitalInput m_top_limit_sensor;
 
     const units::inch_t m_init_height;
     const double m_init_units;

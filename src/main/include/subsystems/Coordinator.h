@@ -22,7 +22,7 @@ public:
     frc2::CommandPtr NetPositionCommand();
     frc2::CommandPtr RunElevator(double speed);
     frc2::CommandPtr ScoreL3Auto();
-    frc2::CommandPtr ScoreL2Auto();
+    frc2::CommandPtr ScoreL4Auto();
     inline frc2::CommandPtr MoveUpLevelCommand() { return this->RunOnce([this]{ MoveToLevel(m_current_level + 1);}); }
     inline frc2::CommandPtr MoveDownLevelCommand() { return this->RunOnce([this]{ MoveToLevel(m_current_level - 1);}); }
 
