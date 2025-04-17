@@ -70,14 +70,21 @@ frc2::CommandPtr t34::Coordinator::ScoreL4Auto()
     //     .AndThen(frc2::cmd::Wait(0.3_s))
     //     .AndThen(this->RunOnce( [this] { MoveToLevel(0); } )); //Return elevator back to starting position
 
-    return frc2::cmd::Wait(5_s).AndThen(frc2::cmd::RunEnd([this]
+    return frc2::cmd::RunEnd([this]
   {
-    m_swerve_drive->Drive(frc::Translation2d(0_m, 0.5_m), 0.0);
+    if (m_swerve_drive->GetModulePositions()[0].distance.value() > -90.0)
+    {
+        m_swerve_drive->Drive(frc::Translation2d(0_m, -0.2_m), 0.0);
+    }
+    else
+    {
+        m_swerve_drive->Drive(frc::Translation2d(0_m, 0_m), 0.0);
+    }
   },
   [this]
   {
     m_swerve_drive->Drive(frc::Translation2d(0_m, 0_m), 0.0);
-  }));
+  });
 }
 
 

@@ -7,7 +7,7 @@ void Robot::RobotPeriodic()
 {
   frc2::CommandScheduler::GetInstance().Run();
   frc::SmartDashboard::PutNumber("Gyro Yaw", m_gyro->GetYaw().GetValueAsDouble());
-
+  frc::SmartDashboard::PutNumber("Swerve Encoder Pos", rc.swerve_drive->GetModulePositions()[0].distance.value());
 }
 
 void Robot::DisabledInit() {}
