@@ -53,6 +53,24 @@ frc2::CommandPtr t34::Coordinator::ScoreL3Auto()
         .AndThen(this->RunOnce( [this] { MoveToLevel(0); } )); //Return elevator back to starting position
 }
 
+frc2::CommandPtr t34::Coordinator::ScoreL2Auto()
+{
+    return AutoDriveCommand{m_swerve_drive, 0_in, 3_ft, 0_deg}.ToPtr() //Leave and move up to the reef
+        .AndThen(frc2::cmd::Wait(1.5_s))
+        .AndThen(this->RunOnce( [this] { MoveToLevel(1); } )) //Bring elevator up to score an L3
+        .AndThen(m_coral_intake->MoveWristToCommand(12.0)) //Move coral wrist into position
+        .AndThen(frc2::cmd::Wait(1.25_s))
+        .AndThen(m_coral_intake->RunOutCommand(0.5) //Spit out coral
+            .WithDeadline(frc2::cmd::Wait(2_s))) //Keep running for 1 second
+        .AndThen(frc2::cmd::Wait(1_s))
+        .AndThen(m_coral_intake->StopIntakeCommand())
+        .AndThen(m_coral_intake->MoveToZero()) //Return coral intake back to the top
+        .AndThen(AutoDriveCommand{m_swerve_drive, 0_in, -1_ft, 0_deg}.ToPtr()) //Move backward
+        .AndThen(frc2::cmd::Wait(0.3_s))
+        .AndThen(this->RunOnce( [this] { MoveToLevel(0); } )); //Return elevator back to starting position
+}
+
+
 // frc2::CommandPtr t34::Coordinator::NetPositionCommand()
 // {
 //     return this->RunOnce(

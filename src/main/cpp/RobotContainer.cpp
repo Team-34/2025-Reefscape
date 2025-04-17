@@ -18,42 +18,48 @@ RobotContainer::RobotContainer()
 
 void RobotContainer::ConfigureBindings() 
 {
-  ctrl->LeftStick()
+  ctrl->LeftStick() //Left underside button toggles Faris Mode
     .OnTrue(swerve_drive->EnableFarisModeCommand())
-    .OnFalse(swerve_drive->DisableFarisModeCommand());
+    .OnFalse(swerve_drive->DisableFarisModeCommand()); 
 
-  ctrl->RightTrigger(0.75).OnTrue(m_climber.Climb());
+  ctrl->RightTrigger(0.75).OnTrue(m_climber.Climb()); //Right trigger deploys/retracts climb
 
-  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristToCommand(8089));
-  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristToCommand(-1572));
+  ctrl->RightBumper().WhileTrue(m_algae_intake.MoveWristToCommand(8089)); //Right bumper pulls up the algae intake
+  ctrl->LeftBumper().WhileTrue(m_algae_intake.MoveWristToCommand(-1572)); //Left bumper pulls down the algae intake
 
-  ctrl->RightStick().WhileTrue(m_algae_intake.MoveWristToCommand(9000));
+  ctrl->RightStick().WhileTrue(m_algae_intake.MoveWristToCommand(9000)); //Right underside button angles the algae intake to fire into the barge
 
-  // ctrl->RightBumper().OnTrue(m_algae_intake.MoveWristToCommand(75)); //-7350 is horizontal
-  // ctrl->LeftBumper().OnTrue(m_algae_intake.MoveWristToCommand(0));
-
-  ctrl->POVRight().OnTrue(m_coral_intake.MoveWristToCommand(12.0));
-  ctrl->POVLeft().OnTrue(m_coral_intake.MoveToZero());
-
-  (ctrl->POVDown() && ctrl->LeftStick())
+  (ctrl->POVDown() && ctrl->LeftStick()) //POV Down + left underside button shaves elevator down
     .WhileTrue(m_elevator.MoveElevatorByPowerCommand(-0.3));
 
-  (ctrl->POVUp() && ctrl->LeftStick())
+  (ctrl->POVUp() && ctrl->LeftStick()) //POV Up + left underside button shaves elevator up
     .WhileTrue(m_elevator.MoveElevatorByPowerCommand(0.3));
 
-  (ctrl->POVDown() && !ctrl->LeftStick())
+  (ctrl->POVDown() && !ctrl->LeftStick()) //POV Down decrements the robot's level
     .OnTrue(m_coordinator.MoveDownLevelCommand());
 
-  (ctrl->POVUp() && !ctrl->LeftStick())
+  (ctrl->POVUp() && !ctrl->LeftStick()) //POV Up increments the robot's level
     .OnTrue(m_coordinator.MoveUpLevelCommand());  
 
-  ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand());
+  (ctrl->POVRight() && ctrl->LeftStick())  //POV Right + left underside button shaves coral intake up
+    .WhileTrue(m_coral_intake.MoveWristByPowerCommand(0.25));
 
-  ctrl->A().WhileTrue(m_algae_intake.RunInCommand(0.5));
-  ctrl->B().WhileTrue(m_algae_intake.RunOutCommand(0.5));
+  (ctrl->POVLeft() && ctrl->LeftStick()) //POV Left + left underside button shaves coral intake down
+    .WhileTrue(m_coral_intake.MoveWristByPowerCommand(-0.25));
+
+  (ctrl->POVRight() && !ctrl->LeftStick()) //POV Right pulols the coral intake into scoring position
+    .OnTrue(m_coral_intake.MoveWristToCommand(12.0));
+
+  (ctrl->POVRight() && !ctrl->LeftStick()) //POV Left pulls the coral intake back up
+    .OnTrue(m_coral_intake.MoveToZero());
+
+  ctrl->Back().OnTrue(swerve_drive->ZeroYawCommand()); //Back button zeros the robot's gyro
+
+  ctrl->A().WhileTrue(m_algae_intake.RunInCommand(0.5)); //A sucks in algae
+  ctrl->B().WhileTrue(m_algae_intake.RunOutCommand(0.5)); //A spits out algae
   
-  ctrl->X().WhileTrue(m_coral_intake.RunInCommand(0.5));
-  ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand(0.5)); 
+  ctrl->X().WhileTrue(m_coral_intake.RunInCommand(0.5)); //X sucks in coral
+  ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand(0.5)); //Y spits out coral
 }
 
 frc2::CommandPtr RobotContainer::GetAutonomousCommand() 
