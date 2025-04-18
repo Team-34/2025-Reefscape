@@ -88,7 +88,7 @@ namespace t34
         m_left_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
         m_right_motor.Set(ctre::phoenix::motorcontrol::ControlMode::PercentOutput, 0.0);
       }
-    );
+    ).Until([this] { return m_pid.AtSetpoint(); } );
   }
 
   frc2::CommandPtr Elevator::MoveElevatorByPowerCommand(double val)

@@ -57,7 +57,7 @@ void RobotContainer::ConfigureBindings()
     .WhileTrue(m_coral_intake.MoveWristByPowerCommand(0.25));
 
   (ctrl->POVLeft() && ctrl->LeftStick()) //POV Left + left underside button shaves coral intake down
-    .WhileTrue(m_coral_intake.MoveWristToCommand(7.6));
+    .OnTrue(m_elevator.ElevateToCommand(0.44).AndThen(m_coral_intake.MoveWristToCommand(4.83)));
 
   (ctrl->POVRight() && !ctrl->LeftStick()) //POV Right pulols the coral intake into scoring position
     .OnTrue(m_coral_intake.MoveWristToCommand(12.0));
@@ -71,7 +71,7 @@ void RobotContainer::ConfigureBindings()
   ctrl->A().WhileTrue(m_algae_intake.RunInCommand(0.5)); //A sucks in algae
   ctrl->B().WhileTrue(m_algae_intake.RunOutCommand(0.75)); //A spits out algae
   
-  ctrl->X().WhileTrue(m_coral_intake.RunInCommand(0.5)); //X sucks in coral
+  ctrl->X().WhileTrue(m_coral_intake.RunInCommand(0.25)); //X sucks in coral
   ctrl->Y().WhileTrue(m_coral_intake.RunOutCommand(0.5)); //Y spits out coral
 }
 
