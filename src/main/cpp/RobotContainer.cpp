@@ -57,7 +57,7 @@ void RobotContainer::ConfigureBindings()
     .WhileTrue(m_coral_intake.MoveWristByPowerCommand(0.25));
 
   (ctrl->POVLeft() && ctrl->LeftStick()) //POV Left + left underside button shaves coral intake down
-    .WhileTrue(m_coral_intake.MoveWristByPowerCommand(-0.25));
+    .WhileTrue(m_coral_intake.MoveWristToCommand(7.6));
 
   (ctrl->POVRight() && !ctrl->LeftStick()) //POV Right pulols the coral intake into scoring position
     .OnTrue(m_coral_intake.MoveWristToCommand(12.0));

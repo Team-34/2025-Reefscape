@@ -136,7 +136,7 @@ namespace t34
   {
     
     frc::SmartDashboard::PutBoolean("Coral Limit engaged?", AtTopLimit());
-    frc::SmartDashboard::PutNumber("Coral Intake Speed", m_motor.GetOutputCurrent());
+    frc::SmartDashboard::PutNumber("Coral Enc", m_wrist_motor.GetEncoder().GetPosition());
     if (!m_returning)
     {
       m_wrist_motor.GetClosedLoopController().SetReference(m_encoder_setpoint, rev::spark::SparkLowLevel::ControlType::kPosition);

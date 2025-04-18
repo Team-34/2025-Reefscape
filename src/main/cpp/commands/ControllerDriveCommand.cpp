@@ -23,8 +23,8 @@ namespace t34 {
     ControllerDriveCommand::ControllerDriveCommand(std::shared_ptr<SwerveDrive> drive, std::shared_ptr<T34CommandXboxController> controller)
         : m_swerve_drive(drive)
         , m_controller(controller)
-        , m_x_limiter( units::scalar_t(1.1).value() / 1_s)
-        , m_y_limiter( units::scalar_t(1.1).value() / 1_s)
+        , m_x_limiter( units::scalar_t(0.55).value() / 1_s)
+        , m_y_limiter( units::scalar_t(0.55).value() / 1_s)
         , m_r_limiter( units::scalar_t(2.0).value() / 1_s) {
         
         AddRequirements(drive.get());
