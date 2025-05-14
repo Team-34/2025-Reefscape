@@ -14,7 +14,7 @@ AutoDriveCommand::AutoDriveCommand(std::shared_ptr<t34::SwerveDrive> swerve, uni
 : m_swerve(swerve)
 , m_x_translation(x_translation)
 , m_y_translation(y_translation)
-, m_setpoint(sqrt((m_x_translation * m_x_translation) + (m_y_translation * m_y_translation)))
+, m_setpoint(sqrt((m_x_translation * m_x_translation) + (m_y_translation * m_y_translation))) //0.766 keeps setpoints to encoder units
 , m_travelled(0.0)
 , m_current_x(0.0)
 , m_current_y(0.0)
@@ -45,7 +45,7 @@ void AutoDriveCommand::Initialize()
 // Called repeatedly when this Command is scheduled to run
 void AutoDriveCommand::Execute() 
 {
-  m_travelled = EncUnitsToInches(m_swerve->GetModulePositions()[0].distance.value() + m_init_dist);
+  m_travelled = units::inch_t(m_swerve->GetModulePositions()[0].distance.value() + m_init_dist); //EncUnitsToInches(m_swerve->GetModulePositions()[0].distance.value() + m_init_dist);
 
   m_current_x = m_travelled * cos(m_wheel_theta);
   m_current_y = -m_travelled * sin(m_wheel_theta);
@@ -58,8 +58,8 @@ void AutoDriveCommand::Execute()
     if (fabs(m_travelled) < fabs(m_setpoint) - 1_in)
     {
       m_swerve->Drive(frc::Translation2d(
-      units::meter_t(m_invert_drives * m_y_drive),
-      units::meter_t(-m_x_drive)),
+      units::meter_t(std::clamp(m_invert_drives * m_y_drive, -1.0, 1.0)),
+      units::meter_t(std::clamp(-m_x_drive, -1.0, 1.0))),
       m_rot_speed
     );
 

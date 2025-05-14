@@ -19,7 +19,6 @@ void Robot::DisabledExit() {}
 void Robot::AutonomousInit() 
 {
   frc2::CommandScheduler::GetInstance().Schedule(rc.m_coordinator.ScoreL4Auto());
-  // rc.m_coordinator.ScoreL3Auto().Unwrap()->Schedule();
 }
 
 void Robot::AutonomousPeriodic() {}

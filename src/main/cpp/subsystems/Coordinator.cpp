@@ -33,7 +33,7 @@ void t34::Coordinator::MoveToLevel(int level)
         break;
     case 3:
         m_elevator->ElevateTo(10.0);
-        m_coral_intake->MoveWristTo(9.357);
+        m_coral_intake->MoveWristTo(9.357 - 0.3);
         break;
     }
 
@@ -41,8 +41,7 @@ void t34::Coordinator::MoveToLevel(int level)
 
 frc2::CommandPtr t34::Coordinator::ScoreL3Auto()
 {
-    return frc2::cmd::Wait(5_s) //temporary
-        .AndThen(AutoDriveCommand{m_swerve_drive, 0_in, 4_ft, 0_deg}.ToPtr()) //Leave and move up to the reef
+    return AutoDriveCommand{m_swerve_drive, 0_in, 4_ft, 0_deg}.ToPtr() //Leave and move up to the reef
         .AndThen(frc2::cmd::Wait(1.75_s))
         .AndThen(this->RunOnce( [this] { MoveToLevel(2); } )) //Bring elevator up to score an L3
         .AndThen(m_coral_intake->MoveWristToCommand(12.0)) //Move coral wrist into position
@@ -60,33 +59,24 @@ frc2::CommandPtr t34::Coordinator::ScoreL3Auto()
 frc2::CommandPtr t34::Coordinator::ScoreL4Auto()
 {
 
-    return frc2::cmd::RunEnd([this]
-  {
-    m_swerve_drive->Drive(frc::Translation2d(0_m, -0.6_m), 0.0); //Drive forward
-  },
-  [this]
-  {
-    m_swerve_drive->Drive(frc::Translation2d(0_m, 0_m), 0.0);
-  }).Until([this] { return m_swerve_drive->GetModulePositions()[0].distance.value() < -90.0; })
-  .AndThen(frc2::cmd::Wait(1.75_s))
-  .AndThen(this->RunOnce( [this] { MoveToLevel(3); } )) //Bring elevator up to score an L4
-  .AndThen(frc2::cmd::Wait(1.25_s))
-  .AndThen(m_coral_intake->RunOutCommand(0.5)) //Spit out coral
-      .WithDeadline(frc2::cmd::Wait(2_s)) //Keep running for 1 second
-  .AndThen(frc2::cmd::Wait(1_s))
-  .AndThen(m_coral_intake->StopIntakeCommand())
-  .AndThen(m_coral_intake->MoveToZero()) //Return coral intake back to the top
-  .AndThen(frc2::cmd::RunEnd([this]
-  {
-    m_swerve_drive->Drive(frc::Translation2d(0_m, -0.2_m), 0.0); //Drive backword
-  },
-  [this]
-  {
-    m_swerve_drive->Drive(frc::Translation2d(0_m, 0_m), 0.0);
-  })
-    .Until([this] { return m_swerve_drive->GetModulePositions()[0].distance.value() > -60.0; }))
-  .AndThen(frc2::cmd::Wait(0.3_s))
-  .AndThen(this->RunOnce( [this] { MoveToLevel(0); } )); //Return elevator back to starting position
+    //return AutoDriveCommand{m_swerve_drive, 0_in, 90_in, 0_deg}.ToPtr() //Leave and move up to the reef
+    return this->RunEnd([this] { m_swerve_drive->Drive(frc::Translation2d(0_m, -0.3_m), 0.0); },
+             [this] { m_swerve_drive->Drive(frc::Translation2d(0_m, 0_m), 0.0); })
+            .Until([this] { return m_swerve_drive->GetModulePositions()[0.0].distance.value() > 61.0; })
+        .AndThen(frc2::cmd::Wait(1.75_s))
+        .AndThen(this->RunOnce( [this] { MoveToLevel(3); } )) //Bring elevator up to score an L4
+        .AndThen(frc2::cmd::Wait(1.75_s))
+        .AndThen(m_coral_intake->MoveWristToCommand(12.0)) //Move coral wrist into position
+        .AndThen(m_coral_intake->RunOutCommand(0.5) //Spit out coral
+            .WithDeadline(frc2::cmd::Wait(2_s))) //Keep running for 1 second
+        .AndThen(frc2::cmd::Wait(1_s))
+        .AndThen(m_coral_intake->StopIntakeCommand())
+        .AndThen(m_coral_intake->MoveToZero()) //Return coral intake back to the top
+        .AndThen(this->RunEnd([this] { m_swerve_drive->Drive(frc::Translation2d(0_m, 0.3_m), 0.0); },
+             [this] { m_swerve_drive->Drive(frc::Translation2d(0_m, 0_m), 0.0); })
+            .Until([this] { return m_swerve_drive->GetModulePositions()[0.0].distance.value() < 39.0; })) //Move backward
+        .AndThen(frc2::cmd::Wait(0.6_s))
+        .AndThen(this->RunOnce( [this] { MoveToLevel(0); } )); //Return elevator back to starting position
 }
 
 
